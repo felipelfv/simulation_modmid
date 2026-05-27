@@ -417,6 +417,13 @@ run_condition <- function(i) {
 }
 
 t_start <- Sys.time()
+# TRUE (default, what we use) for mc.set.seed: 
+# each child gets a different rng state. The exact mechanism depends on RNGkind():
+# (i) with the default Mersenne-Twister: each child seeds itself from Sys.time() + Sys.getpid().
+# should be "different enough" but not formally independent
+# (ii) with RNGkind("L'Ecuyer-CMRG") 
+# (what we set at the top of sim_mc.R): each child calls nextRNGStream() to advance to a
+# guaranteed-independent substream (substreams are 2^127 draws apart and provably non-overlapping)
 parallel::mclapply(seq_len(nrow(design)), run_condition,
                    mc.cores = n_cores, mc.preschedule = FALSE,
                    mc.set.seed = TRUE)
