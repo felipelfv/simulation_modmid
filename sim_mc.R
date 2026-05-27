@@ -1,18 +1,22 @@
-# self-contained moderated-mediation simulation comparing three estimators.
-# imm: MC quantile CI via lav_mvrnorm draws on vcov(fit)[c("a3","b"), .].
-# other params: Wald CI from model vcov.
-#
+# code for the simulation: 
+# moderated-mediation simulation comparing three estimators.
+# 
 # lsam    : lavaan::sam(sam.method = "local", se = "local")
 # lms     : modsem_da(method = "lms", robust.se = TRUE)
 # dblcent : modsem(method = "dblcent", estimator = "MLR")
 #
-# 4 n x 3 a3 x 2 rel x 5 distr_exo x 9 misspec = 1080 cells.
+# 4 n x 3 a3 x 2 rel x 5 distr_exo x 9 misspec = 1080 conditions
+
+# note to myself: write in the first article taht all have non normal copulas
+# althought the calibration was done empirically under the non normal copula with marginal gaussians
+# in this paper, we should then calibrate with everything normal (maginal and copula)
 
 library(modsem); library(lavaan)
+library(covsim); library(rvinecopulib)
 
-master_seed <- 7000L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
+master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
-r_per_cell  <- 100L # (!)
+r_per_condition  <- 100L # (!)
 m_mc        <- 20000L
 n_cores     <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc       <- "."
@@ -25,10 +29,10 @@ rho <- 0.3
 loadings   <- c(1, 0.8, 0.7, 0.6)
 rel_levels <- list(low = 0.5, high = 0.7)
 
-res_m_var <- 0.7341
-res_y_var <- 0.8214
-var_m_emp <- c("0" = 1.0576, "0.2" = 1.0718, "0.4" = 1.1402)
-var_y_emp <- c("0" = 1.1824, "0.2" = 1.1804, "0.4" = 1.1916)
+res_m_var <- 0.8531
+res_y_var <- 0.9350
+var_m_emp <- c("0" = 1.1746, "0.2" = 1.2188, "0.4" = 1.3498)
+var_y_emp <- c("0" = 1.3249, "0.2" = 1.3350, "0.4" = 1.3682)
 var_m_at  <- function(a3v) unname(var_m_emp[as.character(a3v)])
 var_y_at  <- function(a3v) unname(var_y_emp[as.character(a3v)])
 
@@ -49,12 +53,13 @@ model_lv <- "
 "
 
 # structural misspecifications
-# note we always estimate the correctly-specified structural model, so
+# note: we always estimate the correctly-specified structural model, so
 # (est - true_value) captures the misspec-induced bias.
 # c2: true Y eq adds c2 * W (omitted W -> Y direct path)
 # c3: true Y eq adds c3 * X*W (omitted X*W -> Y direct path)
 # cl: indicator m3 also loads on X (omitted cross-loading)
 # rcov: cor(d_m3, e_y3) = rcov (omitted residual covariance)
+# note the c2 and c3 nomenclature comes from X
 misspec_specs <- list(
   none             = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0),
   c2_small         = list(c2 = 0.25, c3 = 0,    cl = 0,    rcov = 0),
@@ -67,8 +72,8 @@ misspec_specs <- list(
   rescov_medium    = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0.50)
 )
 
-# design grid
-grid <- expand.grid(
+# design grid (full factorial)
+design <- expand.grid(
   n         = c(100, 200, 300, 500),
   a3        = c(0, 0.20, 0.40),
   rel       = c("low", "high"),
@@ -76,27 +81,46 @@ grid <- expand.grid(
   misspec   = names(misspec_specs),
   stringsAsFactors = FALSE
 )
-saveRDS(grid, file.path(results_dir, "grid.rds"))
+saveRDS(design, file.path(results_dir, "design.rds"))
 
 chi_df <- 2L; t_df <- 5L
 
-# data generation 
+# data generation
+# every distr_exo (normal, uniform, t5, chisq) is standardized to
+# mean = 0 and variance = 1, so that differences across branches come from
+# distribution shape, not from scale or location.
+# normal condition uses a forced Gaussian copula (clean reference); the four
+# non-normal conditions use vita's default (clayton-first) — so they vary the
+# marginals while keeping a consistent non-normal joint dependence.
 gen_exo <- function(n, distr_exo) {
   if (distr_exo == "normal") {
+    # truly bivariate normal baseline: force gaussian copula
     sigma  <- matrix(c(1, rho, rho, 1), 2, 2)
     margin <- list(distr = "norm", mean = 0, sd = 1)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6)
+    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
+                       family_set = "gauss") 
     e  <- rvinecopulib::rvine(n, vine = vd)
     return(list(x = e[, 1], w = e[, 2]))
   }
   if (distr_exo == "uniform") {
     sigma  <- matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "unif", min = -sqrt(3), max = sqrt(3))
+    # note: var(U(a,b)) = (b-a)^2 / 12. we have a symmetry constrain: a = -b
+    # this for the mean 0, var 1
+    # thus U{-sqrt(3),sqrt(3)} has var = 1
+    margin <- list(distr = "unif", min = -sqrt(3), max = sqrt(3)) # bounded -+ sqrt(3)
     vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6)
     e  <- rvinecopulib::rvine(n, vine = vd)
     return(list(x = e[, 1], w = e[, 2]))
   }
   if (distr_exo == "t5") {
+    # t is symmetric so mean = 0 is free, but var(t) = t_df / (t_df - 2)
+    # for t5 that is 5/3, not 1
+    # strategy: 
+    # target the covariance at the native scale 
+    # (diag = nat_var, off-diag = nat_var * rho,
+    # so the implied correlation is still rho), then divide by
+    # sqrt(nat_var) at the end. correlation is scale-invariant so cor stays at
+    # rho, and the heavy tails are preserved
     nat_var <- t_df / (t_df - 2)
     sigma   <- nat_var * matrix(c(1, rho, rho, 1), 2, 2)
     margin  <- list(distr = "t", df = t_df)
@@ -105,6 +129,10 @@ gen_exo <- function(n, distr_exo) {
     return(list(x = e[, 1] / sqrt(nat_var), w = e[, 2] / sqrt(nat_var)))
   }
   if (distr_exo %in% c("chisq_same", "chisq_diff")) {
+    # chisq has mean = chi_df and var = 2*chi_df (= nat_var), so unlike unif and t
+    # we need both centering and scaling
+    # strategy: sample at native scale, then subtract chi_df (mean) and divide 
+    # by sqrt(nat_var) (sd) to standardize
     rho_in  <- if (distr_exo == "chisq_same") rho else -rho
     nat_var <- 2 * chi_df
     sigma   <- nat_var * matrix(c(1, rho_in, rho_in, 1), 2, 2)
@@ -120,14 +148,17 @@ gen_exo <- function(n, distr_exo) {
 }
 
 gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
-  msp <- misspec_specs[[misspec_key]]
+  # easiest way thus far to get misspecification from the list (to be decided); 
+  # ask claude:
+  msp <- misspec_specs[[misspec_key]] 
   exo <- gen_exo(n, distr_exo); x <- exo$x; w <- exo$w
   m   <- a1*x + a2*w + a3_true*x*w + rnorm(n, sd = sqrt(res_m_var))
-  # y eq adds omitted c2*W and c3*X*W direct paths when misspec is non-zero
+  # y eq adds omitted c2*W and c3*X*W direct paths when misspec is non-zero (!)
   y   <- b*m + cp*x + msp$c2*w + msp$c3*(x*w) + rnorm(n, sd = sqrt(res_y_var))
   
   target_rel <- rel_levels[[rel_key]]
-  e_sd_xw    <- err_sd_for(target_rel, var_eta = 1)
+  # not be confused: both are the same and we use the population var = 1 (!):
+  e_sd_xw    <- err_sd_for(target_rel, var_eta = 1) 
   e_sd_m     <- err_sd_for(target_rel, var_eta = var_m_at(a3_true))
   e_sd_y     <- err_sd_for(target_rel, var_eta = var_y_at(a3_true))
   mk <- function(eta, prefix, e_sd) {
@@ -163,6 +194,11 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
 }
 
 # mc + wald inference from coef + vcov
+# note:
+# imm: mc quantile CI via lav_mvrnorm draws on vcov(fit)[c("a3","b"), .]
+# other parameters just use the: wald CI from model vcov
+# this was validated with the lavaan implementation (commit d3f423c)
+# i use my own implementation for consistency throughout all methods though
 mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
   na6 <- setNames(rep(NA_real_, length(pars)), pars)
   if (!is.matrix(V) ||
@@ -192,182 +228,196 @@ mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
   list(est = est[pars], se = se[pars], lo = lo[pars], hi = hi[pars])
 }
 
-# admissibility helpers (heywood cases)
+# admissibility/implausible helpers (heywood cases)
+# note that lavaan has all of this already, but not modsem (from my knowledge)
+# therefore, also for consistency, the same exact check throughout all appraoches
 # neg_theta: any residual variance (diag of theta) <= 0
 # npd_psi: factor covariance matrix psi has any non-positive eigenvalue
-neg_theta_diag <- function(theta_diag_vec) {
-  if (!length(theta_diag_vec)) return(NA)
-  any(theta_diag_vec <= 0, na.rm = TRUE)
-}
+# maybe move to a helpers file. not sure. i generally dislike an extra helpers.R 
+# note also this means we include term x:w in the PD check for lsam
+neg_theta_diag <- function(v) any(v <= 0, na.rm = TRUE)
+
 npd_psi_mat <- function(psi_mat) {
   if (!length(psi_mat) || !nrow(psi_mat)) return(NA)
   if (any(!is.finite(psi_mat))) return(TRUE)
   min(eigen(psi_mat, symmetric = TRUE, only.values = TRUE)$values) <= 0
 }
+
 admis_from_pe <- function(pe, latents) {
-  pe <- as.data.frame(pe)
-  vv <- pe[pe$op == "~~", , drop = FALSE]
-  th <- vv[vv$lhs == vv$rhs & !(vv$lhs %in% latents), , drop = FALSE]
-  ps <- vv[vv$lhs %in% latents & vv$rhs %in% latents, , drop = FALSE]
+  vv <- pe[pe$op == "~~", ]
+  th <- vv[vv$lhs == vv$rhs & !(vv$lhs %in% latents), ]
+  ps <- vv[vv$lhs %in% latents & vv$rhs %in% latents, ]
   L_names <- intersect(latents, unique(c(ps$lhs, ps$rhs)))
   psi <- matrix(0, length(L_names), length(L_names),
                 dimnames = list(L_names, L_names))
-  for (k in seq_len(nrow(ps))) {
-    psi[ps$lhs[k], ps$rhs[k]] <- ps$est[k]
-    psi[ps$rhs[k], ps$lhs[k]] <- ps$est[k]
-  }
+  psi[cbind(ps$lhs, ps$rhs)] <- ps$est
+  psi[cbind(ps$rhs, ps$lhs)] <- ps$est
   list(neg_theta = neg_theta_diag(th$est),
        npd_psi   = npd_psi_mat(psi))
 }
+
 safe_admis <- function(expr) {
   res <- try(expr, silent = TRUE)
-  if (inherits(res, "try-error") || !is.list(res) ||
-      !all(c("neg_theta", "npd_psi") %in% names(res)))
-    return(list(neg_theta = NA, npd_psi = NA))
+  if (inherits(res, "try-error")) return(list(neg_theta = NA, npd_psi = NA))
   res
 }
 
-# per-method fitters: return list(co, V, neg_theta, npd_psi) or NULL on failure
+# estimation per method.
+# any error bubbles up to try_with_warnings in work_for_condition, where the
+# message is captured into the `warnings` column and an NA row is produced.
 fit_lsam <- function(data) {
-  fit <- try(lavaan::sam(model_lv, data = data,
-                         sam.method = "local", se = "local"),
-             silent = TRUE)
-  if (inherits(fit, "try-error")) return(NULL)
-  V  <- try(vcov(fit), silent = TRUE)
-  co <- try(coef(fit), silent = TRUE)
-  pe <- try(lavaan::parameterEstimates(fit), silent = TRUE)
-  if (inherits(V, "try-error") || inherits(co, "try-error")) return(NULL)
-  adm <- if (inherits(pe, "try-error")) list(neg_theta = NA, npd_psi = NA)
-  else safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y")))
+  # mm.list: X and W (interacting variables) share one block;
+  # M and Y get their own blocks. three measurement blocks total.
+  fit <- lavaan::sam(model_lv, data = data,
+                     sam.method = "local", se = "local",
+                     mm.list = list(c("X", "W"), "M", "Y"))
+  V  <- vcov(fit)
+  co <- coef(fit)
+  # remove.step1 as FALSE is important for the implausible checks
+  pe <- lavaan::parameterEstimates(fit, remove.step1 = FALSE) 
+  adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y","X:W")))
   list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
 }
 
 fit_lms <- function(data) {
-  fit <- try(modsem_da(model_lv, data = data, method = "lms",
-                       robust.se = TRUE),
-             silent = TRUE)
-  if (inherits(fit, "try-error")) return(NULL)
-  V  <- try(vcov(fit), silent = TRUE)
-  co <- try(coef(fit), silent = TRUE)
-  pe <- try(parameter_estimates(fit), silent = TRUE)
-  if (inherits(V, "try-error") || inherits(co, "try-error")) return(NULL)
-  adm <- if (inherits(pe, "try-error")) list(neg_theta = NA, npd_psi = NA)
-  else safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y")))
+  fit <- modsem_da(model_lv, data = data, method = "lms",
+                   robust.se = TRUE) # robust SEs
+  V  <- vcov(fit)
+  co <- coef(fit)
+  pe <- parameter_estimates(fit)
+  adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y")))
   list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
 }
 
 fit_dblcent <- function(data) {
-  fit <- try(modsem(model_lv, data = data, method = "dblcent",
-                    estimator = "MLR"),
-             silent = TRUE)
-  if (inherits(fit, "try-error")) return(NULL)
-  V  <- try(vcov(fit), silent = TRUE)
-  co <- try(coef(fit), silent = TRUE)
-  pe <- try(parameter_estimates(fit), silent = TRUE)
-  if (inherits(V, "try-error") || inherits(co, "try-error")) return(NULL)
+  fit <- modsem(model_lv, data = data, method = "dblcent",
+                estimator = "MLR") # robust SEs but also statistics diff (?) 
+  V  <- vcov(fit)
+  co <- coef(fit)
   # dblcent introduces an extra XW latent from product indicators
-  adm <- if (inherits(pe, "try-error")) list(neg_theta = NA, npd_psi = NA)
-  else safe_admis(admis_from_pe(pe, latents = c("X","W","XW","M","Y")))
+  pe <- parameter_estimates(fit)
+  adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","XW","M","Y")))
   list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
 }
 
-fitters <- list(lsam    = fit_lsam,
-                lms     = fit_lms,
+fitters <- list(lsam = fit_lsam,
+                lms = fit_lms,
                 dblcent = fit_dblcent)
 methods <- names(fitters)
 
-# per-rep wrapper
+# wrapper per replication
 true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v), pars)
 
-work_for_cell <- function(i, r) {
-  # capture l'ecuyer substream before any draw, for per-rep replay
+work_for_condition <- function(i, r) {
+  # capture l'ecuyer substream before any draw, for per rep reproduciblity
   rng_stream <- paste(get(".Random.seed", envir = .GlobalEnv), collapse = ":")
-  
-  cell  <- grid[i, ]
-  dat   <- gen_data(cell$n, cell$a3, cell$rel, cell$distr_exo, cell$misspec)
-  truth <- true_value_for(cell$a3)
+
+  condition  <- design[i, ]
+  truth <- true_value_for(condition$a3)
   na6   <- setNames(rep(NA_real_, length(pars)), pars)
-  
-  # helper: run expr while collecting any warnings into a single string
-  with_warnings <- function(expr) {
-    warns <- character(0)
-    out <- withCallingHandlers(expr,
-      warning = function(w) {
-        warns <<- c(warns, conditionMessage(w)); invokeRestart("muffleWarning")
-      })
-    list(value = out,
-         warnings = if (length(warns)) paste(unique(warns), collapse = " | ")
+
+  # helper: run expr capturing BOTH errors and warnings.
+  # returns list(value, error, warnings) — error = NA on success.
+  try_with_warnings <- function(expr) {
+    warns <- character(0); err <- NA_character_
+    val <- tryCatch(
+      withCallingHandlers(expr,
+        warning = function(w) {
+          warns <<- c(warns, conditionMessage(w)); invokeRestart("muffleWarning")
+        }),
+      error = function(e) { err <<- conditionMessage(e); NULL })
+    notes <- c(if (!is.na(err)) paste0("ERROR: ", err), unique(warns))
+    list(value = val, error = err,
+         warnings = if (length(notes)) paste(notes, collapse = " | ")
                     else NA_character_)
   }
 
+  # data generation (matches the try + inherits pattern from Simulation(1).R).
+  # gen_data should never fail in practice, but on the off chance it does we
+  # drop the rep silently via return(NULL).
+  dat <- try(gen_data(condition$n, condition$a3, condition$rel, 
+                      condition$distr_exo, condition$misspec),
+             silent = TRUE)
+  if (inherits(dat, "try-error")) return(NULL)
+
+  # per-method fit + mc_inference, each wrapped independently so one
+  # method's error does NOT block the others. Method failures produce
+  # NA rows for that method only, with the error captured in `warnings`.
   rows_all <- lapply(methods, function(m) {
-    ww <- with_warnings({
+    mw <- try_with_warnings({
       fitted <- fitters[[m]](dat)
-      list(fitted = fitted,
-           res = if (is.null(fitted)) list(est = na6, se = na6, lo = na6, hi = na6)
-                 else                 mc_inference(fitted$co, fitted$V))
+      list(fitted = fitted, res = mc_inference(fitted$co, fitted$V))
     })
-    fitted <- ww$value$fitted
-    res    <- ww$value$res
-    adm    <- if (is.null(fitted)) list(neg_theta = NA, npd_psi = NA)
-              else list(neg_theta = fitted$neg_theta, npd_psi = fitted$npd_psi)
+
+    if (!is.na(mw$error)) {
+      # method-level failure — NA row + the error message stored in warnings
+      return(data.frame(parameter = pars,
+                        est = NA_real_, se = NA_real_,
+                        ci_lo = NA_real_, ci_hi = NA_real_,
+                        neg_theta = NA, npd_psi = NA,
+                        warnings = mw$warnings,
+                        method = m, stringsAsFactors = FALSE))
+    }
+
+    fitted <- mw$value$fitted
+    res    <- mw$value$res
     data.frame(parameter = pars,
                est       = as.numeric(res$est),
                se        = unname(res$se),
                ci_lo     = unname(res$lo),
                ci_hi     = unname(res$hi),
-               neg_theta = adm$neg_theta,
-               npd_psi   = adm$npd_psi,
-               warnings  = ww$warnings,
+               neg_theta = fitted$neg_theta,
+               npd_psi   = fitted$npd_psi,
+               warnings  = mw$warnings,
                method    = m,
                stringsAsFactors = FALSE)
   })
   rows <- do.call(rbind, rows_all)
 
-  rows$cell       <- sprintf("c%04d", i)
-  rows$n          <- cell$n
-  rows$a3         <- cell$a3
-  rows$rel        <- cell$rel
-  rows$distr_exo  <- cell$distr_exo
-  rows$misspec    <- cell$misspec
+  rows$condition  <- sprintf("c%04d", i)
+  rows$n          <- condition$n
+  rows$a3         <- condition$a3
+  rows$rel        <- condition$rel
+  rows$distr_exo  <- condition$distr_exo
+  rows$misspec    <- condition$misspec
   rows$rep        <- r
   rows$true_value <- truth[rows$parameter]
   rows$rng_stream <- rng_stream
-  rows[, c("cell","n","a3","rel","distr_exo","misspec","rep","method","parameter",
+  rows[, c("condition","n","a3","rel","distr_exo","misspec","rep","method","parameter",
            "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi",
            "warnings","rng_stream")]
 }
 
-# parallel run over cells
-run_cell <- function(i) {
-  cell_file <- file.path(results_dir, sprintf("cell_mc_%04d.rds", i))
-  if (file.exists(cell_file)) return(invisible(NULL))
+# parallel run over conditions
+run_condition <- function(i) {
+  condition_file <- file.path(results_dir, sprintf("condition_mc_%04d.rds", i))
+  if (file.exists(condition_file)) return(invisible(NULL))
   
   t0        <- Sys.time()
-  rows_list <- lapply(seq_len(r_per_cell),
-                      function(r) try(work_for_cell(i, r), silent = TRUE))
+  rows_list <- lapply(seq_len(r_per_condition),
+                      function(r) try(work_for_condition(i, r), silent = TRUE))
   ok        <- vapply(rows_list, is.data.frame, logical(1))
-  cell_raw  <- do.call(rbind, rows_list[ok])
-  # guard!: don't write a NULL/empty file (would lock the cell out of future
+  condition_raw  <- do.call(rbind, rows_list[ok])
+  # guard!: don't write a NULL/empty file (would lock the condition out of future
   # resume-skip retries even though it has no usable data)
-  if (!is.null(cell_raw) && nrow(cell_raw) > 0)
-    saveRDS(cell_raw, cell_file)
+  if (!is.null(condition_raw) && nrow(condition_raw) > 0)
+    saveRDS(condition_raw, condition_file)
   
   dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  cat(sprintf("c%04d  %.1fs  %d/%d\n", i, dt, sum(ok), r_per_cell),
+  cat(sprintf("c%04d  %.1fs  %d/%d\n", i, dt, sum(ok), r_per_condition),
       file = file.path(results_dir, "progress.log"), append = TRUE)
   invisible(NULL)
 }
 
 t_start <- Sys.time()
-parallel::mclapply(seq_len(nrow(grid)), run_cell,
+parallel::mclapply(seq_len(nrow(design)), run_condition,
                    mc.cores = n_cores, mc.preschedule = FALSE,
                    mc.set.seed = TRUE)
 message(sprintf("done in %.1f min",
                 as.numeric(difftime(Sys.time(), t_start, units = "mins"))))
 
-# aggregate raw cell files into raw_mc.rds
+# aggregate raw condition files into raw_mc.rds
 raw <- do.call(rbind, lapply(
-  list.files(results_dir, "^cell_mc_\\d+\\.rds$", full.names = TRUE),
+  list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE),
   readRDS))
 saveRDS(raw, file.path(results_dir, "raw_mc.rds"))
