@@ -72,7 +72,7 @@ misspec_specs <- list(
   crossload_small  = list(c2 = 0,    c3 = 0,    cl = 0.25, rcov = 0),
   crossload_medium = list(c2 = 0,    c3 = 0,    cl = 0.50, rcov = 0),
   rescov_small     = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0.25),
-  rescov_medium.   = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0.50)
+  rescov_medium    = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0.50)
 )
 
 # design grid (full factorial)
@@ -313,10 +313,10 @@ true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v), pars)
 work_for_condition <- function(i, r) {
   condition  <- design[i, ]
   truth <- true_value_for(condition$a3)
-  na6 <- setNames(rep(NA_real_, length(pars)), pars)
 
   # helper: run expr capturing BOTH errors and warnings
   # returns list(value, error, warnings) — error = NA on success
+  # tidyverse has functions for this, but i personally want to avoid extra large packages
   try_with_warnings <- function(expr) {
     warns <- character(0); err <- NA_character_
     val <- tryCatch(
