@@ -11,6 +11,9 @@
 # althought the calibration was done empirically under the non normal copula with marginal gaussians
 # in this paper, we should then calibrate with everything normal (maginal and copula)
 
+# note to myself: probably keep model fit values also. that implies retaining other values in the final output
+# note to myself: also keep track of the r2 and reliability under each dataset generated
+
 library(modsem); library(lavaan)
 library(covsim); library(rvinecopulib)
 
@@ -262,7 +265,7 @@ safe_admis <- function(expr) {
   res
 }
 
-# estimation per method.
+# estimation per method
 # any error bubbles up to try_with_warnings in work_for_condition, where the
 # message is captured into the `warnings` column and an NA row is produced.
 fit_lsam <- function(data) {
@@ -300,18 +303,14 @@ fit_dblcent <- function(data) {
   list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
 }
 
-fitters <- list(lsam = fit_lsam,
+methods <- list(lsam = fit_lsam,
                 lms = fit_lms,
                 dblcent = fit_dblcent)
-methods <- names(fitters)
 
 # wrapper per replication
 true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v), pars)
 
 work_for_condition <- function(i, r) {
-  # capture l'ecuyer substream before any draw, for per rep reproduciblity
-  rng_stream <- paste(get(".Random.seed", envir = .GlobalEnv), collapse = ":")
-
   condition  <- design[i, ]
   truth <- true_value_for(condition$a3)
   na6   <- setNames(rep(NA_real_, length(pars)), pars)
@@ -332,20 +331,28 @@ work_for_condition <- function(i, r) {
                     else NA_character_)
   }
 
-  # data generation (matches the try + inherits pattern from Simulation(1).R).
-  # gen_data should never fail in practice, but on the off chance it does we
-  # drop the rep silently via return(NULL).
-  dat <- try(gen_data(condition$n, condition$a3, condition$rel, 
-                      condition$distr_exo, condition$misspec),
-             silent = TRUE)
-  if (inherits(dat, "try-error")) return(NULL)
+  # gen_data with up to 5 retries. vita can fail on rare RNG states.
+  dat <- NULL
+  for (attempt in seq_len(5)) {
+    attempt_stream <- paste(get(".Random.seed", envir = .GlobalEnv), collapse = ":")
+    dat <- tryCatch(
+      gen_data(condition$n, condition$a3, condition$rel,
+               condition$distr_exo, condition$misspec),
+      error = function(e) NULL)
+    if (!is.null(dat)) { rng_stream <- attempt_stream; break }
+  }
+  if (is.null(dat)) {
+    cat(sprintf("c%04d  r%04d  data failure\n", i, r),
+        file = file.path(results_dir, "progress.log"), append = TRUE)
+    return(NULL)
+  }
 
   # per-method fit + mc_inference, each wrapped independently so one
   # method's error does NOT block the others. Method failures produce
   # NA rows for that method only, with the error captured in `warnings`.
-  rows_all <- lapply(methods, function(m) {
+  rows_all <- lapply(names(methods), function(m) {
     mw <- try_with_warnings({
-      fitted <- fitters[[m]](dat)
+      fitted <- methods[[m]](dat)
       list(fitted = fitted, res = mc_inference(fitted$co, fitted$V))
     })
 
