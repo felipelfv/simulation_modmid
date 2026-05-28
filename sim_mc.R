@@ -12,14 +12,13 @@
 # in this paper, we should then calibrate with everything normal (maginal and copula)
 
 # note to myself: probably keep model fit values also. that implies retaining other values in the final output
-# note to myself: also keep track of the r2 and reliability under each dataset generated
 
 library(modsem); library(lavaan)
 library(covsim); library(rvinecopulib)
 
 master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
-r_per_condition  <- 2L # (!)
+r_per_condition  <- 10L # (!)
 m_mc <- 20000L
 n_cores <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc <- "."
@@ -151,17 +150,24 @@ gen_exo <- function(n, distr_exo) {
 }
 
 gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
-  # easiest way thus far to get misspecification from the list (to be decided); 
-  # ask claude:
-  msp <- misspec_specs[[misspec_key]] 
+  msp <- misspec_specs[[misspec_key]]
+  target_rel <- rel_levels[[rel_key]]
+
+  # rescale standardized misspec inputs to raw coefficients (normal-X,W ref).
+  # c2, c3, cl in misspec_specs are TARGET STANDARDIZED values (Brandt-style).
+  sd_y_pop  <- sqrt(var_y_at(a3_true))
+  sd_xw_pop <- sqrt(1 + rho^2)
+  sd_m3_pop <- loadings[3] * sqrt(var_m_at(a3_true) / target_rel)
+  raw_c2 <- msp$c2 * sd_y_pop
+  raw_c3 <- msp$c3 * sd_y_pop / sd_xw_pop
+  raw_cl <- msp$cl * sd_m3_pop
+
   exo <- gen_exo(n, distr_exo); x <- exo$x; w <- exo$w
   m <- a1*x + a2*w + a3_true*x*w + rnorm(n, sd = sqrt(res_m_var))
-  # y eq adds omitted c2*W and c3*X*W direct paths when misspec is non-zero (!)
-  y <- b*m + cp*x + msp$c2*w + msp$c3*(x*w) + rnorm(n, sd = sqrt(res_y_var))
-  
-  target_rel <- rel_levels[[rel_key]]
+  y <- b*m + cp*x + raw_c2*w + raw_c3*(x*w) + rnorm(n, sd = sqrt(res_y_var))
+
   # not be confused: both are the same and we use the population var = 1 (!):
-  e_sd_xw <- err_sd_for(target_rel, var_eta = 1) 
+  e_sd_xw <- err_sd_for(target_rel, var_eta = 1)
   e_sd_m <- err_sd_for(target_rel, var_eta = var_m_at(a3_true))
   e_sd_y <- err_sd_for(target_rel, var_eta = var_y_at(a3_true))
   make_indicators <- function(eta, prefix, e_sd) {
@@ -175,8 +181,8 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
   M_ind <- make_indicators(m, "m", e_sd_m)
   Y_ind <- make_indicators(y, "y", e_sd_y)
   
-  # omitted cross-loading: m3 also loads on X with lambda = msp$cl
-  if (msp$cl != 0) M_ind$m3 <- M_ind$m3 + msp$cl * x
+  # omitted cross-loading: m3 also loads on X (standardized magnitude = msp$cl)
+  if (raw_cl != 0) M_ind$m3 <- M_ind$m3 + raw_cl * x
   
   # omitted residual covariance: replace independent residuals for m3 and y3
   # with a correlated pair (corr = msp$rcov, marginal SDs preserved)
@@ -204,7 +210,7 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
   )
   attr(out, "R2") <- c(
     M = var(a1*x + a2*w + a3_true*x*w) / var(m),
-    Y = var(b*m + cp*x + msp$c2*w + msp$c3*(x*w)) / var(y)
+    Y = var(b*m + cp*x + raw_c2*w + raw_c3*(x*w)) / var(y)
   )
   out
 }
