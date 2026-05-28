@@ -19,7 +19,7 @@ library(covsim); library(rvinecopulib)
 
 master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
-r_per_condition  <- 100L # (!)
+r_per_condition  <- 2L # (!)
 m_mc <- 20000L
 n_cores <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc <- "."
@@ -164,16 +164,16 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
   e_sd_xw <- err_sd_for(target_rel, var_eta = 1) 
   e_sd_m <- err_sd_for(target_rel, var_eta = var_m_at(a3_true))
   e_sd_y <- err_sd_for(target_rel, var_eta = var_y_at(a3_true))
-  mk <- function(eta, prefix, e_sd) {
+  make_indicators <- function(eta, prefix, e_sd) {
     z <- sapply(seq_along(loadings),
                 function(j) loadings[j]*eta + rnorm(n, sd = e_sd[j]))
     colnames(z) <- paste0(prefix, seq_along(loadings))
     as.data.frame(z)
   }
-  X_ind <- mk(x, "x", e_sd_xw)
-  W_ind <- mk(w, "w", e_sd_xw)
-  M_ind <- mk(m, "m", e_sd_m)
-  Y_ind <- mk(y, "y", e_sd_y)
+  X_ind <- make_indicators(x, "x", e_sd_xw)
+  W_ind <- make_indicators(w, "w", e_sd_xw)
+  M_ind <- make_indicators(m, "m", e_sd_m)
+  Y_ind <- make_indicators(y, "y", e_sd_y)
   
   # omitted cross-loading: m3 also loads on X with lambda = msp$cl
   if (msp$cl != 0) M_ind$m3 <- M_ind$m3 + msp$cl * x
@@ -193,7 +193,20 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
     Y_ind$y3 <- loadings[3]*y + pair[, 2]
   }
   
-  cbind(X_ind, W_ind, M_ind, Y_ind)
+  out <- cbind(X_ind, W_ind, M_ind, Y_ind)
+  # per-latent reliability: average of the 4 per-indicator reliabilities
+  # rel_j = lambda_j^2 * var(eta) / var(indicator_j)
+  attr(out, "rel") <- c(
+    X = mean(loadings^2 * var(x) / sapply(X_ind, var)),
+    W = mean(loadings^2 * var(w) / sapply(W_ind, var)),
+    M = mean(loadings^2 * var(m) / sapply(M_ind, var)),
+    Y = mean(loadings^2 * var(y) / sapply(Y_ind, var))
+  )
+  attr(out, "R2") <- c(
+    M = var(a1*x + a2*w + a3_true*x*w) / var(m),
+    Y = var(b*m + cp*x + msp$c2*w + msp$c3*(x*w)) / var(y)
+  )
+  out
 }
 
 # mc + wald inference from coef + vcov
@@ -203,17 +216,17 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
 # this was validated with the lavaan implementation (commit d3f423c)
 # i use my own implementation for consistency throughout all methods though
 mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
-  na6 <- setNames(rep(NA_real_, length(pars)), pars)
+  na_pars <- setNames(rep(NA_real_, length(pars)), pars)
   if (!is.matrix(V) ||
       !all(c("a1","a2","a3","b","cp") %in% rownames(V)) ||
       !all(c("a1","a2","a3","b","cp") %in% names(co)))
-    return(list(est = na6, se = na6, lo = na6, hi = na6))
+    return(list(est = na_pars, se = na_pars, lo = na_pars, hi = na_pars))
   
-  pn <- c("a1","a2","a3","b","cp")
+  param_names <- c("a1","a2","a3","b","cp")
   z <- qnorm(1 - alpha/2)
-  se_struct <- sqrt(diag(V)[pn])
-  lo_struct <- co[pn] - z * se_struct
-  hi_struct <- co[pn] + z * se_struct
+  se_struct <- sqrt(diag(V)[param_names])
+  lo_struct <- co[param_names] - z * se_struct
+  hi_struct <- co[param_names] + z * se_struct
   
   V_ab <- V[c("a3","b"), c("a3","b")]
   sims <- lavaan:::lav_mvrnorm(n = M, mu = c(co["a3"], co["b"]),
@@ -223,7 +236,7 @@ mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
   imm_lo <- as.numeric(quantile(imm_sims, alpha/2))
   imm_hi <- as.numeric(quantile(imm_sims, 1 - alpha/2))
   
-  est <- c(co[pn], imm = unname(co["a3"] * co["b"]))
+  est <- c(co[param_names], imm = unname(co["a3"] * co["b"]))
   se <- c(se_struct, imm = imm_se)
   lo <- c(lo_struct, imm = imm_lo)
   hi <- c(hi_struct, imm = imm_hi)
@@ -351,23 +364,23 @@ work_for_condition <- function(i, r) {
   # method's error does NOT block the others. Method failures produce
   # NA rows for that method only, with the error captured in 'warnings'
   rows_all <- lapply(names(methods), function(m) {
-    mw <- try_with_warnings({
+    warn_stored <- try_with_warnings({
       fitted <- methods[[m]](dat)
       list(fitted = fitted, res = mc_inference(fitted$co, fitted$V))
     })
 
-    if (!is.na(mw$error)) {
+    if (!is.na(warn_stored$error)) {
       # method level failure — NA row + the error message stored in warnings
       return(data.frame(parameter = pars,
                         est = NA_real_, se = NA_real_,
                         ci_lo = NA_real_, ci_hi = NA_real_,
                         neg_theta = NA, npd_psi = NA,
-                        warnings = mw$warnings,
+                        warnings = warn_stored$warnings,
                         method = m, stringsAsFactors = FALSE))
     }
 
-    fitted <- mw$value$fitted
-    res <- mw$value$res
+    fitted <- warn_stored$value$fitted
+    res <- warn_stored$value$res
     data.frame(parameter = pars,
                est = as.numeric(res$est),
                se = unname(res$se),
@@ -375,11 +388,12 @@ work_for_condition <- function(i, r) {
                ci_hi = unname(res$hi),
                neg_theta = fitted$neg_theta,
                npd_psi = fitted$npd_psi,
-               warnings = mw$warnings,
+               warnings = warn_stored$warnings,
                method = m,
                stringsAsFactors = FALSE)
   })
   rows <- do.call(rbind, rows_all)
+
 
   rows$condition <- sprintf("c%04d", i)
   rows$n <- condition$n
@@ -390,9 +404,23 @@ work_for_condition <- function(i, r) {
   rows$rep <- r
   rows$true_value <- truth[rows$parameter]
   rows$rng_stream <- rng_stream
-  rows[, c("condition","n","a3","rel","distr_exo","misspec","rep","method","parameter",
-           "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi",
-           "warnings","rng_stream")]
+  rows <- rows[, c("condition","n","a3","rel","distr_exo","misspec","rep","method","parameter",
+                   "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi",
+                   "warnings","rng_stream")]
+
+  # dataset-level metrics: one row per (condition, rep)
+  # metadata about the data
+  rel_obs <- attr(dat, "rel")
+  r2_obs  <- attr(dat, "R2")
+  metrics <- data.frame(
+    condition = sprintf("c%04d", i), rep = r,
+    rel_X = rel_obs["X"], rel_W = rel_obs["W"],
+    rel_M = rel_obs["M"], rel_Y = rel_obs["Y"],
+    R2_M = r2_obs["M"], R2_Y = r2_obs["Y"],
+    stringsAsFactors = FALSE, row.names = NULL
+  )
+
+  list(rows = rows, metrics = metrics)
 }
 
 # parallel run over conditions
@@ -401,17 +429,17 @@ run_condition <- function(i) {
   if (file.exists(condition_file)) return(invisible(NULL))
   
   t0 <- Sys.time()
-  rows_list <- lapply(seq_len(r_per_condition),
-                      function(r) try(work_for_condition(i, r), silent = TRUE))
-  ok <- vapply(rows_list, is.data.frame, logical(1))
-  condition_raw  <- do.call(rbind, rows_list[ok])
-  # guard!: don't write a NULL/empty file (would lock the condition out of future
-  # resume skip retries even though it has no usable data)
-  if (!is.null(condition_raw) && nrow(condition_raw) > 0)
-    saveRDS(condition_raw, condition_file)
-  
+  results_list <- lapply(seq_len(r_per_condition),
+                         function(r) try(work_for_condition(i, r), silent = TRUE))
+  rep_succeeded     <- vapply(results_list, function(x) is.list(x) && is.data.frame(x$rows), logical(1))
+  condition_rows    <- do.call(rbind, lapply(results_list[rep_succeeded], `[[`, "rows"))
+  condition_metrics <- do.call(rbind, lapply(results_list[rep_succeeded], `[[`, "metrics"))
+  # guard!: don't write empty (would lock the condition out of resume retries)
+  if (!is.null(condition_rows) && nrow(condition_rows) > 0)
+    saveRDS(list(rows = condition_rows, metrics = condition_metrics), condition_file)
+
   dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
-  cat(sprintf("c%04d  %.1fs  %d/%d\n", i, dt, sum(ok), r_per_condition),
+  cat(sprintf("c%04d  %.1fs  %d/%d\n", i, dt, sum(rep_succeeded), r_per_condition),
       file = file.path(results_dir, "progress.log"), append = TRUE)
   invisible(NULL)
 }
@@ -431,8 +459,11 @@ parallel::mclapply(seq_len(nrow(design)), run_condition,
 message(sprintf("done in %.1f min",
                 as.numeric(difftime(Sys.time(), t_start, units = "mins"))))
 
-# aggregate raw condition files into raw_mc.rds
-raw <- do.call(rbind, lapply(
-  list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE),
-  readRDS))
-saveRDS(raw, file.path(results_dir, "raw_mc.rds"))
+# aggregate per-condition files into raw_mc.rds (estimates) and
+# metrics_mc.rds (per-rep dataset metrics). uncomment to run.
+# all_files <- list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE)
+# all_data  <- lapply(all_files, readRDS)
+# raw     <- do.call(rbind, lapply(all_data, `[[`, "rows"))
+# metrics <- do.call(rbind, lapply(all_data, `[[`, "metrics"))
+# saveRDS(raw,     file.path(results_dir, "raw_mc.rds"))
+# saveRDS(metrics, file.path(results_dir, "metrics_mc.rds"))
