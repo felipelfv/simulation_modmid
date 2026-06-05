@@ -7,19 +7,19 @@
 #
 # 4 n x 3 a3 x 2 rel x 5 distr_exo x 9 misspec = 1080 conditions
 
-# note to myself: write in the first article taht all have non normal copulas
-# althought the calibration was done empirically under the non normal copula with marginal gaussians
-# in this paper, we should then calibrate with everything normal (maginal and copula)
-
-# note to myself: probably keep model fit values also. that implies retaining other values in the final output
+# note to myself: probably keep model fit values also. that implies retaining 
+# other values in the final output
+# note to myself: if checking cfa indices for the first step as in brandt et al. 2020, 
+# then we should have 1 block for all latent variables
+# note to myself: better organize this in different files or at least sections?
 
 library(modsem); library(lavaan)
 library(covsim); library(rvinecopulib)
 
 master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
-r_per_condition  <- 10L # (!)
-m_mc <- 20000L
+r_per_condition  <- 10L # (!) 
+m_mc <- 20000L # justification for the indirect effect mc (?)
 n_cores <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc <- "."
 results_dir <- file.path(direc, "results")
@@ -33,22 +33,24 @@ rel_levels <- list(low = 0.5, high = 0.7)
 
 res_m_var <- 0.8531
 res_y_var <- 0.9350
-var_m_emp <- c("0" = 1.1746, "0.2" = 1.2188, "0.4" = 1.3498)
-var_y_emp <- c("0" = 1.3249, "0.2" = 1.3350, "0.4" = 1.3682)
-var_m_at <- function(a3v) unname(var_m_emp[as.character(a3v)])
-var_y_at <- function(a3v) unname(var_y_emp[as.character(a3v)])
+var_m_at <- function(a3v) a1^2 + a2^2 + 2*a1*a2*rho + a3v^2*(1 + rho^2) + res_m_var
+var_y_at <- function(a3v) b^2*var_m_at(a3v) + cp^2 + 2*b*cp*(a1 + a2*rho) + res_y_var
 
 err_sd_for <- function(target_rel, var_eta = 1) {
   loadings * sqrt(var_eta * (1 - target_rel) / target_rel)
 }
 
-pars <- c("a1", "a2", "a3", "b", "cp", "imm")
+# 12 free loadings (first indicator of each factor is fixed to 1 for identification);
+# true free-loading values are 0.8 / 0.7 / 0.6 per factor (loadings[2:4]).
+load_names <- c("lx2","lx3","lx4","lw2","lw3","lw4","lm2","lm3","lm4","ly2","ly3","ly4")
+load_true  <- setNames(rep(loadings[2:4], 4), load_names)
+pars <- c("a1", "a2", "a3", "b", "cp", "imm", load_names)
 
 model_lv <- "
-  X =~ x1 + x2 + x3 + x4
-  W =~ w1 + w2 + w3 + w4
-  M =~ m1 + m2 + m3 + m4
-  Y =~ y1 + y2 + y3 + y4
+  X =~ x1 + lx2*x2 + lx3*x3 + lx4*x4
+  W =~ w1 + lw2*w2 + lw3*w3 + lw4*w4
+  M =~ m1 + lm2*m2 + lm3*m3 + lm4*m4
+  Y =~ y1 + ly2*y2 + ly3*y3 + ly4*y4
   M ~ a1*X + a2*W + a3*X:W
   Y ~ b*M  + cp*X
   imm := a3 * b
@@ -146,21 +148,25 @@ gen_exo <- function(n, distr_exo) {
     if (distr_exo == "chisq_diff") w <- -w
     return(list(x = x, w = w))
   }
-  stop("unknown distr_exo: ", distr_exo)
+  stop("not specified: ", distr_exo)
 }
+
+# calibration (from calibrate_final.R): misspec_coefs = beta coefs per cell (pure lookup);
+# vy_ratios = var(Y) inflation ratios to hold Y reliability at its `none` value under c2/c3.
+cal           <- readRDS(file.path(results_dir, "calibration.rds"))
+misspec_coefs <- cal$misspec_coefs
+vy_ratios     <- cal$vy_ratios
 
 gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
   msp <- misspec_specs[[misspec_key]]
   target_rel <- rel_levels[[rel_key]]
 
-  # rescale standardized misspec inputs to raw coefficients (normal-X,W ref).
-  # c2, c3, cl in misspec_specs are TARGET STANDARDIZED values (Brandt-style).
-  sd_y_pop  <- sqrt(var_y_at(a3_true))
-  sd_xw_pop <- sqrt(1 + rho^2)
-  sd_m3_pop <- loadings[3] * sqrt(var_m_at(a3_true) / target_rel)
-  raw_c2 <- msp$c2 * sd_y_pop
-  raw_c3 <- msp$c3 * sd_y_pop / sd_xw_pop
-  raw_cl <- msp$cl * sd_m3_pop
+  # raw coefficients looked up per cell (standardized magnitude = msp values).
+  # c2/c3 are rel-independent; only cl is keyed by reliability level.
+  cell   <- misspec_coefs[[distr_exo]][[as.character(a3_true)]]
+  raw_c2 <- if (msp$c2 == 0) 0 else cell$c2[[as.character(msp$c2)]]
+  raw_c3 <- if (msp$c3 == 0) 0 else cell$c3[[as.character(msp$c3)]]
+  raw_cl <- if (msp$cl == 0) 0 else cell$cl[[rel_key]][[as.character(msp$cl)]]
 
   exo <- gen_exo(n, distr_exo); x <- exo$x; w <- exo$w
   m <- a1*x + a2*w + a3_true*x*w + rnorm(n, sd = sqrt(res_m_var))
@@ -169,7 +175,12 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
   # not be confused: both are the same and we use the population var = 1 (!):
   e_sd_xw <- err_sd_for(target_rel, var_eta = 1)
   e_sd_m <- err_sd_for(target_rel, var_eta = var_m_at(a3_true))
-  e_sd_y <- err_sd_for(target_rel, var_eta = var_y_at(a3_true))
+  # c2/c3 inflate var(Y); scale the Y indicator error by the calibrated variance
+  # ratio so Y reliability stays at its `none` level. none/cl/rcov -> ratio 1.
+  kappa <- if (msp$c2 != 0) vy_ratios[[distr_exo]][[as.character(a3_true)]]$c2[[as.character(msp$c2)]]
+           else if (msp$c3 != 0) vy_ratios[[distr_exo]][[as.character(a3_true)]]$c3[[as.character(msp$c3)]]
+           else 1
+  e_sd_y <- err_sd_for(target_rel, var_eta = var_y_at(a3_true) * kappa)
   make_indicators <- function(eta, prefix, e_sd) {
     z <- sapply(seq_along(loadings),
                 function(j) loadings[j]*eta + rnorm(n, sd = e_sd[j]))
@@ -228,11 +239,11 @@ mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
       !all(c("a1","a2","a3","b","cp") %in% names(co)))
     return(list(est = na_pars, se = na_pars, lo = na_pars, hi = na_pars))
   
-  param_names <- c("a1","a2","a3","b","cp")
+  param_names <- c("a1","a2","a3","b","cp", load_names)   # structural + 12 free loadings
   z <- qnorm(1 - alpha/2)
-  se_struct <- sqrt(diag(V)[param_names])
-  lo_struct <- co[param_names] - z * se_struct
-  hi_struct <- co[param_names] + z * se_struct
+  se_wald <- sqrt(diag(V)[param_names])
+  lo_wald <- co[param_names] - z * se_wald
+  hi_wald <- co[param_names] + z * se_wald
   
   V_ab <- V[c("a3","b"), c("a3","b")]
   sims <- lavaan:::lav_mvrnorm(n = M, mu = c(co["a3"], co["b"]),
@@ -243,9 +254,9 @@ mc_inference <- function(co, V, M = m_mc, alpha = 0.05) {
   imm_hi <- as.numeric(quantile(imm_sims, 1 - alpha/2))
   
   est <- c(co[param_names], imm = unname(co["a3"] * co["b"]))
-  se <- c(se_struct, imm = imm_se)
-  lo <- c(lo_struct, imm = imm_lo)
-  hi <- c(hi_struct, imm = imm_hi)
+  se <- c(se_wald, imm = imm_se)
+  lo <- c(lo_wald, imm = imm_lo)
+  hi <- c(hi_wald, imm = imm_hi)
   
   list(est = est[pars], se = se[pars], lo = lo[pars], hi = hi[pars])
 }
@@ -327,7 +338,7 @@ methods <- list(lsam = fit_lsam,
                 dblcent = fit_dblcent)
 
 # wrapper per replication
-true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v), pars)
+true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v, load_true), pars)
 
 work_for_condition <- function(i, r) {
   condition  <- design[i, ]
@@ -409,10 +420,9 @@ work_for_condition <- function(i, r) {
   rows$misspec <- condition$misspec
   rows$rep <- r
   rows$true_value <- truth[rows$parameter]
-  rows$rng_stream <- rng_stream
   rows <- rows[, c("condition","n","a3","rel","distr_exo","misspec","rep","method","parameter",
                    "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi",
-                   "warnings","rng_stream")]
+                   "warnings")]
 
   # dataset-level metrics: one row per (condition, rep)
   # metadata about the data
@@ -420,6 +430,7 @@ work_for_condition <- function(i, r) {
   r2_obs  <- attr(dat, "R2")
   metrics <- data.frame(
     condition = sprintf("c%04d", i), rep = r,
+    rng_stream = rng_stream,
     rel_X = rel_obs["X"], rel_W = rel_obs["W"],
     rel_M = rel_obs["M"], rel_Y = rel_obs["Y"],
     R2_M = r2_obs["M"], R2_Y = r2_obs["Y"],
