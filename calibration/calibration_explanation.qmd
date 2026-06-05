@@ -1,15 +1,7 @@
 ---
 title: "Calibration of Structural Misspecifications to Standardized Values"
 author: "Felipe Fontana Vieira and Yves Rosseel"
-date: today
 format:
-  html:
-    toc: true
-    toc-depth: 3
-    number-sections: true
-    code-fold: false
-    theme: cosmo
-    df-print: kable
   pdf:
     toc: true
     number-sections: true
