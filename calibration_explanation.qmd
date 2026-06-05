@@ -1,0 +1,552 @@
+---
+title: "Calibration of Structural Misspecifications to Standardized Values"
+author: "Felipe Fontana Vieira and Yves Rosseel"
+date: today
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    code-fold: false
+    theme: cosmo
+    df-print: kable
+  pdf:
+    toc: true
+    number-sections: true
+    geometry: margin=1in
+execute:
+  eval: false
+  echo: true
+  warning: false
+---
+
+# Overview
+
+This document explains, in the order things actually happen, what the 
+calibration and the data generation do. It is split into the population model,
+the calibration step (`calibrate_final.R`, run once), and the data-generation 
+step (`gen_data` inside `sim_mc_final.R`, run every replication), because the 
+calibration exists only to supply two tables with values that the data 
+generation then uses and needs.
+
+# The Population Model
+
+Everything is based on a single moderated-mediation model at the latent level. 
+Two exogenous variables $X$ and $W$ are standardized to mean zero and unit 
+variance with correlation $\rho = 0.3$. The mediator and outcome are generated 
+structurally as
+
+$$
+M = a_1 X + a_2 W + a_3 (X W) + \varepsilon_M, \qquad \varepsilon_M \sim (0,\ \psi_M),
+$$
+$$
+Y = b M + c' X + \varepsilon_Y, \qquad \varepsilon_Y \sim (0,\ \psi_Y),
+$$
+
+with $a_1 = 0.4$, $a_2 = 0.3$, $a_3 \in \{0, 0.2, 0.4\}$, $b = 0.5$, $c' = 0.15$,
+and fixed structural residual variances $\psi_M = 0.8531$, $\psi_Y = 0.9350$. The
+disturbances $\varepsilon_M, \varepsilon_Y$ are always Gaussian and independent 
+of each other and of $(X, W)$. Non-normality enters $M$ and $Y$ only through the
+exogenous variables. The quantity of substantive interest is $a_3$ (i.e., 
+moderation estimate) and the index of moderated mediation $\text{imm} = a_3 b$.
+
+The two structural residual variances are not free parameters: they are fixed at
+the values that make each structural equation explain a target fraction of its
+outcome's variance, $R^2 = 0.30$, at the central interaction level $a_3 = 0.2$ 
+under the normal baseline. Split $M$ into its systematic part and its 
+disturbance,
+
+$$
+M = \underbrace{a_1 X + a_2 W + a_3 X W}_{S_M} + \varepsilon_M,
+\qquad
+\operatorname{Var}(M) = \operatorname{Var}(S_M) + \psi_M,
+$$
+
+so that $R^2_M = \operatorname{Var}(S_M) / \operatorname{Var}(M)$ is the share 
+of $M$'s variance carried by the signal $S_M$. The signal variance is fixed by 
+the structural coefficients alone. Being the variance of a sum, it needs only 
+second moments, and not the distribution of the product $X W$, which is 
+non-normal even when $X, W$ are:
+
+$$
+\begin{aligned}
+\operatorname{Var}(S_M) ={}& a_1^2 \operatorname{Var}(X) + a_2^2 \operatorname{Var}(W) + a_3^2 \operatorname{Var}(X W) \\
+&+ 2 a_1 a_2 \operatorname{Cov}(X, W) + 2 a_1 a_3 \operatorname{Cov}(X, X W) + 2 a_2 a_3 \operatorname{Cov}(W, X W).
+\end{aligned}
+$$
+
+Under the normal baseline $\operatorname{Var}(X) = \operatorname{Var}(W) = 1$,
+$\operatorname{Cov}(X, W) = \rho$, $\operatorname{Var}(X W) = 1 + \rho^2 = 1.09$, 
+and the two product-covariances $\operatorname{Cov}(X, X W) = \mathbb{E}[X^2 W]$,
+$\operatorname{Cov}(W, X W) = \mathbb{E}[X W^2]$ vanish (odd moments of a 
+zero-mean normal), leaving
+
+$$
+\operatorname{Var}(S_M) = a_1^2 + a_2^2 + 2 a_1 a_2 \rho + a_3^2 (1 + \rho^2)
+= 0.322 + 0.0436 = 0.3656 .
+$$
+
+With the signal fixed at $0.3656$, the only parameter left to set is the 
+disturbance $\psi_M$. For the signal to be exactly $30\%$ of the total, the 
+total variance must be $\operatorname{Var}(M) = 0.3656 / 0.30 = 1.2187$, so the 
+disturbance is the remainder,
+
+$$
+\psi_M = \operatorname{Var}(M) - \operatorname{Var}(S_M) = 1.2187 - 0.3656 = 0.8531 .
+$$
+
+The same construction applies to $Y$. Its signal $b M + c' X$ uses the full
+$\operatorname{Var}(M) = 1.2187$ (with $\operatorname{Cov}(M, X) = a_1 + a_2 \rho = 0.49$
+under the normal baseline), so the signal variance at $a_3 = 0.2$ is
+
+$$
+\operatorname{Var}(b M + c' X) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c' \operatorname{Cov}(M, X) = 0.4007 .
+$$
+
+Requiring this to be $30\%$ of the total gives
+$\operatorname{Var}(Y) = 0.4007 / 0.30 = 1.3357$, so the disturbance is the 
+remainder,
+
+$$
+\psi_Y = \operatorname{Var}(Y) - \operatorname{Var}(b M + c' X) = 1.3357 - 0.4007 = 0.9350 .
+$$
+
+Fixing the disturbances at these values, rather than re-solving them per 
+condition, anchors the structural signal-to-noise ratio at a recognizable 
+medium level (i.e., 30% explained variance) and then holds it constant, 
+so that $R^2$ moves only through the design factors. That is, under 
+normality $R^2_M$ runs $0.274 \to 0.300 \to 0.368$ as $a_3$ goes 
+$0 \to 0.2 \to 0.4$, and drifts mildly further across distributions
+through $\operatorname{Var}(X W)$. This is the same "set it at the normal, 
+central reference, then let it drift and record it" logic applied throughout 
+the design to the latent variances and the reliabilities.
+
+Each of the four latent variables $\eta \in \{X, W, M, Y\}$ is measured by four
+indicators with a common loading vector $\lambda = (1,\ 0.8,\ 0.7,\ 0.6)$,
+
+$$
+z_{\eta j} = \lambda_j\,\eta + \delta_{\eta j}, \qquad \delta_{\eta j} \sim (0,\ \theta_{\eta j}).
+$$
+
+The reliability of each indicator is its share of signal variance,
+$\omega_j = \lambda_j^2 \operatorname{Var}(\eta) / \operatorname{Var}(z_{\eta j})$.
+To force a target reliability $\omega \in \{0.5, 0.7\}$ we choose the residual
+variance $\theta_{\eta j} = \operatorname{Var}(\delta_{\eta j})$ accordingly. 
+Solving $\omega = \lambda_j^2 V / (\lambda_j^2 V + \theta_{\eta j})$ for 
+$\theta_{\eta j}$ gives the residual variance, and its square root is the 
+residual standard deviation,
+
+$$
+\theta_{\eta j} = \lambda_j^2\, V\, \frac{1-\omega}{\omega},
+\qquad
+\operatorname{sd}(\delta_{\eta j}) = \sqrt{\theta_{\eta j}} = \lambda_j \sqrt{V\,\frac{1-\omega}{\omega}},
+$$
+
+which is exactly the function `err_sd_for(omega, var_eta = V)`. The crucial 
+point is that this requires knowing the latent variance 
+$V = \operatorname{Var}(\eta)$. For $X$ and $W$ that variance is exactly $1$ by 
+construction, so their reliability is hit exactly. For $M$ and $Y$ the variance 
+depends on $a_3$ and on the distribution of the exogenous variables, and this 
+is where the normal-baseline variances `var_m_at(a3)` and `var_y_at(a3)` come 
+in. They are the population variances of $M$ and $Y$ under the normal baseline 
+at each $a_3$ level, computed analytically in closed form from the model 
+parameters rather than estimated by simulation,
+
+$$
+\operatorname{Var}(M) = a_1^2 + a_2^2 + 2 a_1 a_2 \rho + a_3^2(1+\rho^2) + \psi_M ,
+\qquad
+\operatorname{Var}(Y) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c' (a_1 + a_2 \rho) + \psi_Y ,
+$$
+
+which at $a_3 = 0$ gives $\operatorname{Var}(M) = 0.16 + 0.09 + 0.072 + 0.8531 = 1.1751$.
+Because they are exact functions of the parameters, these values carry no sample
+size, cannot disagree with the calibration, and stay correct automatically if a
+parameter changes. They are evaluated under the normal baseline and then held 
+fixed across distributions rather than recomputed per cell, so that the 
+indicator error variance is identical across replications and across 
+distributions. This choice is what makes reliability stable within a cell 
+and lets it drift naturally across distributions.
+
+# The Exogenous Variables
+
+The five `distr_exo` cases all deliver $(X, W)$ with mean zero, unit variance,
+and correlation $\rho$ (i.e., 0.3). So, only the shape changes. The normal 
+branch forces a Gaussian copula with $\mathcal N(0,1)$ margins. The uniform 
+branch uses $\mathrm U(-\sqrt3, \sqrt3)$, whose variance $(2\sqrt3)^2/12 = 1$. 
+The $t_5$ branch exploits that a $t$ with $\nu = 5$ has variance 
+$\nu/(\nu-2) = 5/3$: it samples at the native scale with covariance matrix
+
+$$
+\tfrac{5}{3}\begin{pmatrix} 1 & \rho \\ \rho & 1 \end{pmatrix},
+$$
+
+so the implied correlation is still $\rho$, then divides by $\sqrt{5/3}$ to 
+restore unit variance while preserving the heavy tails. The two chi-square 
+branches use $\chi^2_2$, which has mean $2$ and variance $2 \cdot 2 = 4$, so 
+each draw is centred by subtracting the mean and scaled by $\sqrt{4}$. The 
+difference between `chisq_same` and `chisq_diff` is not the correlation 
+(both end at $\operatorname{Cor}(X,W) = +\rho$) but the skew alignment: 
+`chisq_same` leaves both right-skewed, whereas `chisq_diff` samples with 
+$-\rho$ and then negates $W$, which flips $W$'s skew to the left while 
+restoring the correlation to $+\rho$. So `same` means co-skewed in the same 
+direction and `diff` means oppositely skewed.
+
+Because $\operatorname{Var}(X W)$ is a fourth-moment quantity that depends on the
+joint tails, it is *not* constant across these conditions (roughly $1.09$ under
+normality, larger under $t_5$ and $\chi^2$). This single fact is what drives the
+whole standardization problem below, and also the intentional distributional
+reliability drift.
+
+# Why Misspecifications Must be Calibrated
+
+Four misspecifications are studied, each at a "small" and a "medium" level. 
+Two are structural: `c2` adds an omitted direct path $W \to Y$, and `c3` adds 
+an omitted direct path $X{:}W \to Y$. One is a measurement cross-loading, `cl`, 
+where indicator $m_3$ secretly also loads on $X$. The last, `rcov`, is an 
+omitted residual covariance between $\delta_{m_3}$ and $\delta_{y_3}$. In every 
+condition the *estimated* model is the correctly specified one, so the 
+difference between an estimate and its true value isolates the bias the 
+omission induces. At most one misspecification is active in any condition, 
+so the baseline outcome for the active term is the correctly specified equation.
+
+The labels $0.25$ and $0.50$ are meant as standardized effect sizes, not raw
+coefficients, because a fixed raw coefficient would mean wildly different things
+across cells. To state this precisely, we write $y_0$ for the *baseline outcome* 
+(the correctly-specified equation that the omitted term attaches to, written out 
+before that term is added) and $p$ for the omitted predictor. For `c2` and `c3` 
+that equation is the structural equation for $Y$; for `cl` it is the measurement
+equation for the third mediator indicator. Explicitly,
+
+$$
+\underbrace{y_0 = b M + c' X + \varepsilon_Y}_{\text{baseline for c2, c3}},
+\qquad\qquad
+\underbrace{y_0 = m_3 = \lambda_3 M + \delta_{m_3}}_{\text{baseline for cl}} .
+$$
+
+The omitted predictor added to that baseline is $p = W$ for `c2`, $p = X W$ for
+`c3`, and $p = X$ for `cl`. Adding it with raw coefficient $\beta$ produces the 
+full outcome $y_0 + \beta p$, which spelled out for each misspecification is
+
+$$
+y_0 + \beta p =
+\begin{cases}
+b M + c' X + \varepsilon_Y + \beta W & \text{(c2)}, \\
+b M + c' X + \varepsilon_Y + \beta (X W) & \text{(c3)}, \\
+\lambda_3 M + \delta_{m_3} + \beta X & \text{(cl)}.
+\end{cases}
+$$
+
+We then define the term's magnitude as the fully standardized regression
+coefficient of $p$ on that outcome,
+
+$$
+t = \frac{\beta\,\operatorname{sd}(p)}{\operatorname{sd}(y_0 + \beta p)} .
+$$
+
+Squaring $t$ turns the standard deviations into variances, and substituting
+the variance of the perturbed outcome,
+
+$$
+\operatorname{Var}(y_0 + \beta p) = \operatorname{Var}(y_0) + \beta^2 \operatorname{Var}(p) + 2\beta \operatorname{Cov}(p, y_0),
+$$
+
+into the denominator gives
+
+$$
+t^2 = \frac{\beta^2 \operatorname{Var}(p)}{\operatorname{Var}(y_0) + \beta^2 \operatorname{Var}(p) + 2\beta \operatorname{Cov}(p, y_0)},
+$$
+
+Clearing the denominator and expanding gives
+
+$$
+t^2 \operatorname{Var}(y_0) + t^2 \beta^2 \operatorname{Var}(p) + 2 t^2 \beta \operatorname{Cov}(p, y_0) = \beta^2 \operatorname{Var}(p),
+$$
+
+and collecting terms by powers of $\beta$ rearranges to a quadratic in $\beta$,
+
+$$
+\operatorname{Var}(p)\,(1 - t^2)\,\beta^2 \;-\; 2 t^2 \operatorname{Cov}(p, y_0)\,\beta \;-\; t^2 \operatorname{Var}(y_0) \;=\; 0,
+$$
+
+The leading coefficient $\operatorname{Var}(p)(1-t^2)$ is positive and the 
+constant term $-t^2\operatorname{Var}(y_0)$ is negative, so the quadratic has 
+two solutions of opposite sign: one value of $\beta$ is positive, the other 
+negative. The misspecification is injected by adding $\beta\,p$ to the outcome; 
+for `c2` this is
+
+$$
+Y = bM + c'X + \beta\, W + \varepsilon_Y .
+$$
+
+A misspecification of standardized size $0.25$ or $0.50$ is a positive omitted
+path, so we need $\beta > 0$. Since the two solutions are one positive and one 
+negative, the positive root is precisely the $\beta > 0$ solution, and that is 
+the one we keep. The quadratic
+
+$$
+\operatorname{Var}(p)\,(1 - t^2)\,\beta^2 \;-\; 2 t^2 \operatorname{Cov}(p, y_0)\,\beta \;-\; t^2 \operatorname{Var}(y_0) = 0
+$$
+
+has the standard form $A\beta^2 + B\beta + C = 0$ with
+
+$$
+A = \operatorname{Var}(p)(1-t^2), \qquad B = -2t^2\operatorname{Cov}(p,y_0), \qquad C = -t^2\operatorname{Var}(y_0),
+$$
+
+so the positive root $\beta = \dfrac{-B + \sqrt{B^2 - 4AC}}{2A}$ is
+
+$$
+\begin{aligned}
+\beta &= \frac{2t^2\operatorname{Cov}(p,y_0) + \sqrt{\,4t^4\operatorname{Cov}(p,y_0)^2 + 4t^2(1-t^2)\,\operatorname{Var}(p)\,\operatorname{Var}(y_0)\,}}{2\,\operatorname{Var}(p)(1-t^2)} \\[4pt]
+&= \frac{2t^2\operatorname{Cov}(p,y_0) + 2\sqrt{\,t^4\operatorname{Cov}(p,y_0)^2 + t^2(1-t^2)\,\operatorname{Var}(p)\,\operatorname{Var}(y_0)\,}}{2\,\operatorname{Var}(p)(1-t^2)} \\[4pt]
+&= \frac{t^2 \operatorname{Cov}(p, y_0) + \sqrt{\, t^4 \operatorname{Cov}(p, y_0)^2 + t^2 (1 - t^2)\,\operatorname{Var}(p)\,\operatorname{Var}(y_0) \,}}{\operatorname{Var}(p)\,(1 - t^2)} .
+\end{aligned}
+$$
+
+This is `solve_std`, which solves for a single target $t$. `solve_targets` 
+applies it at both design magnitudes, $t = 0.25$ (small) and $t = 0.50$ (medium), 
+returning one coefficient for each. The predictor $p$ and baseline $y_0$ differ 
+by misspecification, which fixes the three moments as
+
+$$
+\begin{array}{c|ccc}
+ & \operatorname{Var}(p) & \operatorname{Cov}(p, y_0) & \operatorname{Var}(y_0) \\ \hline
+\texttt{c2} & \operatorname{Var}(W)   & \operatorname{Cov}(W, y_0)   & \operatorname{Var}(y_0) \\
+\texttt{c3} & \operatorname{Var}(X W) & \operatorname{Cov}(X W, y_0) & \operatorname{Var}(y_0) \\
+\texttt{cl} & \operatorname{Var}(X)   & \operatorname{Cov}(X, m_3)   & \operatorname{Var}(m_3)
+\end{array}
+$$
+
+None of these has a clean closed form, which is why they are estimated rather 
+than computed analytically: for `c3` the predictor is the product
+$X W$, whose variance is a fourth-moment quantity that depends strongly on the 
+tails of the copula; and for `cl` the predictor $X$ acts on
+$m_3 = \lambda_3 M + \delta_{m_3}$, whose variance and covariance with $X$ 
+depend on $\operatorname{Var}(M)$ (hence on $a_3$) and on the reliability 
+level (through the variance of $\delta_{m_3}$). `rcov` never appears in the 
+calibration because it is already a correlation and equals its target in every 
+cell.
+
+# What Calibration Computes (by Order)
+
+For each distribution and each $a_3$, `calibrate_final.R` draws a single very 
+large sample, $n_{\text{cal}} = 10^6$, of $(X, W)$ and forms the product $X W$. 
+It then builds the latent mediator and the *clean* outcome (no misspecification 
+terms),
+
+$$
+M = a_1 X + a_2 W + a_3 (X W) + \varepsilon_M, \qquad
+y_0 = b M + c' X + \varepsilon_Y,
+$$
+
+using the same residual variances as the simulation. From this one sample it
+estimates the three moments the quadratic needs (the predictor's variance
+$\operatorname{Var}(p)$, its covariance with the baseline 
+$\operatorname{Cov}(p, y_0)$, and the baseline variance 
+$\operatorname{Var}(y_0)$) and feeds them to `solve_std`, i.e. the positive root 
+of the standardizing quadratic derived in the previous section, evaluated at 
+both targets $t \in \{0.25, 0.5\}$. For the two structural terms the predictor 
+is $p = W$ (`c2`) or $p = XW$ (`c3`) and the baseline is $y_0$,
+and neither coefficient depends on the reliability level:
+
+$$
+\beta_{c2} = \texttt{solve\_targets}\big(\operatorname{Var}(W),\ \operatorname{Cov}(W, y_0),\ \operatorname{Var}(y_0)\big),
+$$
+$$
+\beta_{c3} = \texttt{solve\_targets}\big(\operatorname{Var}(X W),\ \operatorname{Cov}(X W, y_0),\ \operatorname{Var}(y_0)\big).
+$$
+
+Immediately afterward it records, for each level, the factor by which the omitted
+structural term inflates the variance of $Y$,
+
+$$
+\kappa_{c2} = \frac{\operatorname{Var}(y_0 + \beta_{c2} W)}{\operatorname{Var}(y_0)},
+\qquad
+\kappa_{c3} = \frac{\operatorname{Var}(y_0 + \beta_{c3}\, X W)}{\operatorname{Var}(y_0)},
+$$
+
+and stores these ratios in `vy_ratios`. They are stored because `c2` or `c3`
+inflate $\operatorname{Var}(Y)$, which would raise $Y$'s indicator reliability 
+as a side effect; the simulation uses $\kappa$ to scale the $Y$ indicator noise
+by the same factor, cancelling that side effect and holding $Y$ reliability at its
+no-misspecification value (the exact mechanism is shown in the data-generation
+step). 
+
+The calibration then turns to `cl`, the omitted cross-loading of $X$ onto
+the mediator's third indicator $m_3$, a misspecification at the measurement level
+rather than in the $Y$ equation. For each of the two reliability levels
+$\omega \in \{0.5,\ 0.7\}$ (low and high), it reconstructs $m_3$ exactly as the
+simulation will,
+
+$$
+m_3 = \lambda_3 M + \delta_{m_3}, \qquad
+\operatorname{sd}(\delta_{m_3}) = \texttt{err\_sd\_for}(\omega,\ \texttt{var\_m\_at}(a_3))[3] ,
+$$
+
+using the fixed normal-baseline variance `var_m_at(a3)` at that $\omega$. This
+keeps the calibration of `cl` consistent with how $m_3$ is later built. It then
+solves the same standardizing quadratic used for c2 and c3 (again via
+`solve_std`) for the cross-loading coefficient, now with the indicator $m_3$ as
+the baseline in place of the clean outcome $y_0$,
+
+$$
+\beta_{cl} = \texttt{solve\_targets}\big(\operatorname{Var}(X),\ \operatorname{Cov}(X, m_3),\ \operatorname{Var}(m_3)\big).
+$$
+
+Concretely, this finds the $\beta_{cl}$ at which $X$'s fully standardized contribution
+to the perturbed indicator equals the target $t$,
+
+$$
+t = \frac{\beta_{cl}\,\operatorname{sd}(X)}{\operatorname{sd}(m_3 + \beta_{cl} X)} ,
+$$
+
+which is the same standardizing equation as before with $p = X$ and the baseline
+$m_3$ in place of $y_0$. `solve_std` returns its positive root,
+
+$$
+\beta_{cl} = \frac{-B + \sqrt{B^2 - 4AD}}{2A}, \qquad
+A = \operatorname{Var}(X)(1 - t^2), \quad
+B = -2t^2 \operatorname{Cov}(X, m_3), \quad
+D = -t^2 \operatorname{Var}(m_3) .
+$$
+
+The output is a single number. For example, at $\omega = 0.7$, $a_3 = 0.4$, $t = 0.5$
+under the normal distribution, $\operatorname{Var}(X) = 1$,
+$\operatorname{Cov}(X, m_3) = 0.343$, and $\operatorname{Var}(m_3) = 0.946$ give
+$\beta_{cl} \approx 0.687$. At simulation time `gen_data` does not re-solve; it looks up
+this number and builds the indicator with the cross-loading baked in,
+$m_3 = \lambda_3 M + \delta_{m_3} + \beta_{cl} X$.
+
+Because that baseline is the noisy indicator $m_3$ (carrying the measurement noise
+$\delta_{m_3}$) rather than the clean $y_0$, $\beta_{cl}$ moves with the reliability
+level, whereas $\beta_{c2}$ and $\beta_{c3}$ do not.
+
+This reliability loop sits inside the distribution loop, so $m_3$ is rebuilt and
+`cl` re-solved separately for every distribution at each setting $\omega$. The
+setting $\omega$ enters in one place: the size of the noise $\delta_{m_3}$, which is
+fixed to the normal-baseline `var_m_at(a3)`. The signal $\lambda_3 M$ is the
+distribution's own, and its variance $\lambda_3^2 \operatorname{Var}(M)$ drifts
+off-normal.
+
+A worked example at $a_3 = 0.4$, $\omega = 0.7$ makes this concrete. The noise
+variance is the same for every distribution,
+
+$$
+\operatorname{Var}(\delta_{m_3}) = \lambda_3^2 \cdot \texttt{var\_m\_at}(0.4) \cdot \frac{1-\omega}{\omega}
+= 0.49 \cdot 1.350 \cdot \frac{0.3}{0.7} = 0.284 ,
+$$
+
+but the signal $\lambda_3^2 \operatorname{Var}(M)$ is not, so the realized
+reliability $\lambda_3^2 \operatorname{Var}(M) / \big(\lambda_3^2 \operatorname{Var}(M) + \operatorname{Var}(\delta_{m_3})\big)$
+lands in a different place:
+
+$$
+\text{normal}\ \ (\operatorname{Var}(M) = 1.35): \quad \frac{0.49 \cdot 1.35}{0.49 \cdot 1.35 + 0.284} = \frac{0.662}{0.946} = 0.70 ,
+$$
+$$
+\text{chisq}\ \ (\operatorname{Var}(M) \approx 1.50): \quad \frac{0.49 \cdot 1.50}{0.49 \cdot 1.50 + 0.284} = \frac{0.735}{1.019} = 0.72 .
+$$
+
+Same noise, different signal: the realized reliability sits at the nominal $0.70$
+under normal and drifts to about $0.72$ under chisq. That is the intentional
+reliability drift from the population-model section, and it is exactly the $m_3$
+that `gen_data` will later build with the same `err_sd_for(omega, var_m_at(a3))`.
+So `cl` is sized against each distribution's actual $m_3$, drift and all, and
+reaches its target standardized magnitude in every cell, wherever the realized
+reliability lands.
+
+Therefore, in the code, 
+the output is two nested tables saved together as `list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios)` in
+`results/calibration.rds`. They act at two different layers of the model: `misspec_coefs`
+supplies the coefficients that *create* the misspecification in the data equations,
+while `vy_ratios` supplies the ratio that only *rescales the $Y$ indicator noise*,
+
+$$
+\begin{aligned}
+\textbf{misspec\_coefs} \;&:\quad Y = bM + c'X + \beta_{c2}\, W + \beta_{c3}\,(XW) + \varepsilon_Y, \\
+&\phantom{:}\quad m_3 = \lambda_3 M + \delta_{m_3} + \beta_{cl}\, X, \\[3pt]
+\textbf{vy\_ratios} \;&:\quad \operatorname{sd}(\delta_{Y j}) = \texttt{err\_sd\_for}\big(\omega,\ \texttt{var\_y\_at}(a_3)\cdot \kappa\big).
+\end{aligned}
+$$
+
+So the $\beta$'s (`misspec_coefs`) enter the latent and indicator *equations* and set the
+misspecification size; the ratio $\kappa$ (`vy_ratios`) enters only the $Y$ *error
+variance* and only holds reliability fixed. Within `misspec_coefs[distr][a3]`, only the
+`cl` entry carries a reliability index (`cl[rel]`), because `cl` is the only coefficient that
+depends on reliability; `c2` and `c3` are stored once, as is `vy_ratios[distr][a3]`, because
+both are reliability-independent. Because the solving happens here, the
+simulation needs only a "pure" lookup, it never calls `solve_std` at runtime.
+
+# What Data Generation Does With Those Tables
+
+For one condition $(n, a_3, \omega, \text{distr}, \text{misspec})$, `gen_data` builds
+one dataset in four steps: look up the calibrated values, build the latent variables,
+turn them into indicators, and inject the measurement-level misspecifications.
+
+**Step 1: look-up.** From the active misspecification it reads the raw coefficients
+$\beta_{c2}, \beta_{c3}, \beta_{cl}$ from `misspec_coefs` (any inactive one is $0$) and the
+variance ratio $\kappa$ from `vy_ratios` ($\kappa_{c2}$, $\kappa_{c3}$, or $1$ when neither
+`c2` nor `c3` is active). These are pure look-ups, nothing is solved at run time.
+
+**Step 2: latent variables.** It draws fresh $(X, W)$ of size $n$ and forms the
+latents, folding the active structural term into $Y$:
+
+$$
+M = a_1 X + a_2 W + a_3(X W) + \varepsilon_M,
+$$
+$$
+Y = b M + c' X + \underbrace{\beta_{c2}\, W}_{\text{if c2}} + \underbrace{\beta_{c3}\,(X W)}_{\text{if c3}} + \varepsilon_Y .
+$$
+
+Because at most one misspecification is active, the added term sits on exactly the
+clean baseline $y_0 = bM + c'X + \varepsilon_Y$ it was calibrated against, so its
+standardized magnitude lands on target. 
+
+**Step 3: indicators.** Each latent $\eta \in \{X, W, M, Y\}$ becomes four indicators
+$z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$, with the noise sized to hit the
+target reliability $\omega$ from the latent's variance $V_\eta$:
+
+$$
+\operatorname{sd}(\delta_{\eta j}) = \texttt{err\_sd\_for}(\omega,\ V_\eta), \qquad
+V_X = V_W = 1, \quad V_M = \texttt{var\_m\_at}(a_3), \quad V_Y = \texttt{var\_y\_at}(a_3)\cdot\kappa .
+$$
+
+$X$ and $W$ have variance exactly $1$. $M$ uses its closed-form normal variance with
+no further factor, because no misspecification inflates the $M$ latent (`c2`/`c3`
+live in the $Y$ equation; `cl`/`rcov` act on indicators, not on the $M$ latent). Only
+$Y$ carries the factor $\kappa$, which holds its reliability fixed under `c2`/`c3`;
+the algebra is given at the end of this section.
+
+**Step 4: measurement-level misspecifications.** Two misspecifications act here, not
+on the latents. For `cl`, the third mediator indicator gains a cross-loading,
+$m_3 \leftarrow m_3 + \beta_{cl}\,X$; this deliberately lowers $m_3$'s reliability,
+and that contamination *is* the misspecification, so it is not compensated. For
+`rcov`, the independent residuals $\delta_{m_3}, \delta_{y_3}$ are replaced by a
+correlated pair from a bivariate normal whose correlation is the target value but
+whose marginal standard deviations are exactly the original
+$\operatorname{sd}(\delta_{m_3}), \operatorname{sd}(\delta_{y_3})$; because the
+marginals are preserved, only the residual correlation changes and neither
+indicator's reliability moves.
+
+**Why $Y$ carries the factor $\kappa$.** A $Y$ indicator's reliability is its signal
+share (the same $\omega_j$ as in the measurement model),
+
+$$
+\omega_j = \frac{\lambda_j^2\, V}{\lambda_j^2\, V + \theta_j},
+$$
+
+with signal variance $\lambda_j^2 V$ ($V = \operatorname{Var}(Y)$) and noise variance
+$\theta_j$. Turning on `c2` or `c3` multiplies the latent variance by $\kappa$ (that
+is what $\kappa$ measures), so the signal becomes $\kappa\,\lambda_j^2 V$. If the noise
+$\theta_j$ stayed fixed, $\omega_j$ would rise. The correction scales the noise by the
+same $\kappa$ (it sets $\theta_j$ from a variance multiplied by $\kappa$), so signal
+and noise move together and $\kappa$ cancels,
+
+$$
+\omega_j = \frac{\kappa\,\lambda_j^2 V}{\kappa\,\lambda_j^2 V + \kappa\,\theta_j}
+= \frac{\lambda_j^2 V}{\lambda_j^2 V + \theta_j} .
+$$
+
+So $Y$'s reliability returns to exactly its no-misspecification value. The
+omitted-path effect size itself lives at the latent level and is untouched; only the
+$Y$ indicators are made correspondingly noisier.
