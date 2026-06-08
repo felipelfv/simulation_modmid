@@ -1,6 +1,6 @@
 library(rix)
 
-rix(date = "2026-05-25", # available_dates()
+rix(date = "2026-05-11", # available_dates(); 1.8.x quarto (1.9.37 has a pandoc bug)
     r_pkgs = c("modsem", "covsim", "rvinecopulib",
                "knitr"),                   # knitr: R engine quarto uses for code chunks
     system_pkgs = "quarto",                # quarto CLI to render the paper
