@@ -2,8 +2,7 @@ library(rix)
 
 rix(date = "2026-05-25", # available_dates()
     r_pkgs = c("modsem", "covsim", "rvinecopulib",
-               # analysis + manuscript rendering
-               "dplyr", "tidyr", "ggplot2", "knitr", "rmarkdown"),
+               "knitr"),                   # knitr: R engine quarto uses for code chunks
     system_pkgs = "quarto",                # quarto CLI to render the paper
     # LaTeX deps for the Quarto PDF; extend as the build reports missing .sty
     tex_pkgs = c("amsmath", "framed", "fvextra", "fancyvrb", "booktabs",

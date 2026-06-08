@@ -4,11 +4,7 @@
 #  > r_pkgs = c("modsem",
 #  > "covsim",
 #  > "rvinecopulib",
-#  > "dplyr",
-#  > "tidyr",
-#  > "ggplot2",
-#  > "knitr",
-#  > "rmarkdown"),
+#  > "knitr"),
 #  > system_pkgs = "quarto",
 #  > git_pkgs = list(package_name = "lavaan",
 #  > repo_url = "https://github.com/yrosseel/lavaan",
@@ -37,13 +33,9 @@ let
   rpkgs = builtins.attrValues {
     inherit (pkgs.rPackages) 
       covsim
-      dplyr
-      ggplot2
       knitr
       modsem
-      rmarkdown
-      rvinecopulib
-      tidyr;
+      rvinecopulib;
   };
  
     lavaan = (pkgs.rPackages.buildRPackage {
@@ -83,9 +75,7 @@ let
     inherit (pkgs) 
       glibcLocales
       nix
-      quarto
-      pandoc
-      which;
+      quarto;
   };
   
   shell = pkgs.mkShell {

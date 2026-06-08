@@ -11,16 +11,9 @@ Placeholder manuscript rendered by the CI pipeline (`.github/workflows/render.ya
 Replace this with the article body.
 
 ```{r}
-#| label: setup
 #| include: false
-library(dplyr)
-library(ggplot2)
-```
-
-Simulation results live in `results/`. With the execution directory set to this
-file's folder, they can be read with e.g.:
-
-```{r}
-#| eval: false
-summary_tbl <- readRDS("../results/summary.rds")
+# smoke-test for the knitr engine. add library() calls and data reads
+# (e.g. readRDS("../results/summary.rds")) — plus the matching packages in
+# gen_env.R's r_pkgs — as the manuscript needs them.
+invisible(1 + 1)
 ```
