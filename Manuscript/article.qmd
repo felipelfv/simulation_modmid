@@ -1,0 +1,26 @@
+---
+title: "Moderated mediation under measurement and structural misspecification"
+author: "Felipe Fontana Vieira and Yves Rosseel"
+date: today
+format: pdf
+---
+
+## Introduction
+
+Placeholder manuscript rendered by the CI pipeline (`.github/workflows/render.yaml`).
+Replace this with the article body.
+
+```{r}
+#| label: setup
+#| include: false
+library(dplyr)
+library(ggplot2)
+```
+
+Simulation results live in `results/`. With the execution directory set to this
+file's folder, they can be read with e.g.:
+
+```{r}
+#| eval: false
+summary_tbl <- readRDS("../results/summary.rds")
+```

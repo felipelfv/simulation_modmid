@@ -1,0 +1,49 @@
+name: Render paper with Nix
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Install Nix
+      uses: DeterminateSystems/nix-installer-action@main
+      with:
+        logger: pretty
+        log-directives: nix_installer=trace
+        backtrace: full
+
+    - name: Set git config
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+
+    - name: Build development environment
+      run: |
+        nix-build
+
+    - name: Render manuscript
+      run: nix-shell --run "quarto render Manuscript/article.qmd"
+
+    - name: Push rendered manuscript
+      run: |
+        git pull --rebase --autostash origin main
+        git add Manuscript/article.pdf
+        if git diff --cached --quiet; then
+          echo "No changes to commit."
+        else
+          git commit -m "Updated manuscript PDF"
+          git push origin main
+        fi

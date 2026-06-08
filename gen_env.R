@@ -1,11 +1,18 @@
 library(rix)
 
 rix(date = "2026-05-25", # available_dates()
-    r_pkgs = c("modsem", "covsim", "rvinecopulib", "ggplot2"),
+    r_pkgs = c("modsem", "covsim", "rvinecopulib",
+               # analysis + manuscript rendering
+               "dplyr", "tidyr", "ggplot2", "knitr", "rmarkdown"),
+    system_pkgs = "quarto",                # quarto CLI to render the paper
+    # LaTeX deps for the Quarto PDF; extend as the build reports missing .sty
+    tex_pkgs = c("amsmath", "framed", "fvextra", "fancyvrb", "booktabs",
+                 "caption", "etoolbox", "xcolor", "geometry", "hyperref",
+                 "float"),
     git_pkgs = list(
       package_name = "lavaan",
       repo_url = "https://github.com/yrosseel/lavaan",
-      commit = "52d303c"
+      commit = "8d99872"
     ),
     project_path = ".",
     overwrite = TRUE
