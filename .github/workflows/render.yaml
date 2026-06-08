@@ -25,6 +25,10 @@ jobs:
         log-directives: nix_installer=trace
         backtrace: full
 
+    - uses: cachix/cachix-action@v15
+      with:
+        name: rstats-on-nix
+
     - name: Set git config
       run: |
         git config --global user.name "GitHub Actions"
