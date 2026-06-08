@@ -2,7 +2,9 @@
 title: "Moderated mediation under measurement and structural misspecification"
 author: "Felipe Fontana Vieira and Yves Rosseel"
 date: today
-format: pdf
+format:
+  pdf:
+    pdf-engine: pdflatex
 ---
 
 ## Introduction
