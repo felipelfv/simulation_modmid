@@ -1,10 +1,10 @@
 # code for the simulation: 
 # moderated-mediation simulation comparing three estimators.
-# 
+
 # lsam    : lavaan::sam(sam.method = "local", se = "local")
 # lms     : modsem_da(method = "lms", robust.se = TRUE)
 # dblcent : modsem(method = "dblcent", estimator = "MLR")
-#
+
 # 4 n x 3 a3 x 2 rel x 5 distr_exo x 9 misspec = 1080 conditions
 
 # note to myself: probably keep model fit values also. that implies retaining 
