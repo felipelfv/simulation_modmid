@@ -18,7 +18,7 @@ library(covsim); library(rvinecopulib)
 
 master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
-r_per_condition  <- 10L # (!) 
+r_per_condition  <- 1000L # (!) 
 m_mc <- 20000L # justification for the indirect effect mc (?)
 n_cores <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc <- "."
@@ -153,7 +153,7 @@ gen_exo <- function(n, distr_exo) {
 
 # calibration (from calibrate_final.R): misspec_coefs = beta coefs per cell (pure lookup);
 # vy_ratios = var(Y) inflation ratios to hold Y reliability at its `none` value under c2/c3.
-cal           <- readRDS(file.path(results_dir, "calibration.rds"))
+cal           <- readRDS(file.path(direc, "calibration", "calibration_results.rds"))
 misspec_coefs <- cal$misspec_coefs
 vy_ratios     <- cal$vy_ratios
 

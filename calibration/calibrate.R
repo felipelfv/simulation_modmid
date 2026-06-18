@@ -2,7 +2,6 @@ library(covsim); library(rvinecopulib)
 
 set.seed(20240501L) # clarification to myself: seed does L internally
 n_cal <- 1e6L
-results_dir <- "results"; dir.create(results_dir, showWarnings = FALSE)
 
 a1 <- 0.4; a2 <- 0.3; b <- 0.5; cp <- 0.15 
 rho <- 0.3
@@ -131,5 +130,5 @@ for (de in c("normal", "uniform", "t5", "chisq_same", "chisq_diff")) {
   }
 }
 
-saveRDS(list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios), 
-        file.path(results_dir, "calibration.rds"))
+saveRDS(list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios),
+        "calibration_results.rds")

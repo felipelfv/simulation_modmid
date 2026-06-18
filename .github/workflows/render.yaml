@@ -39,12 +39,12 @@ jobs:
         nix-build
 
     - name: Render manuscript
-      run: nix-shell --run "quarto render Manuscript/article.qmd"
+      run: nix-shell --run "quarto render manuscript/article.qmd"
 
     - name: Push rendered manuscript
       run: |
         git pull --rebase --autostash origin main
-        git add Manuscript/article.pdf
+        git add manuscript/article.pdf
         if git diff --cached --quiet; then
           echo "No changes to commit."
         else
