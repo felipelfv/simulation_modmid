@@ -478,9 +478,9 @@ message(sprintf("done in %.1f min",
 
 # aggregate per-condition files into raw_mc.rds (estimates) and
 # metrics_mc.rds (per-rep dataset metrics). uncomment to run.
-# all_files <- list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE)
-# all_data  <- lapply(all_files, readRDS)
-# raw     <- do.call(rbind, lapply(all_data, `[[`, "rows"))
-# metrics <- do.call(rbind, lapply(all_data, `[[`, "metrics"))
-# saveRDS(raw,     file.path(results_dir, "raw_mc.rds"))
-# saveRDS(metrics, file.path(results_dir, "metrics_mc.rds"))
+all_files <- list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE)
+all_data  <- lapply(all_files, readRDS)
+raw     <- do.call(rbind, lapply(all_data, `[[`, "rows"))
+metrics <- do.call(rbind, lapply(all_data, `[[`, "metrics"))
+saveRDS(raw,     file.path(results_dir, "raw_mc.rds"))
+saveRDS(metrics, file.path(results_dir, "metrics_mc.rds"))
