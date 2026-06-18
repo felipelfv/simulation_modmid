@@ -1,16 +1,269 @@
 ---
-title: "Moderated mediation under measurement and structural misspecification"
-author: "Felipe Fontana Vieira and Yves Rosseel"
-date: today
+title: "Moderated Latent Variables Mediation Using Correct and Misspecified Models"
+shorttitle: "Moderated Mediation With Latent Variables"
+
+author:
+  - name: Felipe Fontana Vieira
+    corresponding: true
+    orcid: 0009-0006-0949-6569
+    email: felipe.fontanavieira@ugent.be
+    affiliations:
+      - name: Ghent University
+        department: Department of Data Analysis, Faculty of Psychology and Educational Sciences
+        address: Henri Dunantlaan 2
+        city: Ghent
+        country: Belgium
+        postal-code: 9000
+        id: UGent
+    roles:
+      - Conceptualization
+      - Methodology
+      - Software
+      - Investigation
+      - Data curation
+      - Formal analysis
+      - Visualization
+      - Writing - original draft
+      - Writing - review & editing
+  - name: Yves Rosseel
+    corresponding: false
+    orcid: 0000-0002-4129-4477
+    affiliations:
+      - ref: UGent
+    roles:
+      - Conceptualization
+      - Methodology
+      - Software
+      - Supervision
+      - Writing - review & editing
+      - Funding acquisition
+
+author-note:
+  status-changes:
+    affiliation-change: ~
+    deceased: ~
+  disclosures:
+    study-registration: "This study was preregistered."
+    data-sharing: "The preregistration, data, code, and materials for this 
+    manuscript can be found at <https://doi.org/10.5281/zenodo.20703258>."
+    financial-support: "This project was funded by the Special Research Fund 
+    (BOF) of Ghent University (BOF/24J/2023/144)."
+
+abstract: |
+  TODO: Abstract.
+
+impact-statement: |
+  TODO: Translational abstract.
+
+keywords: [moderated mediation, structural equation modeling, latent interaction, measurement error, model misspecification]
+
+language:
+  title-impact-statement: "Translational Abstract"
+
+word-count: true
+floatsintext: true
+numbered-lines: false
+link-citations: false
+mask: false
+
+bibliography: "references.bib"
+
 format:
-  pdf:
-    pdf-engine: pdflatex
+  apaquarto-pdf:
+    documentmode: man
+    keep-tex: false
+    include-in-header:
+      text: |
+        \raggedbottom
+        \usepackage{pdflscape}
+
+execute:
+  echo: false
+  warning: false
+  message: false
 ---
 
-## Introduction
+Mediation analysis is a well-known procedure in the behavioral and social
+sciences [@Hayes2018; @Preacher2007; @Pieters2017; @Charlton2021]. In its 
+basic and standard form, the effect of an independent variable on an outcome is 
+decomposed into a direct effect and an indirect effect transmitted through a 
+mediator, with all variables observed. This basic single-mediator model has 
+since been extended, for example by allowing the indirect effect to depend on 
+a moderator and by adjusting for covariates [@Hayes2015; @Edwards2007; 
+@Preacher2007; @Montoya2024].
 
-Placeholder manuscript rendered by the CI pipeline (`.github/workflows/render.yaml`).
-Replace this with the article body.
+A more fundamental concern arises from measurement. Many constructs in 
+psychology are not directly observed but are measured indirectly through 
+multiple items, that is, they are latent variables [@BollenHoyle2012;
+@LedgerwoodShrout2011].
+When such constructs are reduced to summary scores 
+(e.g., a sum or mean of the items) and analyzed as though they were observed, 
+measurement error is ignored. This error can bias the indirect effect and 
+inflate its uncertainty [@HoyleKenny1999; @ColePreacher2014], and it is 
+especially problematic for the mediator, which acts at once as a predictor and 
+an outcome [@GonzalezMacKinnon2021]. To address this, SEM with latent variables
+has been proposed [@cite], especially in the context of mediation [@cite]. 
+It counteracts the attenuation by estimating structural
+relationships between common factors, from which indicator-specific unique
+variance has been partitioned [@Bollen1989], provided the measurement model is
+correctly specified [@cite]. The problem is compounded under moderation, 
+where the product term is less reliable than either of its constituents 
+[@Bohrnstedt1978; @Busemeyer1983].
+
+Yet, combining latent measurement with moderation yields a latent-variable 
+moderated mediation model [@Hayes2015], which is not straightforward in terms of
+estimation. A latent interaction involves the product of two latent 
+variables, which is unobserved and nonnormal even when its constituents are 
+normal [@KleinMoosbrugger2000]. A number of methods have been proposed to
+estimate latent interactions [@AlginaMoulder2001; @Arminger1998;
+@AsparouhovMuthen2021; @Boker2023; @Bollen1995; @CoxKelcey2021; @HolstBudtz2020;
+@JoreskogYan1996; @KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007;
+@Marsh2004; @MooijaartBentler2010; @MooijaartSatorra2012; @NgChan2020;
+@RosseelLoh2024; @WallAmemiya2000; @WallAmemiya2001; @WallAmemiya2003]. 
+Most adopt a system-wide (joint) estimation
+strategy, in which the measurement and structural parameters are estimated
+simultaneously, and include the most known methods: latent moderated
+structural equations (LMS) and product-indicator (PI). Opposed to these 
+are structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
+@HolstBudtz2020; @NgChan2020; @RosseelLoh2024],
+in which the measurement model is estimated first, from the indicators alone, 
+and the structural model is estimated afterward with the measurement parameters 
+held fixed. Until recently, these abovementioned approaches were rarely applied 
+in practice, held back by limited software, slow estimation, and error-prone 
+implementations. This has changed with recent open-source implementations 
+[@Slupphaug2025; @Rosseel2025; @HolstBudtz2020] and non-commercial software 
+[@Keller2025].
+
+In this context, a further consideration concerns interpretation. Mediation is 
+a hypothesis about causal effects, in that the indirect effect is intended as 
+the effect of the predictor on the outcome that is transmitted through the 
+mediator. A causal interpretation requires identification assumptions that 
+cannot be verified from the data alone [@Imai2010; @Rohrer2022; 
+@VanderWeele2015]. With latent variables, further requirements apply 
+[@Sterner2024; @VanderWeeleVansteelandt2022]. We focus on one that is central 
+to interpretation: the estimated latent variables must validly represent the 
+intended constructs [@GonzalezMacKinnon2021]. When they do not, the model is 
+subject to interpretational confounding [@Burt1976], a discrepancy between the 
+empirical meaning assigned to a latent variable through its estimated 
+measurement parameters and the meaning intended by the researcher. 
+In one-step SEM, where the measurement and structural parameters are estimated
+simultaneously, a misspecification in the structural model can propagate to the
+measurement model and alter the estimated latent variables. In moderated
+mediation, such misspecifications are plausible (e.g., an omitted moderator 
+effect on the outcome, an omitted moderated direct effect, a cross-loading, or 
+a residual mediator-outcome covariance), and each can distort the constructs 
+whose conditional indirect effect is of interest. SAM avoids this problem. 
+Because the structural model
+cannot influence the measurement model, structural misspecification does not 
+affect the estimated latent variables, and interpretational confounding is
+avoided, though this does not imply that the structure is correct or fixed. 
+Local SAM (LSAM) is one variant of this approach, and it has recently been 
+extended to interaction and quadratic effects among latent variables 
+[@Rosseel2025], which makes it applicable to latent-variable moderated 
+mediation.
+
+To illustrate, for simplicity, we take a mediation model with three latent 
+variables, X, M, and Y, each with three indicators, and obtain a population 
+covariance matrix 
+from a correctly specified version. We then alter it: the covariances between 
+the X and M indicators are made unequal across the X indicators (3.0, 1.5, and 
+1.5, with mean held at the implied value of 2.0), so that only their pattern, 
+not the overall X-M strength, changes. We fit the model by one-step SEM and by 
+SAM ($N = 200$).
+
+```{r}
+#| label: tbl-interp-confounding
+#| tbl-cap: "Illustration for Interpretational Confounding."
+library(lavaan)
+
+model.pop <- '
+  X =~ 1*x1 + 1*x2 + 1*x3
+  Y =~ 1*y1 + 1*y2 + 1*y3
+  M =~ 1*m1 + 1*m2 + 1*m3
+  X ~~ 4*X
+  M ~~ 3.0*M
+  Y ~~ 2.76*Y
+  x1 ~~ 1.7*x1; x2 ~~ 1.7*x2; x3 ~~ 1.7*x3
+  y1 ~~ 1.7*y1; y2 ~~ 1.7*y2; y3 ~~ 1.7*y3
+  m1 ~~ 1.7*m1; m2 ~~ 1.7*m2; m3 ~~ 1.7*m3
+  M ~ 0.5*X
+  Y ~ 0.1*X + 0.5*M
+'
+Sigma <- lavInspect(sem(model.pop), "implied")$cov
+
+Sigma2 <- Sigma
+Sigma2[c("m1", "m2", "m3"), "x1"] <- 3.0
+Sigma2[c("m1", "m2", "m3"), "x2"] <- 1.5
+Sigma2[c("m1", "m2", "m3"), "x3"] <- 1.5
+Sigma2["x1", c("m1", "m2", "m3")] <- 3.0
+Sigma2["x2", c("m1", "m2", "m3")] <- 1.5
+Sigma2["x3", c("m1", "m2", "m3")] <- 1.5
+
+model <- '
+  X =~ x1 + x2 + x3
+  Y =~ y1 + y2 + y3
+  M =~ m1 + m2 + m3
+  M ~ X
+  Y ~ M + X
+'
+fit_sem <- sem(model, sample.cov = Sigma2, sample.cov.rescale = FALSE, 
+               sample.nobs = 200L)
+fit_sam <- sam(model, sample.cov = Sigma2, sample.cov.rescale = FALSE, 
+               sample.nobs = 200L)
+
+pull <- function(fit) {
+  est <- lavInspect(fit, "est")
+  L <- est$lambda
+  B <- est$beta
+  c(L["x1", "X"], L["x2", "X"], L["x3", "X"],
+    B["M", "X"], B["Y", "M"], B["Y", "X"], B["M", "X"] * B["Y", "M"])
+}
+
+tab <- data.frame(
+  Parameter = c("Loading of $x_1$ on X", "Loading of $x_2$ on X",
+                "Loading of $x_3$ on X", "$M \\sim X$", "$Y \\sim M$",
+                "$Y \\sim X$", "Indirect effect"),
+  True = c(1, 1, 1, 0.5, 0.5, 0.1, 0.25),
+  `One-step SEM` = pull(fit_sem),
+  SAM = pull(fit_sam),
+  check.names = FALSE
+)
+knitr::asis_output(paste0("\\begin{center}\n",
+  knitr::kable(tab, digits = 2, booktabs = TRUE, escape = FALSE, 
+               format = "latex"),
+  "\n\\end{center}"))
+```
+
+As shown in @tbl-interp-confounding, one-step SEM yields a proper solution but
+distorts the X loadings and biases the structural paths, with the direct effect 
+of X on Y falling from 0.10 to 0.03. SAM estimates the measurement model from 
+the indicators alone, leaving the loadings intact and recovering the true 
+parameters.
+
+### Present Research and Contributions
+
+This study evaluates LSAM, alongside LMS and a double-mean-centered 
+product-indicator approach, for estimating the index of moderated mediation.
+It makes three contributions.
+
+First, inference for the index has relied on the bootstrap in the limited 
+prior work [@Hayes2015; @Tibbe2022; @FalkBiesanz2015; @Feng2020]. We instead 
+use the Monte Carlo method and evaluate how well it is calibrated.
+
+Second, these estimators, and LSAM and LMS in particular, have not been examined 
+for moderated mediation under structural misspecification. We evaluate them 
+under a battery of plausible misspecifications (an omitted $W \to Y$ effect, 
+an omitted moderated direct effect, an omitted cross-loading, and an omitted 
+residual covariance, each at two magnitudes), the omissions that induce 
+interpretational confounding under one-step estimation.
+
+Third, LSAM has not been evaluated in a mediation setting or for derived 
+quantities such as the indirect effect $a\,b$ or the index $a_3 b$, which are 
+nonlinear functions of the structural parameters whose behavior need not match 
+that of their constituents. We assess all three estimators across realistic 
+sample sizes, two reliability levels, and nonnormal latent predictors, on bias, 
+root-mean-square error, coverage, and the Type I error and power of the index, 
+and close with practical recommendations for estimator choice.
 
 ```{r}
 #| include: false
@@ -19,3 +272,245 @@ Replace this with the article body.
 # gen_env.R's r_pkgs — as the manuscript needs them.
 invisible(1 + 1)
 ```
+
+# Simulation Design and Performance Evaluation
+
+In this section we describe the design of the simulation study and the
+measures used to evaluate performance, following recent recommendations for 
+the conduct and reporting of simulation studies [@Morris2019; @Siepe2024; @Pawel2026].
+
+### Population Model and Estimand
+
+We study a moderated mediation model among four latent variables: an
+exogenous predictor $X$, a moderator $W$, a mediator $M$, and an outcome $Y$.
+The structural model is as follows
+
+$$
+M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
+Y = b\,M + c'\,X + \zeta_Y,
+$$
+
+The primary estimands are the index of moderated mediation (imm) [@Hayes2015],
+i.e., $a_3 b$. The remaining
+structural coefficients ($a_1$, $a_2$, $b$, $c'$) and the twelve freely estimated
+factor loadings serve as secondary estimands. Because the index is a derived
+quantity rather than a free parameter, its true value is computed as $a_3 b$
+implied by the correctly specified model, and each estimator's recovery of that
+value is assessed across conditions.
+
+Population values were fixed at $a_1 = 0.4$, $a_2 = 0.3$, $b = 0.5$, and
+$c' = 0.15$, with $\mathrm{cor}(X, W) = 0.3$. The interaction coefficient $a_3$
+is a design factor (see below). These coefficients, together with the structural
+disturbance variances, were chosen so that under the baseline condition (normal
+exogenous predictors and a correctly specified model) each dependent latent
+variable has $R^2 = 0.30$ at the interaction level $a_3 = 0.20$. Note that, 
+because $a_3$ contributes to the variance of $M$, the explained variance is 
+naturally higher at $a_3 = 0.40$ and lower at $a_3 = 0$. Each latent variable is 
+measured by four congeneric indicators with loadings $1.0$, $0.8$, $0.7$, 
+and $0.6$. @fig-model depicts the population
+model, where the structural misspecifications studied below are drawn in grey.
+
+```{tikz}
+%| label: fig-model
+%| fig-cap: "Population (Data-Generating) Model for the Simulation Study."
+%| apa-note: "*Note*. $X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators; circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rcov). Residual variances and intercepts are not shown."
+%| fig-align: center
+%| fig-width: 9
+%| fig-height: 6
+
+\tikzset{
+  latent/.style  ={circle,draw,minimum size=12mm},
+  ind/.style     ={rectangle,draw,minimum height=6mm,minimum width=7mm,align=center},
+  derived/.style ={circle,draw,minimum size=12mm},
+  mis/.style     ={->,gray!70,thick,dashed},
+  miscov/.style  ={<->,gray!70,thick,dashed},
+  every node/.style={font=\small}
+}
+
+\begin{tikzpicture}
+
+% X
+\node[ind] (x1) at (0,  5.4) {$x_1$};
+\node[ind] (x2) at (0,  4.6) {$x_2$};
+\node[ind] (x3) at (0,  3.8) {$x_3$};
+\node[ind] (x4) at (0,  3.0) {$x_4$};
+\node[latent] (X) at (2.6, 4.2) {$X$};
+\draw[->] (X.west) -- (x1.east);
+\draw[->] (X.west) -- (x2.east);
+\draw[->] (X.west) -- (x3.east);
+\draw[->] (X.west) -- (x4.east);
+
+% moderator W
+\node[ind] (w1) at (0,  1.4) {$w_1$};
+\node[ind] (w2) at (0,  0.6) {$w_2$};
+\node[ind] (w3) at (0, -0.2) {$w_3$};
+\node[ind] (w4) at (0, -1.0) {$w_4$};
+\node[latent] (W) at (2.6, 0.2) {$W$};
+\draw[->] (W.west) -- (w1.east);
+\draw[->] (W.west) -- (w2.east);
+\draw[->] (W.west) -- (w3.east);
+\draw[->] (W.west) -- (w4.east);
+
+% interaction
+\node[derived] (XW) at (2.6, -3.2) {$X{\times}W$};
+
+% X-W covariance (part of the fitted model)
+\draw[<->] (X) to[bend right=42] (W);
+
+% m
+\node[latent] (M) at (7.0, 2.2) {$M$};
+\node[ind] (m1) at (5.5, 5.2) {$m_1$};
+\node[ind] (m2) at (6.5, 5.2) {$m_2$};
+\node[ind] (m3) at (7.5, 5.2) {$m_3$};
+\node[ind] (m4) at (8.5, 5.2) {$m_4$};
+\draw[->] (M.north) -- (m1.south);
+\draw[->] (M.north) -- (m2.south);
+\draw[->] (M.north) -- (m3.south);
+\draw[->] (M.north) -- (m4.south);
+
+% outcome y
+\node[latent] (Y) at (11.4, 2.2) {$Y$};
+\node[ind] (y1) at (13.8, 3.4) {$y_1$};
+\node[ind] (y2) at (13.8, 2.6) {$y_2$};
+\node[ind] (y3) at (13.8, 1.8) {$y_3$};
+\node[ind] (y4) at (13.8, 1.0) {$y_4$};
+\draw[->] (Y.east) -- (y1.west);
+\draw[->] (Y.east) -- (y2.west);
+\draw[->] (Y.east) -- (y3.west);
+\draw[->] (Y.east) -- (y4.west);
+
+% correct struct paths
+\draw[->] (X)  -- node[above,sloped,font=\footnotesize] {$a_1$} (M);
+\draw[->] (W)  -- node[below,sloped,font=\footnotesize] {$a_2$} (M);
+\draw[->] (XW) -- node[below,sloped,font=\footnotesize] {$a_3$} (M);
+\draw[->] (M)  -- node[above,font=\footnotesize] {$b$} (Y);
+\draw[->] (X)  to[bend left=22] node[above,font=\footnotesize] {$c'$} (Y);
+
+% misspecifications (grey): c2/c3 structural, cl/rcov measurement
+\draw[mis] (W)  to[bend right=24] node[below,sloped,font=\footnotesize,text=gray] {$c_2$} (Y);
+\draw[mis] (XW) to[bend right=34] node[below,sloped,font=\footnotesize,text=gray] {$c_3$} (Y);
+\draw[mis] (X) to[out=68,in=128] node[above,font=\footnotesize,text=gray,pos=0.62] {cl} (m3.north);
+\draw[miscov] (m3.north) to[out=42,in=150] node[above,sloped,font=\footnotesize,text=gray,pos=0.5] {rcov} (y3.north west);
+
+\end{tikzpicture}
+```
+
+### Simulation Conditions
+
+We employed a fully factorial design crossing five factors: sample size
+($n \in \{100, 200, 300, 500\}$), interaction magnitude
+($a_3 \in \{0, 0.20, 0.40\}$), measurement reliability (low $= 0.5$,
+high $= 0.7$), the distribution of the exogenous latent predictors (normal, 
+uniform, $t$, and two right-skewed $\chi^2$ distributions), 
+and the (mis)specification condition (nine levels; see
+below). This yielded $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
+conditions, each replicated 1,000 times.
+
+Sample sizes span the small-to-moderate range typical of applied moderated
+mediation research, where interaction terms are estimated with limited power
+[@Hayes2015; @Preacher2007]. The interaction magnitudes include a null condition
+($a_3 = 0$) to assess Type I error and false-positive coverage of the index, and
+two nonzero levels representing small and moderate latent moderation effects.
+Reliability levels of $0.5$ and $0.7$ were chosen because measurement error is
+amplified in product terms and is therefore especially consequential for latent
+interaction estimation [@Bollen1989; @Brandt2014], and because lower reliability
+is common in applied settings than the values typically examined in prior work.
+Nonnormality of the latent predictors is both empirically common and methodologically central for latent interaction estimators, whose distributional assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; @Cham2012]. The misspecification conditions follow the moderated-mediation framework for the
+two structural omissions [@Preacher2007] and prior latent-interaction simulation
+work for the two measurement omissions [@Brandt2020]. They were chosen as
+interpretable threats, acting respectively as a measured mediator–outcome
+confounder, a conflated moderated direct effect, exposure-correlated measurement
+error, and an unmeasured residual confounder [@VanderWeele2015; @Edwards2007]. The
+nine levels are detailed below.
+
+### Estimators
+
+We compared a two-step estimator against two system-wide estimators. The
+two-step approach is LSAM [@RosseelLoh2024; @Rosseel2025]. In this case, the 
+interacting predictors $X$ and $W$ shared a single measurement block, 
+while $M$ and $Y$ formed their own blocks. The two
+system-wide estimators are LMS [@KleinMoosbrugger2000] and UPI with double 
+mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010].
+
+### Data Generation
+
+Appendix A describes the complete data-generating mechanism in detail. Briefly,
+the latent variables $X$ and $W$ were drawn from a bivariate
+distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the VITA
+(vine-to-anything) algorithm [@Gronneberg2022; @Foldnes2015]. Five exogenous
+distributions were examined, each standardized to mean $0$ and variance $1$ so
+that branches differ in shape rather than scale or location: normal, 
+$X, W \sim \mathcal{N}(0, 1)$,
+using a forced Gaussian copula. The remaining four combine non-normal margins 
+with a non-Gaussian vine copula:
+uniform, $t_5$, and two $\chi^2(2)$ conditions with $X$ and $W$ skewed in the 
+same or in opposite directions. Given that, $M$ and $Y$ were generated from the 
+structural equations above with independent Gaussian disturbances 
+$\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$, 
+and each latent variable's four 
+indicators were formed as $z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$, 
+with loadings $\lambda = (1, 0.8, 0.7, 0.6)$ and Gaussian errors
+$\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$ whose variances 
+$\theta_{\eta j}$ were scaled to the target reliability $\omega \in \{0.5, 0.7\}$.
+
+The nine (mis)specification conditions comprise one correctly specified condition
+and four families of misspecification, each at two empirically calibrated 
+magnitudes (standardized $0.25$ and $0.50$, detailed in Appendix A). 
+Two are structural: an omitted direct effect of the moderator on the outcome 
+(`c2`) and an omitted moderated direct effect (`c3`). The others are in the 
+measurement model: a cross-loading of a mediator indicator on $X$ (`cl`) and a 
+residual covariance between a mediator and an outcome indicator (`rcov`). 
+In every case the effect is present in the 
+population but omitted from the fitted model.
+
+### Nonconvergence, Outliers, and Inadmissible Solutions
+
+Following @Lonati2025, replications were screened for estimation failures and
+inadmissible solutions before analysis. Because the compared estimators are
+implemented across different packages, we applied an identical admissibility
+check to all of them: a solution was flagged when any residual (unique) variance
+was nonpositive (a Heywood case) or when the latent covariance matrix was not
+positive definite. Each estimator was fit independently within a replication, so
+a failure of one method produced a missing row for that method only, with the
+captured error or warning retained for diagnostics. 
+
+### Performance Measures
+
+Performance was assessed with the measures implemented in the *simhelpers*
+package [@Joshi2025], following recommendations in @Morris2019. For the index of
+moderated mediation and the structural coefficients we report absolute and
+relative bias, RMSE, the mean standard error and the SE/SD ratio,
+confidence-interval coverage, and—where applicable—the rejection rate
+(Type I error when $a_3 = 0$, power otherwise). Monte Carlo uncertainty in each
+performance measure is quantified with jackknife Monte Carlo standard errors
+[@Joshi2025].
+
+Inference for the index of moderated mediation accounts for the skewness of the
+product $a_3 b$: for $r = 1, \dots, R$ (with $R = 20{,}000$) we drew
+
+$$
+\bigl(a_3^{(r)}, b^{(r)}\bigr) \sim
+\mathcal{N}_2\!\bigl((\hat a_3, \hat b),\, \hat\Sigma_{a_3 b}\bigr),
+\qquad
+\mathrm{imm}^{(r)} = a_3^{(r)}\, b^{(r)},
+$$
+
+where $\hat\Sigma_{a_3 b}$ is the estimated covariance of $(\hat a_3, \hat b)$,
+and took the $2.5$th and $97.5$th empirical percentiles of
+$\{\mathrm{imm}^{(r)}\}_{r=1}^{R}$ as the interval. The structural coefficients
+and loadings use Wald (?) intervals from the model-implied parameter covariance
+matrix. The same
+implementation was applied to all three estimators for comparability.
+
+### Reproducibility and Computational Details
+
+All analyses were conducted in R [@RCoreTeam] using the *lavaan* [@Rosseel2012]
+and *modsem* [@Slupphaug2025] packages for estimation, *covsim* [@Gronneberg2022]
+and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
+[@Joshi2025] for performance evaluation. Conditions were run in parallel with R's
+*parallel* package; reproducible and independent random-number streams across
+workers were obtained with the L'Ecuyer-CMRG generator seeded from a single
+master seed. The computational environment was pinned with Nix via the *rix*
+package [@rix] to ensure reproducibility of the computational environment, 
+and the article was written with the *apaquarto* extension 
+[@apaquarto]. All code and materials are available at the project repository.
