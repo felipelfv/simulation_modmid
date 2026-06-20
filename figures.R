@@ -66,8 +66,6 @@ fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(2
   d <- summary_tbl |>
     filter(parameter == param, a3 == a3v, n %in% nvals) |>
     prep_factors()
-  # drop SE/SD > 1.5: a few cells blow up and swamp the y-axis (flagged for review)
-  if (metric == "se_sd") d <- filter(d, se_sd <= 1.5)
   # drop rel. variance bias > 10: a few cells blow up and swamp the y-axis (flagged for review)
   if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
   p <- ggplot(d, aes(misspec, .data[[metric]], shape = method, linetype = method, group = method))
@@ -103,7 +101,6 @@ fig_bar_both <- function(metric = "rel_rmse", a3v = 0.2, nvals = c(200, 500),
     filter(parameter %in% c("imm", "a3"), a3 == a3v, n %in% nvals) |>
     prep_factors() |>
     mutate(parameter = factor(parameter, levels = c("imm", "a3")))
-  if (metric == "se_sd")        d <- filter(d, se_sd <= 1.5)
   if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
   p <- ggplot(d, aes(misspec, .data[[value]], fill = method, group = method))
   if (!is.null(band))
@@ -174,7 +171,6 @@ fig_param <- function(metric = "coverage", params = c("a1", "a2", "b", "cp"),
            distr_exo = factor(distr_exo, levels = dis_lv),
            parameter = factor(parameter, levels = params),
            method    = factor(method, levels = c("lsam", "lms", "dblcent"), labels = c("LSAM", "LMS", "UPI")))
-  if (metric == "se_sd")        d <- filter(d, se_sd <= 1.5)
   if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
   p <- ggplot(d, aes(misspec, .data[[metric]], shape = method, linetype = method, group = method))
   if (!is.null(m$band))
@@ -213,8 +209,7 @@ fig_loading_measures <- function(loading = "lm3", a3v = 0.2, nval = 500, rel_lvl
            distr_exo = factor(distr_exo, levels = dis_lv),
            method    = factor(method, levels = c("lsam", "lms", "dblcent"), labels = c("LSAM", "LMS", "UPI"))) |>
     tidyr::pivot_longer(all_of(meas_lv), names_to = "measure", values_to = "value") |>
-    filter(!(measure == "se_sd" & value > 1.5),
-           !(measure == "rel_bias_var" & value > 10)) |>
+    filter(!(measure == "rel_bias_var" & value > 10)) |>
     mutate(measure = factor(measure, levels = meas_lv, labels = meas_lab))
   refdf <- data.frame(
     measure = factor(meas_lab, levels = meas_lab),

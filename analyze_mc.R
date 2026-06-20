@@ -17,8 +17,9 @@
 # - global step: a rep is dropped from ALL methods unless every method passed.
 # so after global convergence + global outlier removal every method in a
 # condition runs on the identical rep set (n_final is shared).
-# outliers: IQR +- 3 fences on poi est per (condition, method, parameter); a rep
-# flagged on any method/parameter is dropped condition-wide.
+# outliers: IQR +- 3 fences on poi est per (condition, method, parameter), plus
+# (if screen_se) a degenerate SE (> se_max) on any poi parameter; a rep flagged
+# on any method/parameter is dropped condition-wide.
 # metrics carry jackknife MCSEs (*_mcse) from simhelpers, per (condition, method,
 # parameter): rel_bias = mean(est)/true - 1, rel_rmse = rmse/|true|,
 # coverage = P(lo <= true <= hi). rel_bias_var = E[se^2]/var(est) and
@@ -35,6 +36,11 @@ cond_keys     <- c("condition", "n", "a3", "rel", "distr_exo", "misspec")
 methods_all   <- c("lsam", "lms", "dblcent")
 n_methods_all <- length(methods_all)
 poi           <- c("a1", "a2", "a3", "b", "cp", "imm")  # structural paths of interest
+
+# when TRUE, a rep with a degenerate SE (> se_max) on any poi parameter is also
+# flagged as an outlier, dropped under the same global rule as estimate outliers.
+screen_se     <- TRUE
+se_max        <- 10
 
 is_bad <- function(x) is.na(x) | is.nan(x) | is.infinite(x)
 
@@ -139,17 +145,18 @@ process <- function(criterion) {
   kept_reps  <- rep_conv |> filter(.data[[global_col]]) |>
     select(all_of(c(cond_keys, "rep")))
 
-  # outliers on the globally-converged set (slim frame: keys + est only).
+  # outliers on the globally-converged set (slim frame: keys + est + se).
   # computed straight off est_slim so we never materialise a full-width copy.
   rep_out <- est_slim |>
     semi_join(kept_reps, by = c(cond_keys, "rep")) |>
-    select(all_of(c(cond_keys, "method", "parameter", "rep")), est) |>
+    select(all_of(c(cond_keys, "method", "parameter", "rep")), est, se) |>
     filter(parameter %in% poi) |>
     group_by(across(all_of(c(cond_keys, "method", "parameter")))) |>
     mutate(q1 = quantile(est, 0.25, na.rm = TRUE),
            q3 = quantile(est, 0.75, na.rm = TRUE),
            iqr = q3 - q1,
-           is_out = est < q1 - 3 * iqr | est > q3 + 3 * iqr) |>
+           is_out = est < q1 - 3 * iqr | est > q3 + 3 * iqr |
+                    (screen_se & se > se_max)) |>
     group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
     summarise(method_out = any(is_out, na.rm = TRUE), .groups = "drop")
 
