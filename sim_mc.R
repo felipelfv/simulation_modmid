@@ -153,7 +153,7 @@ gen_exo <- function(n, distr_exo) {
 
 # calibration (from calibrate_final.R): misspec_coefs = beta coefs per cell (pure lookup);
 # vy_ratios = var(Y) inflation ratios to hold Y reliability at its `none` value under c2/c3.
-cal           <- readRDS(file.path(direc, "calibration", "calibration_results.rds"))
+cal           <- readRDS(file.path(results_dir, "calibration.rds"))
 misspec_coefs <- cal$misspec_coefs
 vy_ratios     <- cal$vy_ratios
 
@@ -476,11 +476,11 @@ parallel::mclapply(seq_len(nrow(design)), run_condition,
 message(sprintf("done in %.1f min",
                 as.numeric(difftime(Sys.time(), t_start, units = "mins"))))
 
-# aggregate per-condition files into raw_mc.rds (estimates) and
+# aggregate per-condition files into estimates_mc.rds (per-fit estimates) and
 # metrics_mc.rds (per-rep dataset metrics). uncomment to run.
 all_files <- list.files(results_dir, "^condition_mc_\\d+\\.rds$", full.names = TRUE)
 all_data  <- lapply(all_files, readRDS)
-raw     <- do.call(rbind, lapply(all_data, `[[`, "rows"))
-metrics <- do.call(rbind, lapply(all_data, `[[`, "metrics"))
-saveRDS(raw,     file.path(results_dir, "raw_mc.rds"))
-saveRDS(metrics, file.path(results_dir, "metrics_mc.rds"))
+estimates <- do.call(rbind, lapply(all_data, `[[`, "rows"))
+metrics   <- do.call(rbind, lapply(all_data, `[[`, "metrics"))
+saveRDS(estimates, file.path(results_dir, "estimates_mc.rds"))
+saveRDS(metrics,   file.path(results_dir, "metrics_mc.rds"))
