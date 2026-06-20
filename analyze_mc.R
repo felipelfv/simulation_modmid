@@ -48,6 +48,14 @@ conv <- estimates |>
     .groups = "drop") |>
   mutate(strict_nonconv = soft_nonconv | inadmissible)
 
+# conv is the only consumer of warnings/neg_theta/npd_psi; everything downstream
+# needs just the metric columns. project to those and free the full frame before
+# processing (warnings holds unique error strings -- the biggest real-heap cost).
+est_slim <- estimates |>
+  select(all_of(c(cond_keys, "method", "parameter", "rep")),
+         true_value, est, se, ci_lo, ci_hi)
+rm(estimates); gc()
+
 # per-rep global convergence: a rep survives only if ALL methods converged
 rep_conv <- conv |>
   group_by(across(all_of(c(cond_keys, "rep")))) |>
@@ -130,10 +138,11 @@ process <- function(criterion) {
   # filtering needed)
   kept_reps  <- rep_conv |> filter(.data[[global_col]]) |>
     select(all_of(c(cond_keys, "rep")))
-  clean_conv <- estimates |> semi_join(kept_reps, by = c(cond_keys, "rep"))
 
-  # outliers on the globally-converged set (slim frame: keys + est only)
-  rep_out <- clean_conv |>
+  # outliers on the globally-converged set (slim frame: keys + est only).
+  # computed straight off est_slim so we never materialise a full-width copy.
+  rep_out <- est_slim |>
+    semi_join(kept_reps, by = c(cond_keys, "rep")) |>
     select(all_of(c(cond_keys, "method", "parameter", "rep")), est) |>
     filter(parameter %in% poi) |>
     group_by(across(all_of(c(cond_keys, "method", "parameter")))) |>
@@ -167,7 +176,7 @@ process <- function(criterion) {
 
   final_reps <- rep_out_global |> filter(!rep_out) |>
     select(all_of(c(cond_keys, "rep")))
-  clean <- clean_conv |> semi_join(final_reps, by = c(cond_keys, "rep"))
+  clean <- est_slim |> semi_join(final_reps, by = c(cond_keys, "rep"))
 
   # report: one row per (condition x method)
   report <- conv_counts |>
@@ -198,6 +207,7 @@ process <- function(criterion) {
 }
 
 soft   <- process("soft")
+gc()
 strict <- process("strict")
 
 summary_tbl   <- bind_rows(soft$summary,   strict$summary)
