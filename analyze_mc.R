@@ -3,10 +3,10 @@
 # in : results/estimates_mc.rds
 # out: results/{summary,rejection_imm_a3,convergence_report}.rds
 
-# convergence is judged on the structural paths of interest only
-# (poi = a1, a2, a3, b, cp, imm); loadings still get metric rows but never drive
-# inclusion. two criteria, each reported and each producing its own metrics:
-#   soft   : any poi est/se/ci is NA/NaN/Inf.
+# convergence is judged on all estimated parameters: the structural paths of
+# interest (poi = a1, a2, a3, b, cp, imm) plus the 12 free loadings. two
+# criteria, each reported and each producing its own metrics:
+#   soft   : any est/se/ci (any parameter) is NA/NaN/Inf.
 #   strict : soft, OR an inadmissible solution flagged at fit time in sim_mc.R
 #            (neg_theta = residual variance <= 0; npd_psi = non-PD factor cov).
 # warnings are counted (n_warn_method) but do NOT exclude.
@@ -40,7 +40,6 @@ is_bad <- function(x) is.na(x) | is.nan(x) | is.infinite(x)
 
 # --- per (condition, method, rep) convergence flags ---------------------------
 conv <- estimates |>
-  filter(parameter %in% poi) |>
   group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
   summarise(
     soft_nonconv = any(is_bad(est) | is_bad(se) | is_bad(ci_lo) | is_bad(ci_hi)),
@@ -63,8 +62,6 @@ rep_conv <- conv |>
 # simhelpers' ratio (0-centered, MCSE unchanged); relative measures fall back to
 # absolute at true == 0.
 calc_one <- function(df) {
-  df <- df[!is.na(df$est) & !is.na(df$ci_lo) & !is.na(df$ci_hi), ]
-  if (nrow(df) == 0L) return(tibble(n_used = 0L))
   true   <- df$true_value[[1]]
   df$se2 <- df$se^2
   ab  <- calc_absolute(df, estimates = est, true_param = true_value)
@@ -99,8 +96,6 @@ calc_one <- function(df) {
 # reject = 1 - coverage-of-zero (CI excludes 0). Type I error at a3 = 0, power at
 # a3 = 0.2, for imm and a3.
 calc_reject <- function(df) {
-  df <- df[!is.na(df$ci_lo) & !is.na(df$ci_hi), ]
-  if (nrow(df) == 0L) return(tibble(reject = NA_real_, reject_mcse = NA_real_, n_used = 0L))
   df$zero <- 0
   cov <- calc_coverage(df, lower_bound = ci_lo, upper_bound = ci_hi, true_param = zero)
   tibble(reject = 1 - cov$coverage, reject_mcse = cov$coverage_mcse, n_used = nrow(df))
