@@ -23,10 +23,27 @@
 #  > "hyperref",
 #  > "float",
 #  > "pgf",
-#  > "standalone"),
+#  > "standalone",
+#  > "apa7",
+#  > "threeparttable",
+#  > "threeparttablex",
+#  >      "multirow",
+#  > "colortbl",
+#  > "xpatch",
+#  > "lineno",
+#  > "fontawesome5",
+#  > "newtx",
+#  > "pbalance",
+#  > "tcolorbox",
+#  > "environ",
+#  > "pdfcol",
+#  > "mathspec",
+#  > "xecjk",
+#  > "pdflscape",
+#  > "babel-english"),
 #  > project_path = ".",
 #  > overwrite = TRUE,
-#  >      r_ver = "4.6.0")
+#  > r_ver = "4.6.0")
 # It uses the `rstats-on-nix` fork of `nixpkgs` which provides improved
 # compatibility with older R versions and R packages for Linux/WSL and
 # Apple Silicon computers.
@@ -93,18 +110,35 @@ let
     inherit (pkgs.texlive) 
       scheme-small
       amsmath
+      apa7
+      babel-english
       booktabs
       caption
+      colortbl
+      environ
       etoolbox
       fancyvrb
       float
+      fontawesome5
       framed
       fvextra
       geometry
       hyperref
+      lineno
+      mathspec
+      multirow
+      newtx
+      pbalance
+      pdfcol
+      pdflscape
       pgf
       standalone
-      xcolor;
+      tcolorbox
+      threeparttable
+      threeparttablex
+      xcolor
+      xecjk
+      xpatch;
   });
     
   system_packages = builtins.attrValues {
