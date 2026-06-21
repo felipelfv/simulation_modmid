@@ -38,6 +38,7 @@
 #  > "newtx",
 #  > "pbalance",
 #  > "tcolorbox",
+#  > "tikzfill",
 #  > "environ",
 #  > "pdfcol",
 #  > "mathspec",
@@ -142,6 +143,7 @@ let
       tcolorbox
       threeparttable
       threeparttablex
+      tikzfill
       xcolor
       xecjk
       xpatch;

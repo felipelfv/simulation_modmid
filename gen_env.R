@@ -11,8 +11,9 @@ rix(date = "2026-05-11", # available_dates(); 1.8.x quarto (1.9.37 has a pandoc 
                  # apaquarto (apa7.cls) + the packages it and its template load
                  "apa7", "scalerel", "endfloat", "substr", "threeparttable",
                  "threeparttablex", "multirow", "colortbl", "xpatch", "lineno",
-                 "fontawesome5", "newtx", "pbalance", "tcolorbox", "environ",
-                 "pdfcol", "mathspec", "xecjk", "pdflscape", "babel-english"),
+                 "fontawesome5", "newtx", "pbalance", "tcolorbox", "tikzfill",
+                 "environ", "pdfcol", "mathspec", "xecjk", "pdflscape",
+                 "babel-english"),
     git_pkgs = list(
       list(package_name = "lavaan",
            repo_url = "https://github.com/yrosseel/lavaan",
