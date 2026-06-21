@@ -7,7 +7,7 @@ rix(date = "2026-05-11", # available_dates(); 1.8.x quarto (1.9.37 has a pandoc 
     # LaTeX deps for the Quarto PDF; extend as the build reports missing .sty
     tex_pkgs = c("amsmath", "framed", "fvextra", "fancyvrb", "booktabs",
                  "caption", "etoolbox", "xcolor", "geometry", "hyperref",
-                 "float"),
+                 "float", "pgf", "standalone"),
     git_pkgs = list(
       list(package_name = "lavaan",
            repo_url = "https://github.com/yrosseel/lavaan",
