@@ -28,7 +28,8 @@
 #  > "scalerel",
 #  > "endfloat",
 #  > "substr",
-#  >      "threeparttable",
+#  >      "xstring",
+#  > "threeparttable",
 #  > "threeparttablex",
 #  > "multirow",
 #  > "colortbl",
@@ -36,6 +37,7 @@
 #  > "lineno",
 #  > "fontawesome5",
 #  > "newtx",
+#  > "fontaxes",
 #  > "pbalance",
 #  > "tcolorbox",
 #  > "tikzfill",
@@ -125,6 +127,7 @@ let
       fancyvrb
       float
       fontawesome5
+      fontaxes
       framed
       fvextra
       geometry
@@ -146,7 +149,8 @@ let
       tikzfill
       xcolor
       xecjk
-      xpatch;
+      xpatch
+      xstring;
   });
     
   system_packages = builtins.attrValues {
