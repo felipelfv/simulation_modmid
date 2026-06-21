@@ -494,12 +494,59 @@ only, with the captured error or warning retained for diagnostics.
 
 Performance was assessed with the measures implemented in the *simhelpers*
 package [@Joshi2025], following recommendations in @Morris2019. For the index of
-moderated mediation and the structural coefficients we report absolute and
-relative bias, RMSE, the mean standard error and the SE/SD ratio,
-confidence-interval coverage, and—where applicable—the rejection rate
-(Type I error when $a_3 = 0$, power otherwise). Monte Carlo uncertainty in each
-performance measure is quantified with jackknife Monte Carlo standard errors
-[@Joshi2025].
+moderated mediation and the structural coefficients we report relative bias and
+relative RMSE, the mean standard error, the SE/SD ratio and the relative bias of
+the variance estimator, confidence-interval coverage, and—where applicable—the
+rejection rate (Type I error when $a_3 = 0$, power otherwise). Monte Carlo
+uncertainty in each performance measure is quantified with Monte Carlo standard
+errors [@Joshi2025], computed by jackknife where no closed-form expression is
+available. @tbl-performance lists the empirical and Monte Carlo standard-error
+calculations for each measure.
+
+```{r}
+#| label: tbl-performance
+#| tbl-cap: "Subset of the Performance Measures for Evaluating Parameter Estimates"
+#| apa-note: "$B_k$ is the estimate of parameter $\\theta$ in replication $k$ ($k = 1, \\dots, K$ usable replications), $\\bar{B}$ its mean, $S_B^2$ its sample variance, and $S_B$ its standard deviation; $\\mathrm{RMSE} = \\sqrt{\\tfrac{1}{K}\\sum_k (B_k-\\theta)^2}$; $\\widehat{SE}_k$ is the estimated standard error, $\\overline{SE^2} = \\tfrac{1}{K}\\sum_k \\widehat{SE}_k^2$, and $L_k, U_k$ the confidence-interval limits; $c$ and $r$ denote coverage and rejection rate, and $\\rho$ the relative bias of the variance estimator. The subscript $(j)$ marks a leave-one-out jackknife replicate. The MCSEs for relative RMSE and the relative bias of the variance estimator are computed by jackknife; the others are closed-form, and dashes mark MCSEs that are not computed. All measures were computed with the simhelpers package."
+g <- function(x) paste0("\\textit{", x, "}")
+tab <- data.frame(
+  measure = c(
+    g("Relative criteria"),
+    "Relative bias", "Relative RMSE",
+    g("Standard errors"),
+    "Mean SE", "SE/SD ratio", "Relative bias of variance estimator",
+    g("Coverage"),
+    "Coverage",
+    g("Hypothesis testing"),
+    "Rejection rate"),
+  empirical = c(
+    "",
+    "$\\tfrac{\\bar{B}}{\\theta}-1$",
+    "$\\tfrac{1}{|\\theta|}\\sqrt{\\tfrac{1}{K}\\sum_{k=1}^{K}(B_k-\\theta)^2}$",
+    "",
+    "$\\overline{SE}=\\tfrac{1}{K}\\sum_{k=1}^{K}\\widehat{SE}_k$",
+    "$\\overline{SE}/S_B$",
+    "$\\rho=\\overline{SE^2}/S_B^2$",
+    "",
+    "$c=\\tfrac{1}{K}\\sum_{k=1}^{K}I(L_k\\le\\theta\\le U_k)$",
+    "",
+    "$r=\\tfrac{1}{K}\\sum_{k=1}^{K}I(0\\notin[L_k,U_k])$"),
+  mcse = c(
+    "",
+    "$\\sqrt{S_B^2/(K\\theta^2)}$",
+    "$\\tfrac{1}{|\\theta|}\\sqrt{\\tfrac{K-1}{K}\\sum_{j=1}^{K}(\\mathrm{RMSE}_{(j)}-\\mathrm{RMSE})^2}$",
+    "",
+    "---", "---",
+    "$\\sqrt{\\tfrac{K-1}{K}\\sum_{j=1}^{K}(\\rho_{(j)}-\\rho)^2}$",
+    "",
+    "$\\sqrt{c(1-c)/K}$",
+    "",
+    "$\\sqrt{r(1-r)/K}$"))
+knitr::asis_output(paste0("\\begin{center}\n",
+  knitr::kable(tab, booktabs = TRUE, escape = FALSE, longtable = TRUE,
+               linesep = "", format = "latex",
+               col.names = c("Performance measure", "Empirical calculation", "MCSE")),
+  "\n\\end{center}"))
+```
 
 Inference for the index of moderated mediation accounts for the skewness of the
 product $a_3 b$: for $r = 1, \dots, R$ (with $R = 20{,}000$) we drew
