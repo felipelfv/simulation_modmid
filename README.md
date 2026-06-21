@@ -12,18 +12,18 @@ misspecification:
 - **LMS** — latent moderated structural equations, `modsem::modsem_da(method = "lms", robust.se = TRUE)`
 - **UPI** — extended unconstrained product indicators (double mean-centering), `modsem::modsem(method = "dblcent", estimator = "MLR")`
 
-The design is a full factorial of **4 sample sizes × 3 interaction effects × 2
-reliabilities × 5 distributions × 9 misspecifications = 1080 conditions**, each run
-for **1000 replications**.
+The design is a full factorial of 4 sample sizes × 3 interaction effects × 2
+reliabilities × 5 distributions × 9 misspecifications = 1080 conditions, each run
+for 800 replications.
 
 <sub>This work is licensed under a [Creative Commons Attribution 4.0 International
-License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). The
-preregistration, data, code, and materials are archived at
+License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). This project and the
+preregistration for it are archived at
 <https://doi.org/10.5281/zenodo.20703258>.</sub>
 
 ## Repository Structure
 
-The project is a flat set of R scripts forming a four-stage pipeline, plus a
+The project consists of a set of R scripts forming a four stage pipeline, plus a
 Quarto manuscript and a Nix environment definition.
 
 ### 1. Simulation
@@ -47,13 +47,21 @@ The simulation writes its outputs to `results/`:
 results/
 ├── calibration.rds          # calibration lookup consumed by sim_mc.R
 ├── design.rds               # the 1080-row design grid
-├── condition_mc_0001.rds … condition_mc_1080.rds   # one file per condition (resumable)
 ├── estimates_mc.rds         # combined per-fit estimates (~1.3 GB, ~47M rows)
 ├── metrics_mc.rds           # combined per-replication fit metrics / timings
 ├── summary.rds              # performance metrics      (← analyze_mc.R)
 ├── rejection_imm_a3.rds     # Type I error / power     (← analyze_mc.R)
 └── convergence_report.rds   # convergence & outlier counts (← analyze_mc.R)
 ```
+
+The per-condition files `condition_mc_0001.rds … condition_mc_1080.rds` (one
+per condition, written by `sim_mc.R` for resumability) are intermediate
+artifacts combined into `estimates_mc.rds` at the end of Step 1, and are *not
+included* in this repository.
+
+The large combined outputs in `results/` are archived on Zenodo (DOI above) 
+rather than committed here. Download them into `results/` to re-run 
+`analyze_mc.R`. 
 
 ### 2. Analysis and figures
 
