@@ -25,9 +25,12 @@
 #  > "pgf",
 #  > "standalone",
 #  > "apa7",
-#  > "threeparttable",
+#  > "scalerel",
+#  > "endfloat",
+#  > "substr",
+#  >      "threeparttable",
 #  > "threeparttablex",
-#  >      "multirow",
+#  > "multirow",
 #  > "colortbl",
 #  > "xpatch",
 #  > "lineno",
@@ -115,6 +118,7 @@ let
       booktabs
       caption
       colortbl
+      endfloat
       environ
       etoolbox
       fancyvrb
@@ -132,7 +136,9 @@ let
       pdfcol
       pdflscape
       pgf
+      scalerel
       standalone
+      substr
       tcolorbox
       threeparttable
       threeparttablex
