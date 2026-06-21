@@ -39,9 +39,10 @@ method_shapes <- c(LSAM = 16, LMS = 17, UPI = 15)
 method_lines  <- c(LSAM = "solid", LMS = "dashed", UPI = "dotdash")
 method_fills  <- c(LSAM = "grey25", LMS = "grey55", UPI = "grey85")
 
-# shared facet + scale + theme layers
-apa_grid <- function() list(
-  facet_grid(distr_exo ~ rel + n, labeller = labeller(distr_exo = dist_labeller, n = n_labeller)),
+# shared facet + scale + theme layers; caller may override the facet
+apa_grid <- function(facets = facet_grid(distr_exo ~ rel + n,
+                       labeller = labeller(distr_exo = dist_labeller, n = n_labeller))) list(
+  facets,
   scale_shape_manual(values = method_shapes),
   scale_linetype_manual(values = method_lines),
   theme_bw(base_size = 10),
@@ -59,15 +60,10 @@ metric_spec <- list(
   power    = list(lab = "Power",          mcse = "reject_mcse",   band = NULL,             ref = 0.80)
 )
 
-# one metric for one parameter at fixed (a3, n): distribution x reliability grid,
-# x = misspecification, line + point per method, +/- 1 MCSE bars, acceptable band.
-fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(200, 500)) {
+# band + ref line + +/-1 MCSE bars + line + points for a metric (caller adds the
+# facet via apa_grid); shared by the per-condition slice figures.
+slice_geoms <- function(d, metric) {
   m <- metric_spec[[metric]]
-  d <- summary_tbl |>
-    filter(parameter == param, a3 == a3v, n %in% nvals) |>
-    prep_factors()
-  # drop rel. variance bias > 10: a few cells blow up and swamp the y-axis (flagged for review)
-  if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
   p <- ggplot(d, aes(misspec, .data[[metric]], shape = method, linetype = method, group = method))
   if (!is.null(m$band))
     p <- p + annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
@@ -81,8 +77,32 @@ fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(2
   p +
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.6) +
-    apa_grid() +
     labs(x = "Misspecification", y = m$lab, shape = NULL, linetype = NULL)
+}
+
+# one metric for one parameter at fixed (a3, n): distribution x reliability grid,
+# x = misspecification, line + point per method, +/- 1 MCSE bars, acceptable band.
+fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(200, 500)) {
+  d <- summary_tbl |>
+    filter(parameter == param, a3 == a3v, n %in% nvals) |>
+    prep_factors()
+  # drop rel. variance bias > 10: a few cells blow up and swamp the y-axis (flagged for review)
+  if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
+  slice_geoms(d, metric) + apa_grid()
+}
+
+# rel. bias of variance, imm and a3 together at one reliability level: distribution
+# (rows) x parameter x N (cols). high reliability goes in the manuscript, low in the
+# appendix (low-reliability cells blow up under heavy tails and swamp the y-axis).
+fig_relvar_both <- function(a3v = 0.2, rel_lvl = "high") {
+  d <- summary_tbl |>
+    filter(parameter %in% c("imm", "a3"), a3 == a3v, n %in% c(200, 500),
+           rel == rel_lvl, rel_bias_var <= 10) |>
+    prep_factors() |>
+    mutate(parameter = factor(parameter, levels = c("imm", "a3")))
+  slice_geoms(d, "rel_bias_var") +
+    apa_grid(facet_grid(distr_exo ~ parameter + n,
+                        labeller = labeller(distr_exo = dist_labeller, n = n_labeller)))
 }
 
 # imm and a3 together as greyscale grouped bars: parameter x distribution (rows),
@@ -265,13 +285,21 @@ save_bar_both("rel_rmse", 0.2)
 save_bar_both("typeI", 0, d2 = rej_tbl, value = "reject")
 save_bar_both("power", 0.2, d2 = rej_tbl, value = "reject")
 
-# coverage, SE/SD, variance bias as line slices (wide -> rotated); bars compress
-# these (coverage near .95, SE/SD and variance bias near 1)
+# coverage and SE/SD as line slices (wide -> rotated); bars compress these
+# (coverage near .95, SE/SD near 1)
 for (p in c("imm", "a3"))
-  for (m in c("coverage", "se_sd", "rel_bias_var"))
+  for (m in c("coverage", "se_sd"))
     save_rotated(fig_slice(p, 0.2, m),
                  file.path(plot_dir, sprintf("%s_%s_a3-0.2_byrel.png", p, m)),
                  w = 9.5, h = 8)
+
+# rel. bias of variance: imm + a3 in one panel (wide -> rotated); high reliability
+# in the manuscript, low reliability in the appendix (the low-reliability cells blow
+# up under heavy-tailed predictors and would swamp the shared y-axis)
+for (rl in c("high", "low"))
+  save_rotated(fig_relvar_both(0.2, rl),
+               file.path(plot_dir, sprintf("rel_bias_var_a3-0.2_%s.png", rl)),
+               w = 9.5, h = 8)
 
 # structural-coefficient overviews (wide -> rotated)
 for (m in c("rel_bias", "coverage", "se_sd"))

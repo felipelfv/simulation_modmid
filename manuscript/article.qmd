@@ -104,33 +104,33 @@ an outcome [@GonzalezMacKinnon2021]. To address this, structural equation
 modelling (SEM) with latent variables has been proposed, especially in 
 the context of mediation [@CheungLau2008;
 @FalkBiesanz2015; @LedgerwoodShrout2011; @Montoya2024]. 
-By estimating structural relationships between common factors, from 
-which indicator-specific unique variance has been partitioned, provided the 
-measurement model is correctly specified [@Bollen1989; @Rhemtulla2020]. 
+It estimates structural relationships between common factors, from
+which indicator-specific unique variance has been partitioned, provided the
+measurement model is correctly specified [@Bollen1989; @Rhemtulla2020].
 The problem is compounded under moderation, where the product term is even 
 less reliable than either of its constituents [@Bohrnstedt1978; @Busemeyer1983]; 
 yet we also note that latent variables do not necessarily improve power 
 in general, whether for interactions or not [@Cham2012; @Fuller1987; 
 @LedgerwoodShrout2011; @WangRhemtulla2021].
 
-Moderation with latent variables is not straightforward in terms of
+Moderation mediation with latent variables is not straightforward in terms of statistical
 estimation. Indeed, a latent interaction involves the product of two latent 
 variables, which is unobserved and nonnormal even when its constituents are 
-normal [@KleinMoosbrugger2000]. A number of methods have been proposed to
+normal [@KleinMoosbrugger2000]. Following this, a number of methods have been proposed to
 estimate latent interactions [e.g., @AlginaMoulder2001; @Arminger1998;
 @AsparouhovMuthen2021; @Boker2023; @Bollen1995; @CoxKelcey2021; @HolstBudtz2020;
 @JoreskogYan1996; @KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007;
 @Marsh2004; @MooijaartBentler2010; @MooijaartSatorra2012; @WallAmemiya2000]. 
 Most adopt a joint ("system-wide") estimation
 strategy, in which the measurement and structural parameters are estimated
-simultaneously. This is the case of the most known methods: latent moderated
+simultaneously. This is the case of the known methods: latent moderated
 structural equations (LMS) and product-indicator (PI). Opposed to these 
 are structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
 @HolstBudtz2020; @NgChan2020; @RosseelLoh2024; @WallAmemiya2001; @WallAmemiya2003],
-in which the measurement model is estimated first, from the indicators alone, 
-and the structural model is estimated afterward with the measurement parameters 
+in which the measurement model is estimated first and the structural model 
+afterward with the measurement parameters 
 held fixed. Most of the abovementioned approaches have so far been rarely applied in 
-practice, most likely held back by limited software, slow estimation, and 
+practice, likely held back by limited software, slow estimation, and 
 error-prone implementations. With recent open-source implementations 
 [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and non-commercial software 
 [@Keller2025], this is likely to change.
@@ -157,7 +157,7 @@ meaning, do not depend on the structure subsequently fit, and interpretational
 confounding is avoided. Note, however, that this does not imply the 
 structure is correct [@VanderWeeleVansteelandt2022]. Local SAM (LSAM) is 
 one such method, which was recently extended to interaction and quadratic effects 
-among latent variables [@Rosseel2025], which makes it applicable to 
+among latent variables [@Rosseel2025; @Vieira2026], which makes it applicable to 
 latent variable moderated mediation.
 
 To illustrate it, we take a mediation model with three latent variables, X, M, and
@@ -238,23 +238,21 @@ knitr::asis_output(paste0("\\begin{center}\n",
 ```
 
 The example involves a single, deliberate change to the structural model,
-but it reflects a general property of system-wide estimation. That is, because the
+but it reflects a more general property of system-wide estimation. That is, because the
 measurement and structural parameters are estimated jointly, the consequences of
 a misspecification are not confined to the part of the model in which it occurs
 [@BainterBollen2014]. Prior simulation work has examined latent interaction 
-estimation mainly under nonnormal predictors 
-[e.g., @Cham2012; @Vieira2026; @Lonati2025; @Brandt2014], 
-and in only one case under a misspecified measurement model [@Brandt2020], 
-but not within (moderated) mediation, despite its popularity in applied 
-research. In fact, only a few studies investigated (moderated) mediation with 
+estimation mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
+@Lonati2025; @Brandt2014], and in only one case under misspecifications 
+at the measurement level [@Brandt2020]. Moreover, when in it comes to (moderated) mediation, 
+despite its popularity in applied research, only a few studies investigated it with 
 latent variables, and those always assumed a correctly specified (and saturated) model 
 [@FalkBiesanz2015; @Feng2020]. Two questions therefore remain open. 
 The first concerns the robustness of the estimators to structural and measurement
 misspecification, alone and in combination with nonnormal distributions, which is
 relevant because the estimators rely on different distributional assumptions
-[e.g., @Kelava2011; @Lonati2025; @Vieira2026].
-Connected to this, the second concerns how misspecification in the measurement
-model may affect the estimates, a question that is
+[e.g., @Kelava2011; @Lonati2025; @Vieira2026]. Connected to this, the second concerns 
+how misspecification in the measurement model may affect the estimates, a question that is
 particularly relevant in moderated mediation, where the mediator functions simultaneously
 as an outcome and a predictor, and the effect of interest is a nonlinear (product)
 function of two structural coefficients.
@@ -268,9 +266,10 @@ next section. Thus, this study has three contributions to the literature.
 
 These estimators have not been evaluated under misspecification of the
 measurement or the structural model in a large setting. Moreover, the LSAM
-approach has not been assessed for derived quantities such as the imm, 
-which is a nonlinear functions of the structural parameters whose behavior 
-need not match that of their constituents. Moreover, for such quantities inference has 
+approach has not been assessed for derived quantities such as the 
+index of moderated mediation [imm; @Hayes2015], which is a nonlinear functions of the 
+structural parameters whose behavior need not match that of their constituents. 
+Moreover, for such quantities inference has 
 relied on the bootstrap [@Hayes2015; @Tibbe2022], especially in the 
 limited prior work concerning (moderated) mediation with latent variables 
 [@FalkBiesanz2015; @Feng2020]. In this study, we adopt and evaluate 
@@ -304,10 +303,10 @@ M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
 Y = b\,M + c'\,X + \zeta_Y,
 $$
 
-The primary estimands are the index of moderated mediation (imm) [@Hayes2015],
-i.e., $a_3 b$. The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) 
+The primary estimands are the imm (i.e., $a_3 b$) and the interaction coefficient ($a_3$).
+The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) 
 and the twelve freely estimated factor loadings serve as secondary estimands. 
-Because the index is a derived quantity rather than a free parameter, its 
+Note the index is a derived quantity rather than a free parameter, hence its 
 true value is computed as $a_3 b$ implied by the correctly specified model.
 
 Population values were fixed at $a_1 = 0.4$, $a_2 = 0.3$, $b = 0.5$, and
@@ -317,9 +316,9 @@ disturbance variances, were chosen so that under the baseline condition (normal
 exogenous predictors and a correctly specified model) each dependent latent
 variable has $R^2 = 0.30$ at the interaction level $a_3 = 0.20$. Note that, 
 because $a_3$ contributes to the variance of $M$, the explained variance is 
-naturally higher at $a_3 = 0.40$ and lower at $a_3 = 0$. Each latent variable is 
+naturally higher with a larger $a_3$ and lower when its effect is null. Each latent variable is 
 measured by four congeneric indicators with loadings $1.0$, $0.8$, $0.7$, 
-and $0.6$. @fig-model depicts the population
+and $0.6$. @fig-model shows the population
 model, where the structural misspecifications studied below are drawn in grey.
 
 ```{tikz}
@@ -421,12 +420,11 @@ conditions, each replicated 800 times.
 Sample sizes span the small-to-moderate range typical of applied moderated
 mediation research, where interaction terms are estimated with limited power
 [@Hayes2015; @Preacher2007]. The interaction magnitudes include a null condition
-($a_3 = 0$) to assess Type I error and false-positive coverage of the index, and
+($a_3 = 0$) to assess Type I error and false-positive coverage of the imm, and
 two nonzero levels representing small and moderate latent moderation effects.
 Reliability levels of $0.5$ and $0.7$ were chosen because measurement error is
 amplified in product terms and is therefore especially consequential for latent
-interaction estimation [@Bollen1989; @Brandt2014], and because lower reliability
-is common in applied settings than the values typically examined in prior work.
+interaction estimation [@Lonati2025; @Vieira2026].
 Nonnormality of the latent predictors is both empirically common and 
 methodologically central for latent interaction estimators, whose distributional 
 assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; 
@@ -454,17 +452,17 @@ Appendix A describes the complete data-generating mechanism in detail. Briefly,
 the latent variables $X$ and $W$ were drawn from a bivariate
 distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the
 vine-to-anything (VITA) algorithm [@Gronneberg2022; @Foldnes2015]. Five exogenous
-distributions were examined, each standardized to mean $0$ and variance $1$ so
-that branches differ in shape rather than scale or location: normal, 
-$X, W \sim \mathcal{N}(0, 1)$,
-using a forced Gaussian copula. The remaining four combine non-normal margins 
-with a non-Gaussian vine copula:
-uniform, $t_5$, and two $\chi^2(2)$ conditions with $X$ and $W$ skewed in the 
-same or in opposite directions. Given that, $M$ and $Y$ were generated from the 
+distributions were examined, each standardized to mean $0$ and variance $1$.
+Thus, the conditions differ only in distributional shape, not in scale or
+location. Specifically, the normal condition draws $X, W \sim \mathcal{N}(0, 1)$
+through a forced Gaussian copula, whereas the remaining four combine non-normal
+margins with a non-Gaussian copula: uniform, $t_5$, and two $\chi^2(2)$
+conditions in which $X$ and $W$ are skewed in the same or in opposite directions. 
+Given that, $M$ and $Y$ were generated from the 
 structural equations above with independent Gaussian disturbances 
 $\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$, 
-and each latent variable's four 
-indicators were formed as $z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$, 
+and the four indicators ($j = 1, \dots, 4$) of each latent variable
+$\eta \in \{X, W, M, Y\}$ were formed as $z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$,
 with loadings $\lambda = (1, 0.8, 0.7, 0.6)$ and Gaussian errors
 $\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$ whose variances 
 $\theta_{\eta j}$ were scaled to the target reliability $\omega \in \{0.5, 0.7\}$.
@@ -477,31 +475,37 @@ Two are structural: an omitted direct effect of the moderator on the outcome
 measurement model: a cross-loading of a mediator indicator on $X$ (`cl`) and a 
 residual covariance between a mediator and an outcome indicator (`rc`). 
 In every case the effect is present in the 
-population but omitted from the fitted model.
+population but omitted from the estimated model.
 
 ### Nonconvergence, Outliers, and Inadmissible Solutions
 
 Following previous research [@Lonati2025; @Vieira2026], replications were screened
-for estimation failures and inadmissible solutions before analysis. Because the 
-compared estimators are implemented across different packages, we applied an 
-identical admissibility check to all of them: a solution was flagged when any 
-residual (unique) variance was nonpositive or when the latent covariance matrix 
-was not positive definite. Each estimator was fit independently within a 
-replication, so a failure of one method produced a missing row for that method 
-only, with the captured error or warning retained for diagnostics. 
+before analysis in two sequential steps, each applied globally so that every
+estimator is compared on an identical set of replications. First, we checked 
+convergence: a fit was treated as nonconverged
+when any estimate, standard error, or confidence-interval bound—for any structural
+coefficient or loading—was missing or non-finite, and a replication was removed
+from all estimators whenever any one of them did not converge. We also flagged
+inadmissible solutions, where any residual (unique) variance was nonpositive or
+the latent covariance matrix was not positive definite. Second, among the
+remaining replications, we screened for outliers, identified per
+condition, method, and parameter as point estimates beyond the interquartile range
+$\pm\,3$, together with replications whose estimated standard error exceeded
+$10$ on any parameter of interest^[We added the standard error criterion because,
+even after excluding point estimate outliers, a single LMS replication, in one
+condition, retained an anomalous standard error; it was thus the only replication
+removed based on this criteria.]. Again, a replication flagged for any estimator
+was removed from all of them.
 
 ### Performance Measures
 
 Performance was assessed with the measures implemented in the *simhelpers*
-package [@Joshi2025], following recommendations in @Morris2019. For the index of
-moderated mediation and the structural coefficients we report relative bias and
-relative RMSE, the mean standard error, the SE/SD ratio and the relative bias of
-the variance estimator, confidence-interval coverage, and—where applicable—the
-rejection rate (Type I error when $a_3 = 0$, power otherwise). Monte Carlo
-uncertainty in each performance measure is quantified with Monte Carlo standard
-errors [@Joshi2025], computed by jackknife where no closed-form expression is
-available. @tbl-performance lists the empirical and Monte Carlo standard-error
-calculations for each measure.
+package [@Joshi2025], computed for the imm, the structural coefficients, and the
+loadings. These measures, with their empirical and Monte Carlo standard error (MCSE)
+calculations, are listed in @tbl-performance. Note the MCSE are
+obtained in closed form where available and by jackknife otherwise. On top of that, 
+where applicable, we also report the rejection rate (Type I error when $a_3 = 0$, power
+otherwise).
 
 ```{r}
 #| label: tbl-performance
@@ -548,8 +552,8 @@ knitr::asis_output(paste0("\\begin{center}\n",
   "\n\\end{center}"))
 ```
 
-Inference for the index of moderated mediation accounts for the skewness of the
-product $a_3 b$: for $r = 1, \dots, R$ (with $R = 20{,}000$) we drew
+Inference for the imm followed the Monte Carlo method as mentioned before: 
+for $r = 1, \dots, R$ (with $R = 20{,}000$) we drew
 
 $$
 \bigl(a_3^{(r)}, b^{(r)}\bigr) \sim
@@ -561,9 +565,8 @@ $$
 where $\hat\Sigma_{a_3 b}$ is the estimated covariance of $(\hat a_3, \hat b)$,
 and took the $2.5$th and $97.5$th empirical percentiles of
 $\{\mathrm{imm}^{(r)}\}_{r=1}^{R}$ as the interval. The structural coefficients
-and loadings use Wald (?) intervals from the model-implied parameter covariance
-matrix. The same
-implementation was applied to all three estimators for comparability.
+and loadings use Wald-based intervals from the model-implied parameter covariance
+matrix. 
 
 ### Reproducibility and Computational Details
 
@@ -573,7 +576,7 @@ and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
 [@Joshi2025] for performance evaluation. Conditions were run in parallel with 
 the *parallel* package. Reproducible and independent random-number streams 
 across workers were obtained with the L'Ecuyer-CMRG generator. 
-The computational environment was pinned with Nix via the *rix* package [@rix] 
+The computational environment was pinned with Nix [@dolstra_etall_2004] via the *rix* package [@rix] 
 to ensure reproducibility of the computational environment, and the article was 
 written with the *apaquarto* extension [@apaquarto]. For the package versions, 
 code and materials, see the project repository.
@@ -583,16 +586,17 @@ code and materials, see the project repository.
 We present the results in three sections. We first report the imm and the
 interaction coefficient. We then turn to the remaining structural
 coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), and we close with the
-estimated factor loadings, focusing on the cross-loaded indicator. 
-Due to the large number of conditions, the figures show a focused subset 
-of the results. We fix the interaction coefficient at 0.2 
+estimated factor loadings, focusing mainly the cross-loaded indicator. 
+Moreover, due to the large number of conditions, we focused on a subset 
+of the conditions. Namely, we fix the interaction coefficient at 0.2 
 (except for Type I error, which by construction requires a zero interaction) 
 and display a limited number of sample sizes: $N = 200$ and
-$500$ for the imm and the interaction coefficient, and $N = 500$ for the
-structural coefficients and loadings. For the latter two we further restrict to
+$500$ for the imm and the interaction coefficient, and solely $N = 500$ for the
+structural coefficients and loadings. For the latter two, we further restrict to
 high reliability, whereas the imm and the interaction coefficient are shown at
 both reliability levels. The entire set of results, across all sample sizes,
-reliabilities, and interaction values, is available in the repository.
+reliabilities, and interaction values, is available in the repository 
+(<https://doi.org/10.5281/zenodo.20703258>).
 
 ## Main Structural Estimates
 
@@ -652,13 +656,15 @@ Moreover, in the $\chi^2$ in opposite directions, LSAM and UPI struggled the mos
 throughout all misspecifications, including with the correct specification. 
 These results were highly similar for both imm and $a_3$. We also observe that the measurement
 misspecifications affect in particular LMS in combination with specific nonnormal distributions.
-Similar conclusions are obtained with the relative bias of the variance estimator 
-(@fig-relbiasvar-imm and @fig-relbiasvar-a3).
+Similar conclusions are obtained with the relative bias of the variance estimator
+(@fig-relbiasvar).
 
 Under misspecification the SE/SD ratio remains near one for all three. The
-variance-bias measure stays near one at high reliability but becomes unstable at
-low reliability, where a few extreme replications inflate it for every method and
-most severely for LMS, with the largest cells truncated in the figures.
+variance-bias measure stays near one at high reliability (@fig-relbiasvar) but
+becomes unstable at low reliability, where a few extreme replications inflate it
+for every method and most severely for LMS. Because these low-reliability cells
+reach values that would swamp the shared scale, they are shown separately in
+@fig-relbiasvar-low, with the largest (above ten) truncated.
 
 ### Hypothesis Testing (Type I error and Power)
 
@@ -753,17 +759,10 @@ knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 ```
 
 ```{r}
-#| label: fig-relbiasvar-imm
-#| fig-cap: "Relative Bias of the Variance Estimator of the Index of Moderated Mediation"
+#| label: fig-relbiasvar
+#| fig-cap: "Relative Bias of the Variance Estimator of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$ (High Reliability)"
 #| out-width: "6.3in"
-knitr::include_graphics("../plots/imm_rel_bias_var_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-relbiasvar-a3
-#| fig-cap: "Relative Bias of the Variance Estimator of the Interaction Coefficient $a_3$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/a3_rel_bias_var_a3-0.2_byrel.png")
+knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
 ```
 
 ```{r}
@@ -803,17 +802,21 @@ knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 
 ## Measurement Loadings
 
-Finally, for the twelve freely estimated factor loadings, all but one are
-recovered with near-nominal performance across every measure and condition. 
-Indeed, as expected, the cross-loaded mediator indicator $m_3$: under the
-omitted cross-loading (`cl`) its relative bias rises and its coverage collapses,
-while the other eleven loadings stay flat throughout. One subtler pattern is worth
-noting, even though it is negligible in size: under the residual covariance
-(`rc`), the system-wide estimators carry a systematic upward bias in $m_3$, well
-under one percent, whereas LSAM stays centered on zero, since it estimates the
-mediator's measurement block in isolation. We report only $m_3$, with its relative
-bias, coverage, SE/SD ratio, and variance bias shown together (@fig-load) at high
-reliability and $N = 500$.
+For the twelve freely estimated factor loadings, all but one are recovered with
+near-nominal performance across every measure and condition. Hence, we display only
+the cross-loaded mediator indicator $m_3$, with its relative bias, coverage, SE/SD
+ratio, and relative bias of the variance estimator shown together at high
+reliability and $N = 500$ (@fig-load). For $m_3$, the omitted cross-loading (`cl`)
+is the only consequential misspecification: its relative bias rises sharply (above
+$0.5$ at the medium level, somewhat less for LSAM) and its coverage collapses
+toward zero. The two standard error measures, by contrast, remain well calibrated:
+across conditions the SE/SD ratio and the relative bias of the variance estimator
+both stay near one, deviating only mildly under the strongest cross-loading, and
+the most so for LSAM. We also highlight that a subtler pattern, negligible in size, 
+appears under the residual covariance (`rc`): the system-wide
+estimators carry a small systematic upward bias in $m_3$, well under one percent,
+whereas LSAM stays centered on zero, since it estimates the mediator's measurement
+block in isolation.
 
 ```{r}
 #| label: fig-load
@@ -827,52 +830,13 @@ knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 We evaluated three estimators of a latent variable moderated mediation model, the
 two-step LSAM and the system-wide LMS and UPI, under correct specification and
 under a large number of structural and measurement misspecifications. Two questions
-organized the study: how the estimators recover the index of moderated mediation
-and its constituents when the model is correct, and how each responds when the
-fitted model omits an effect that is present in the population.
+organized this study [...]
 
-Under correct specification the three estimators agree on the substance. All
-recover the imm and the interaction coefficient with negligible bias and
-near-nominal coverage, and they separate mainly along a calibration and efficiency
-trade-off. LMS is the most efficient, with the lowest RMSE throughout, but it runs
-liberal and is the most sensitive to nonnormal predictors, where its Type I error
-climbs above the nominal level. Note the bias is dependent on the type of nonnormality,
-similar to previous findings [@Lonati2025; @Vieira2026]. LSAM is the best calibrated in
-both coverage and Type I error, at a modest cost in efficiency. 
-UPI sits between the two but does not yield usable estimates at the smallest sample size. 
-For a correctly specified
-model the choice is therefore between efficiency and calibration rather than
-between right and wrong answers, and it depends on the sample size and on the
-plausibility of normal predictors.
+Under correct specification [...]
 
-The estimators diverge under misspecification, and the divergence follows from
-how each ties the equations together. Under system-wide estimation a
-misspecification cannot be contained: because all parameters are fit jointly to
-the full indicator covariance matrix, an omitted effect is reproduced through
-whatever paths the model makes available and spreads into parameters that bear no
-structural relation to it, including the interaction coefficient and the loadings,
-biasing them and inflating the Type I error of the index. Structural omissions
-mainly perturb the structural estimates, whereas measurement omissions matter most
-in specific, demanding settings, in particular at low reliability—patterns broadly
-consistent with previous work [@cite]. LSAM avoids this by estimating the
-measurement model first and reading the structural parameters from blocks that do
-not involve the misspecified equation; the separation does not make the structural
-model correct, but it keeps a local error local. This is the interpretational
-confounding that motivated the study, now visible in a moderated mediation setting
-and in a derived quantity, the imm.
+The estimators diverge under misspecification [...]
 
-For practice, the results suggest a pragmatic division. When the measurement and
-structural models are trusted and the predictors are approximately normal, LMS is
-an efficient default, with the caveat that its standard errors run optimistic and
-its Type I error is sensitive to nonnormality. When either assumption is in doubt,
-and especially when the interaction coefficient or the index of moderated
-mediation is the target, LSAM is the safer choice, because its estimate of the
-interaction is insulated from misspecification elsewhere in the structural model
-and from contamination in the measurement model. UPI is a reasonable middle option
-at moderate and large sample sizes but should not be relied on when samples are
-small. Across estimators, inference for the index by the Monte Carlo method was
-well calibrated, which supports it as an alternative to the bootstrap for this
-nonlinear quantity.
+For practical recommendations [...]
 
 The study has limits that bound these conclusions [...]
 
@@ -887,10 +851,11 @@ Several extensions follow naturally [...]
 
 {{< pagebreak >}}
 
-# Data Generation and Calibration {#apx-calibration}
+# Calibration and Data Generation {#apx-calibration}
 
 This appendix gives the formulas behind the data-generating mechanism. The full
-derivations, with worked numerical examples, are in the project repository.
+derivations, with worked numerical examples and even more details, 
+are in the project repository.
 
 ## Structural residual variances
 
@@ -1010,4 +975,18 @@ correspondingly noisier. The measurement-level misspecifications `cl` and `rc`
 act on the indicators directly and are not compensated, since that contamination
 is itself the misspecification.
 
-## 
+# Relative Bias of the Variance Estimator at Low Reliability {#apx-relvar}
+
+At low reliability the relative bias of the variance estimator becomes unstable
+under heavy-tailed predictors and small samples: a few replications with extreme
+standard errors inflate the measure, most severely for LMS. These low-reliability
+cells are collected here so that the main-text figure (@fig-relbiasvar) can
+resolve the high-reliability conditions, where the measure stays near one. Cells
+above ten are truncated.
+
+```{r}
+#| label: fig-relbiasvar-low
+#| fig-cap: "Relative Bias of the Variance Estimator of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$ (Low Reliability)"
+#| out-width: "6.3in"
+knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
+``` 
