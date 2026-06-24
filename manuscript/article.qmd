@@ -490,7 +490,7 @@ The nine (mis)specification conditions comprise one correctly specified conditio
 and four families of misspecification, each at two empirically calibrated 
 magnitudes (standardized $0.25$ and $0.50$, detailed in Appendix A). 
 Two are structural: an omitted direct effect of the moderator on the outcome 
-(`c2`) and an omitted moderated direct effect (`c3`). The others are in the 
+($c_2$) and an omitted moderated direct effect ($c_3$). The others are in the 
 measurement model: a cross-loading of a mediator indicator on $X$ (`cl`) and a 
 residual covariance between a mediator and an outcome indicator (`rc`). 
 In every case the effect is present in the 
@@ -649,14 +649,14 @@ negligible across the nonnormal predictors as well, with the exception of the
 $\chi^2$ conditions, where LMS and LSAM are the most affected (@fig-bias). In this case,
 however, larger sample size removes the bias for LSAM but not for LMS,
 while higher reliability lessens it for both. Under misspecification, 
-both `c2` and `c3` bias the imm for all three estimators, as expected. 
-For $a_3$, `c2` produces no bias, whereas `c3` leads to bias under the system-wide 
+both $c_2$ and $c_3$ bias the imm for all three estimators, as expected. 
+For $a_3$, $c_2$ produces no bias, whereas $c_3$ leads to bias under the system-wide 
 estimators. Among the measurement omissions, `cl` attenuates $a_3$ only under the 
 system-wide estimators, while for the imm LMS shows bias in the case of $\chi^2$ 
 conditions. Last, the `rc` leaves $a_3$ and the imm essentially unchanged. 
 In all cases the bias increases with the magnitude of the omission and at lower reliability.
 
-Note the bias of $a_3$ under `c3` is the one result not implied by the omission 
+Note the bias of $a_3$ under $c_3$ is the one result not implied by the omission 
 alone. As both omissions sit in the outcome equation, the mediator equation 
 that defines $a_3$ stays correct. Hence, LSAM, which estimates $a_3$ from the 
 mediator block alone, recovers it. The system-wide estimators fit the full 
@@ -668,10 +668,10 @@ only through $a_3$ and $b$, and absorb the omitted covariance into $a_3$.
 Under correct specification, relative RMSE falls with sample size and reliability
 for all three throughout distributions (@fig-rmse). Specifically, LMS is the most efficient, 
 LSAM intermediate, and UPI the least. However, under misspecification, 
-the structural omissions (`c2` and `c3`) inflate the RMSE of the imm for all three estimators. 
+the structural omissions ($c_2$ and $c_3$) inflate the RMSE of the imm for all three estimators. 
 In fact, such increase, in some cases, affects the system-wide estimators the most. 
 With respect to the measurement omissions (`cl` and `rc`), we observed a negligible 
-effect. For $a_3$, only `c3` inflates slightly the RMSE mainly for UPI, while LSAM and 
+effect. For $a_3$, only $c_3$ inflates slightly the RMSE mainly for UPI, while LSAM and 
 LMS are unaffected. The inflation is larger at lower reliability.
 
 ### Standard errors
@@ -707,9 +707,9 @@ for the imm and $a_3$. It goes down slightly under heavy-tailed ($t_5$) and
 $\chi^2$ predictors for LMS and UPI, respectively, but mainly with a
 smaller sample size and low reliability.
 
-Under misspecification, `c2` and `c3` reduce the imm coverage, since its interval
+Under misspecification, $c_2$ and $c_3$ reduce the imm coverage, since its interval
 is then centered on a biased estimate, with the largest drop for the system-wide
-estimators under `c3`. For $a_3$, the cross-loading (`cl`) is the damaging case,
+estimators under $c_3$. For $a_3$, the cross-loading (`cl`) is the damaging case,
 collapsing coverage under the system-wide estimators at low reliability while LSAM
 holds near nominal. The remaining omissions leave coverage close to nominal.
 
@@ -722,7 +722,7 @@ ordering for $a_3$. The inflation of LMS grows under nonnormal predictors,
 exceeding the nominal level in several skewed and heavy-tailed cells, while LSAM
 and UPI remain near it.
 
-Under misspecification, `c3` inflates the false-positive rate of the system-wide
+Under misspecification, $c_3$ inflates the false-positive rate of the system-wide
 estimators, LMS the most, while LSAM holds its level. The cross-loading (`cl`)
 likewise inflates LMS, mainly at low reliability. The remaining omissions leave
 the rate near nominal.
@@ -743,13 +743,13 @@ $c'$), at high reliability and $N = 500$, we report their relative bias
 distributions.
 
 The coefficients show where each omission is absorbed. The two structural
-omissions act on the outcome equation: `c2` biases the mediator-outcome slope $b$
-and, more strongly, the direct effect $c'$, and `c3` is absorbed mainly by $b$.
+omissions act on the outcome equation: $c_2$ biases the mediator-outcome slope $b$
+and, more strongly, the direct effect $c'$, and $c_3$ is absorbed mainly by $b$.
 Under LSAM the mediator-equation coefficients $a_1$ and $a_2$ stay essentially
 unbiased under both structural omissions, since LSAM estimates the mediator block
-in isolation; the system-wide estimators, by contrast, leak `c2` into the mediator
+in isolation; the system-wide estimators, by contrast, leak $c_2$ into the mediator
 equation, biasing $a_2$ (about 11% at the medium level) and, to a lesser extent,
-$a_1$, and likewise carry part of `c3` into $c'$. The cross-loading (`cl`) is the
+$a_1$, and likewise carry part of $c_3$ into $c'$. The cross-loading (`cl`) is the
 most disruptive, biasing all four coefficients for every estimator, because the
 omitted $X$ loading on $m_3$ distorts the mediator's relations to the other latent
 variables. The residual covariance (`rc`) slightly inflates $b$ and biases $c'$
@@ -907,7 +907,7 @@ predictors shrank with sample size for LSAM but persisted for LMS.
 Under misspecification, LSAM was the more robust approach. Because it estimates each
 measurement block separately and the structural model afterward, the bias from an
 omission was more limited than under the system-wide estimators: the structural
-omissions in the outcome equation (`c2`, `c3`) biased the outcome-side coefficients
+omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side coefficients
 but left the mediator equation, and hence $a_3$, unaffected, whereas LMS and UPI
 also biased $a_3$. The omitted cross-loading (`cl`) was the most damaging
 throughout, biasing every coefficient and sharply lowering the coverage of $a_3$
@@ -1039,17 +1039,17 @@ misspecification,
 
 $$
 \begin{aligned}
-\texttt{c2}: \quad & p = W,   && y_0 = b M + c' X + \varepsilon_Y, \\
-\texttt{c3}: \quad & p = X W, && y_0 = b M + c' X + \varepsilon_Y, \\
+c_2: \quad & p = W,   && y_0 = b M + c' X + \varepsilon_Y, \\
+c_3: \quad & p = X W, && y_0 = b M + c' X + \varepsilon_Y, \\
 \texttt{cl}: \quad & p = X,   && y_0 = m_3 = \lambda_3 M + \delta_{m_3}.
 \end{aligned}
 $$
 
-`c2` and `c3` are reliability-independent; `cl` depends on $\omega$ because its
+$c_2$ and $c_3$ are reliability-independent; `cl` depends on $\omega$ because its
 baseline $m_3$ carries measurement noise. `rc` never enters the calibration: it
 is a residual correlation and equals its target in every cell.
 
-## Holding $Y$ reliability fixed under c2 and c3
+## Holding $Y$ reliability fixed under $c_2$ and $c_3$
 
 Adding an omitted structural path inflates $\operatorname{Var}(Y)$ by
 $\kappa = \operatorname{Var}(y_0 + \beta p) / \operatorname{Var}(y_0)$, which would
