@@ -595,36 +595,58 @@ and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
 [@Joshi2025] for performance evaluation. Conditions were run in parallel with 
 the *parallel* package. Reproducible and independent random-number streams 
 across workers were obtained with the L'Ecuyer-CMRG generator. 
-The computational environment was pinned with Nix [@dolstra_etall_2004] via the *rix* package [@rix] 
+The computational environment was pinned with Nix [@dolstra_etall_2004] via the 
+*rix* package [@rix] 
 to ensure reproducibility of the computational environment, and the article was 
 written with the *apaquarto* extension [@apaquarto]. For the package versions, 
 code and materials, see the project repository.
 
 # Results
 
-We present the results in three sections. We first report the imm and the
-interaction coefficient. We then turn to the remaining structural
-coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), and we close with the
-estimated factor loadings, focusing mainly the cross-loaded indicator. 
-Moreover, due to the large number of conditions, we focused on a subset 
-of the conditions. Namely, we fix the interaction coefficient at 0.2 
-(except for Type I error, which by construction requires a zero interaction) 
-and display a limited number of sample sizes: $N = 200$ and
-$500$ for the imm and the interaction coefficient, and solely $N = 500$ for the
-structural coefficients and loadings. For the latter two, we further restrict to
-high reliability, whereas the imm and the interaction coefficient are shown at
-both reliability levels. The entire set of results, across all sample sizes,
-reliabilities, and interaction values, is available in the repository 
+We present the results in three sections. First, the results for the 
+interaction coefficient and the imm are reported. We then turn to the 
+remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), 
+and we close with the estimated factor loadings, focusing mainly on 
+the cross-loaded indicator. Moreover, due to the large number of conditions, 
+we focused on a subset of the conditions. Namely, we fix the 
+interaction coefficient at 0.2 in most cases (except for Type I error, 
+which by construction requires a zero interaction) and display a limited 
+number of sample sizes: $N = 200$ and $500$ for the interaction coefficient and 
+imm, and solely $N = 500$ for the structural coefficients and loadings. 
+For the latter two, we further restrict to high reliability, whereas the 
+interaction coefficient and imm are shown at both reliability levels. 
+The entire set of results, across all sample sizes, reliabilities, and 
+interaction values, is available in the repository 
 (<https://doi.org/10.5281/zenodo.20703258>).
+
+## Convergence and Outliers
+
+Convergence was high throughout. LSAM converged in essentially every replication
+(at least $99.8\%$ across all conditions) and LMS in at least $98.7\%$. UPI was the
+least stable, with its convergence rate falling to about $91\%$ in the worst
+condition (the smallest sample size, low reliability, and skewed $\chi^2$
+predictors). At high reliability, however, UPI converged in at least $99\%$ of
+replications regardless of sample size, distribution, or misspecification.
+Outliers were likewise rare, staying below about $1\%$ in most conditions and
+reaching their highest values, up to roughly $11\%$ for UPI and $8\%$
+for LSAM, only at $N = 100$ with low reliability and skewed ($\chi^2$) predictors.
+Note the results reported below did not exclude inadmissible solutions. In fact,
+excluding them leads to negligible changes, with the few appreciable differences confined
+to the smallest sample size, low reliability, $\chi^2$ conditions. Under this stricter
+rule, UPI's convergence at $N = 100$ fell to about $85\%$ in the worst condition.
+For more detailed information, see the repository.
 
 ## Main Structural Estimates
 
 ### Relative Bias
 
 Under correct specification with normal predictors, all three estimators recover
-both the imm and $a_3$ with negligible bias (@fig-bias). In fact, bias is 
-negligible across the nonnormal predictors as well, with the exception of the 
-$\chi^2$ conditions, where LMS and LSAM are the most affected. In this case, 
+both the imm and $a_3$ with negligible bias, with what little bias remains
+shrinking as the sample size grows and at higher reliability (@fig-baseline-bias).
+At low reliability and the smallest sample size, UPI carries the largest bias
+before converging with the others. In fact, bias is
+negligible across the nonnormal predictors as well, with the exception of the
+$\chi^2$ conditions, where LMS and LSAM are the most affected (@fig-bias). In this case,
 however, larger sample size removes the bias for LSAM but not for LMS,
 while higher reliability lessens it for both. Under misspecification, 
 both `c2` and `c3` bias the imm for all three estimators, as expected. 
@@ -652,27 +674,19 @@ With respect to the measurement omissions (`cl` and `rc`), we observed a negligi
 effect. For $a_3$, only `c3` inflates slightly the RMSE mainly for UPI, while LSAM and 
 LMS are unaffected. The inflation is larger at lower reliability.
 
-### Coverage
-
-Under correct specification with normal predictors, coverage is around the
-nominal level with all three approaches (@fig-coverage-imm and @fig-coverage-a3) 
-for the imm and $a_3$. It goes down slightly under heavy-tailed ($t_5$) and 
-$\chi^2$ predictors for LMS and UPI, respectively, but mainly with a 
-smaller sample size and low reliability.
-
-Under misspecification, `c2` and `c3` reduce the imm coverage, since its interval
-is then centered on a biased estimate, with the largest drop for the system-wide
-estimators under `c3`. For $a_3$, the cross-loading (`cl`) is the damaging case,
-collapsing coverage under the system-wide estimators at low reliability while LSAM
-holds near nominal. The remaining omissions leave coverage close to nominal.
-
 ### Standard errors
 
+Before turning to the results, we stress that the SE for the imm is the Monte
+Carlo SE, computed by the Monte Carlo method from the structural estimates and
+their sampling covariance, whereas the SE for $a_3$ and the remaining structural
+coefficients is the model-based SE returned directly by each estimator. The SE/SD
+ratio for the imm therefore evaluates the Monte Carlo SE, not a model-based one.
+
 Under correct specification the SE/SD ratio is near one for all three approaches
-(@fig-sesd-imm and @fig-sesd-a3) in the case of a high reliability. Indeed, an 
+(@fig-sesd-imm and @fig-sesd-a3) in the case of a high reliability. Indeed, an
 overestimation is observed in case of low reliability and smaller sample size for UPI.
-Moreover, in the $\chi^2$ in opposite directions, LSAM and UPI struggled the most 
-throughout all misspecifications, including with the correct specification. 
+Moreover, in the $\chi^2$ in opposite directions, LSAM and UPI struggled the most
+throughout all misspecifications, including with the correct specification.
 These results were highly similar for both imm and $a_3$. We also observe that the measurement
 misspecifications affect in particular LMS in combination with specific nonnormal distributions.
 Similar conclusions are obtained with the relative bias of the variance estimator
@@ -684,6 +698,20 @@ becomes unstable at low reliability, where a few extreme replications inflate it
 for every method and most severely for LMS. Because these low-reliability cells
 reach values that would swamp the shared scale, they are shown separately in
 @fig-relbiasvar-low, with the largest (above ten) truncated.
+
+### Coverage
+
+Under correct specification with normal predictors, coverage is around the
+nominal level with all three approaches (@fig-coverage-imm and @fig-coverage-a3)
+for the imm and $a_3$. It goes down slightly under heavy-tailed ($t_5$) and
+$\chi^2$ predictors for LMS and UPI, respectively, but mainly with a
+smaller sample size and low reliability.
+
+Under misspecification, `c2` and `c3` reduce the imm coverage, since its interval
+is then centered on a biased estimate, with the largest drop for the system-wide
+estimators under `c3`. For $a_3$, the cross-loading (`cl`) is the damaging case,
+collapsing coverage under the system-wide estimators at low reliability while LSAM
+holds near nominal. The remaining omissions leave coverage close to nominal.
 
 ### Hypothesis Testing (Type I error and Power)
 
@@ -699,7 +727,7 @@ estimators, LMS the most, while LSAM holds its level. The cross-loading (`cl`)
 likewise inflates LMS, mainly at low reliability. The remaining omissions leave
 the rate near nominal.
 
-At $a_3 = 0.2$ the index is detected with power that rises with sample size and
+At $a_3 = 0.2$ the imm is detected with power that rises with sample size and
 reliability (@fig-power). LMS has the highest power throughout and UPI the lowest,
 with LSAM close to LMS, mirroring their efficiency ordering. Power falls under
 opposite-skew $\chi^2$ predictors, dropping well below the conventional $0.80$ at
@@ -736,64 +764,71 @@ coverage and Type I error at a modest efficiency cost. UPI is intermediate but
 unstable at the smallest sample size.
 
 ```{r}
+#| label: fig-baseline-bias
+#| fig-cap: "Relative Bias of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Under the Normal, Correctly Specified Condition Across Sample Sizes, Reliability, and Interaction Values"
+#| out-width: "100%"
+knitr::include_graphics("../plots/baseline_rel_bias.png")
+```
+
+```{r}
 #| label: fig-bias
-#| fig-cap: "Relative Bias of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$"
+#| fig-cap: "Relative Bias of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$)"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 ```
 
 ```{r}
 #| label: fig-rmse
-#| fig-cap: "Relative RMSE of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$"
+#| fig-cap: "Relative RMSE of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$)"
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
 ```
 
 ```{r}
-#| label: fig-coverage-imm
-#| fig-cap: "Coverage of the Index of Moderated Mediation"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-coverage-a3
-#| fig-cap: "Coverage of the Interaction Coefficient $a_3$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
-```
-
-```{r}
 #| label: fig-sesd-imm
-#| fig-cap: "SE/SD of the Index of Moderated Mediation"
+#| fig-cap: "SE/SD of the imm ($a_3 b$)"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 ```
 
 ```{r}
 #| label: fig-sesd-a3
-#| fig-cap: "SE/SD of the Interaction Coefficient $a_3$"
+#| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$)"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 ```
 
 ```{r}
 #| label: fig-relbiasvar
-#| fig-cap: "Relative Bias of the Variance Estimator of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$ (High Reliability)"
+#| fig-cap: "Relative Bias of the Variance Estimator of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) (High Reliability)"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
 ```
 
 ```{r}
+#| label: fig-coverage-imm
+#| fig-cap: "Coverage of the imm ($a_3 b$)"
+#| out-width: "6.3in"
+knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
+```
+
+```{r}
+#| label: fig-coverage-a3
+#| fig-cap: "Coverage of the Interaction Coefficient ($a_3$)"
+#| out-width: "6.3in"
+knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
+```
+
+```{r}
 #| label: fig-typei
-#| fig-cap: "Type I Error of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$"
+#| fig-cap: "Type I Error of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$)"
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_typeI_a3-0.png")
 ```
 
 ```{r}
 #| label: fig-power
-#| fig-cap: "Power for the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$ at $a_3 = 0.2$"
+#| fig-cap: "Power for the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) at $a_3 = 0.2$"
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_power_a3-0.2.png")
 ```
@@ -846,20 +881,58 @@ knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 
 # Discussion
 
-We evaluated three estimators of a latent variable moderated mediation model, the
-two-step LSAM and the system-wide LMS and UPI, under correct specification and
-under a large number of structural and measurement misspecifications. Two questions
-organized this study [...]
+We evaluated three estimation approaches in the context of a latent variable 
+moderated mediation model, the two-step LSAM and the system-wide LMS and UPI, 
+under correct specification and under a large number of structural and measurement 
+misspecifications. 
 
-Under correct specification [...]
+Under correct specification, all three recovered the imm and the interaction
+coefficient with negligible relative bias and near-nominal coverage, differing
+mainly in terms of coverage, Type I error, and the SE/SD ratio on one side, and
+relative RMSE and power on the other. LMS had the lowest relative RMSE and the
+highest power but showed below-nominal coverage and inflated Type I error,
+increasingly so under nonnormal predictors, and was the most affected by the skewed
+($\chi^2$) conditions. LSAM kept coverage and Type I error closest to nominal, at the cost of a higher
+relative RMSE and lower power, while UPI fell in between, accurate in relative bias
+but the least stable at the smallest sample size and low reliability. The two
+standard-error measures, the SE/SD ratio and the relative bias of the variance
+estimator, agreed: both stayed near one at high reliability but were strained at low
+reliability and small samples, where UPI overestimated standard errors, UPI and
+LSAM struggled the most under the $\chi^2$ predictors skewed in opposite directions,
+and a few extreme replications inflated them for every approach and most severely
+for LMS. Larger samples and higher reliability
+improved every measure, and the residual relative bias under the $\chi^2$
+predictors shrank with sample size for LSAM but persisted for LMS.
 
-The estimators diverge under misspecification [...]
+Under misspecification, LSAM was the more robust approach. Because it estimates each
+measurement block separately and the structural model afterward, the bias from an
+omission was more limited than under the system-wide estimators: the structural
+omissions in the outcome equation (`c2`, `c3`) biased the outcome-side coefficients
+but left the mediator equation, and hence $a_3$, unaffected, whereas LMS and UPI
+also biased $a_3$. The omitted cross-loading (`cl`) was the most damaging
+throughout, biasing every coefficient and sharply lowering the coverage of $a_3$
+under the system-wide estimators at low reliability, while LSAM remained near
+nominal; the residual covariance (`rc`) had little effect. Across conditions the
+relative bias was consistently smaller under LSAM, and it increased with the
+magnitude of the omission and at lower reliability.
 
-For practical recommendations [...]
+These patterns are broadly consistent with previous research. The bias of LMS under
+nonnormal predictors alongside its stability under normality reproduces earlier
+findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], and the behavior of
+LSAM mirrors that of the closely related two-stage method of moments on which it
+builds [@RosseelLoh2024; @Rosseel2025; @WallAmemiya2000]. Add something about misspecification [..]
 
-The study has limits that bound these conclusions [...]
-
-Several extensions follow naturally [...]
+Finally, although this article evaluated the estimation approaches from a
+statistical, inferential perspective, the moderated mediation model itself rests on
+strong causal assumptions [@VanderWeele2015]. This carries a practical consequence
+for applied researchers: good statistical performance is not, on its own, a
+justification for a causal research question or claim. Work addressing the causal
+interpretation of mediation continues to develop, and we direct interested readers
+to this literature [@Morelli2026; @Rohrer2022; @Imai2010;
+@VanderWeeleVansteelandt2022]. 
+Moreover, as we showed, misspecification has strong consequences
+across all three estimation approaches, and many of those may be highly plausible in
+certain context and fields.
 
 {{< pagebreak >}}
 
@@ -1005,7 +1078,7 @@ above ten are truncated.
 
 ```{r}
 #| label: fig-relbiasvar-low
-#| fig-cap: "Relative Bias of the Variance Estimator of the Index of Moderated Mediation (imm) and the Interaction Coefficient $a_3$ (Low Reliability)"
+#| fig-cap: "Relative Bias of the Variance Estimator of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) (Low Reliability)"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
 ``` 

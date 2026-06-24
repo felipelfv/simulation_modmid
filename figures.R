@@ -91,6 +91,37 @@ fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(2
   slice_geoms(d, metric) + apa_grid()
 }
 
+# baseline relative bias for the imm and a3 under the normal, correctly specified
+# condition, across ALL sample sizes, both reliabilities, and both nonzero
+# interaction values: parameter (rows) x reliability + a3 (cols), x = sample size,
+# line + point per method, +/- 1 MCSE bars.
+fig_baseline_bias <- function(a3v = c(0.2, 0.4)) {
+  m <- metric_spec[["rel_bias"]]
+  d <- summary_tbl |>
+    filter(parameter %in% c("imm", "a3"), distr_exo == "normal",
+           misspec == "none", a3 %in% a3v) |>
+    prep_factors() |>
+    mutate(parameter = factor(parameter, levels = c("imm", "a3")),
+           n = factor(n, levels = c(100, 200, 300, 500)))
+  ggplot(d, aes(n, rel_bias, shape = method, linetype = method, group = method)) +
+    annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
+             fill = "grey60", alpha = 0.25) +
+    geom_hline(yintercept = m$ref, linetype = "dotted") +
+    geom_errorbar(aes(ymin = rel_bias - rel_bias_mcse, ymax = rel_bias + rel_bias_mcse),
+                  width = .25, position = position_dodge(.5), linewidth = .3,
+                  linetype = "solid", color = "grey30") +
+    geom_line(position = position_dodge(.5), linewidth = .5) +
+    geom_point(position = position_dodge(.5), size = 1.8) +
+    facet_grid(parameter ~ rel + a3,
+               labeller = labeller(a3 = as_labeller(function(x) paste0("a3 = ", x)))) +
+    scale_shape_manual(values = method_shapes) +
+    scale_linetype_manual(values = method_lines) +
+    theme_bw(base_size = 10) +
+    theme(legend.position = "bottom", panel.grid.minor = element_blank(),
+          strip.text = element_text(face = "bold")) +
+    labs(x = "Sample size (N)", y = m$lab, shape = NULL, linetype = NULL)
+}
+
 # rel. bias of variance, imm and a3 together at one reliability level: distribution
 # (rows) x parameter x N (cols). high reliability goes in the manuscript, low in the
 # appendix (low-reliability cells blow up under heavy tails and swamp the y-axis).
@@ -279,6 +310,11 @@ save_rotated <- function(plot, file, w, h, dpi = 150) {
 # relative bias: imm bars + a3 slate line, one panel (wide -> rotated)
 save_rotated(fig_combo_both("rel_bias", 0.2),
              file.path(plot_dir, "combo_rel_bias_a3-0.2.png"), w = 9.5, h = 8)
+
+# baseline relative bias under the normal, correctly specified condition across all
+# sample sizes, both reliabilities, and both nonzero interaction values
+ggsave(file.path(plot_dir, "baseline_rel_bias.png"),
+       fig_baseline_bias(c(0.2, 0.4)), width = 10, height = 5.5, dpi = 150)
 
 # relative RMSE, Type I error (a3 = 0) and power (a3 = 0.2): tall bar panels, upright
 save_bar_both("rel_rmse", 0.2)
