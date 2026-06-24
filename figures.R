@@ -14,7 +14,11 @@ unlink(list.files(plot_dir, pattern = "\\.png$", full.names = TRUE))
 
 mis_lv  <- c("none","c2_small","c2_medium","c3_small","c3_medium",
              "crossload_small","crossload_medium","rescov_small","rescov_medium")
-mis_lab <- c("n","c2.s","c2.m","c3.s","c3.m","cl.s","cl.m","rc.s","rc.m")
+# plotmath labels: c gets a subscript, cl/rc/none stay upright. rendered on the
+# x-axis via x_misspec (scale_x_discrete + parse) below.
+mis_lab <- c("n",
+             "c[2]*'.s'", "c[2]*'.m'", "c[3]*'.s'", "c[3]*'.m'",
+             "'cl.s'", "'cl.m'", "'rc.s'", "'rc.m'")
 dis_lv  <- c("normal","uniform","t5","chisq_same","chisq_diff")
 
 # distribution strip labels (plain text so strip.text bold applies; plotmath
@@ -24,6 +28,17 @@ dist_labeller <- as_labeller(
     chisq_same = "Chi-square (s)", chisq_diff = "Chi-square (d)"))
 
 n_labeller <- as_labeller(function(x) paste0("N = ", x))
+
+# parameter strip labels as plotmath (subscripts for a_k, prime for c'); a3 column
+# (the design interaction value) rendered as a[3] == value. plotmath strips are not
+# bold (fontface is not honoured), unlike the plain-text distribution strips.
+param_labeller <- as_labeller(
+  c(a1 = "a[1]", a2 = "a[2]", a3 = "a[3]", b = "b", cp = "c*\"'\"", imm = "imm"),
+  label_parsed)
+a3_labeller <- as_labeller(function(x) paste0("a[3] == ", x), label_parsed)
+
+# x-axis misspecification labels: parse the plotmath strings in mis_lab
+x_misspec <- scale_x_discrete(labels = function(l) parse(text = l))
 
 # factor coding shared by the metric and rejection plots
 prep_factors <- function(d) {
@@ -77,6 +92,7 @@ slice_geoms <- function(d, metric) {
   p +
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.6) +
+    x_misspec +
     labs(x = "Misspecification", y = m$lab, shape = NULL, linetype = NULL)
 }
 
@@ -113,7 +129,7 @@ fig_baseline_bias <- function(a3v = c(0.2, 0.4)) {
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.8) +
     facet_grid(parameter ~ rel + a3,
-               labeller = labeller(a3 = as_labeller(function(x) paste0("a3 = ", x)))) +
+               labeller = labeller(parameter = param_labeller, a3 = a3_labeller)) +
     scale_shape_manual(values = method_shapes) +
     scale_linetype_manual(values = method_lines) +
     theme_bw(base_size = 10) +
@@ -133,7 +149,8 @@ fig_relvar_both <- function(a3v = 0.2, rel_lvl = "high") {
     mutate(parameter = factor(parameter, levels = c("imm", "a3")))
   slice_geoms(d, "rel_bias_var") +
     apa_grid(facet_grid(distr_exo ~ parameter + n,
-                        labeller = labeller(distr_exo = dist_labeller, n = n_labeller)))
+                        labeller = labeller(distr_exo = dist_labeller,
+                                            parameter = param_labeller, n = n_labeller)))
 }
 
 # imm and a3 together as greyscale grouped bars: parameter x distribution (rows),
@@ -165,8 +182,10 @@ fig_bar_both <- function(metric = "rel_rmse", a3v = 0.2, nvals = c(200, 500),
                            position = position_dodge(.8), width = .3, linewidth = .25)
   p +
     facet_grid(parameter + distr_exo ~ rel + n,
-               labeller = labeller(distr_exo = dist_labeller, n = n_labeller)) +
+               labeller = labeller(distr_exo = dist_labeller,
+                                   parameter = param_labeller, n = n_labeller)) +
     scale_fill_manual(values = method_fills) +
+    x_misspec +
     theme_bw(base_size = 9) +
     theme(legend.position = "bottom", panel.grid.minor = element_blank(),
           strip.text = element_text(face = "bold"),
@@ -203,8 +222,9 @@ fig_combo_both <- function(metric = "rel_bias", a3v = 0.2, nvals = c(200, 500)) 
     facet_grid(distr_exo ~ rel + n,
                labeller = labeller(distr_exo = dist_labeller, n = n_labeller)) +
     scale_fill_manual(values = method_fills, name = "imm") +
-    scale_shape_manual(values = method_shapes, name = "a3") +
-    scale_linetype_manual(values = method_lines, name = "a3") +
+    scale_shape_manual(values = method_shapes, name = expression(a[3])) +
+    scale_linetype_manual(values = method_lines, name = expression(a[3])) +
+    x_misspec +
     theme_bw(base_size = 10) +
     theme(legend.position = "bottom", panel.grid.minor = element_blank(),
           strip.text = element_text(face = "bold"), axis.text.x = element_text(size = 6)) +
@@ -236,9 +256,11 @@ fig_param <- function(metric = "coverage", params = c("a1", "a2", "b", "cp"),
   p +
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.4) +
-    facet_grid(parameter ~ distr_exo, labeller = labeller(distr_exo = dist_labeller)) +
+    facet_grid(parameter ~ distr_exo,
+               labeller = labeller(distr_exo = dist_labeller, parameter = param_labeller)) +
     scale_shape_manual(values = method_shapes) +
     scale_linetype_manual(values = method_lines) +
+    x_misspec +
     labs(x = "Misspecification", y = m$lab, shape = NULL, linetype = NULL) +
     theme_bw(base_size = 10) +
     theme(legend.position = "bottom", panel.grid.minor = element_blank(),
@@ -277,6 +299,7 @@ fig_loading_measures <- function(loading = "lm3", a3v = 0.2, nval = 500, rel_lvl
                labeller = labeller(distr_exo = dist_labeller)) +
     scale_shape_manual(values = method_shapes) +
     scale_linetype_manual(values = method_lines) +
+    x_misspec +
     theme_bw(base_size = 10) +
     theme(legend.position = "bottom", panel.grid.minor = element_blank(),
           strip.text = element_text(face = "bold"),
