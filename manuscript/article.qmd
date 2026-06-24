@@ -246,15 +246,15 @@ latent variables, and those always assumed a correctly specified (and saturated)
 We therefore consider three approaches in this article, two system-wide and one
 two-step. The first, LMS, approximates the nonnormal distribution of the latent
 product by a finite mixture of normals and estimates the joint model by
-full-information maximum likelihood via an expectation–maximization (EM) algorithm
+full-information maximum likelihood (ML) via an expectation–maximization (EM) algorithm
 [@KleinMoosbrugger2000; @Kelava2011]. The second, the unconstrained PI approach
 (UPI), forms products of the observed indicators to serve as indicators of the
-latent interaction and estimates the resulting model by maximum likelihood,
+latent interaction and estimates the resulting model by ML,
 optionally with robust standard errors and test statistics 
 [@KelavaBrandt2009; @Marsh2004; @Lonati2025; @Slupphaug2025; @Brandt2020]. 
 The third, local structural-after-measurement (LSAM), proceeds in two steps: it
-first estimates the measurement model with a standard estimator (e.g., maximum
-likelihood or generalized least squares) and then estimates the structural model
+first estimates the measurement model with a standard estimator (e.g., ML or
+generalized least squares) and then estimates the structural model
 with the measurement parameters held fixed. The second step is a path or
 regression model that can likewise be fit by various estimators 
 [@RosseelLoh2024; @Rosseel2025]. These approaches have been explained more 
@@ -432,9 +432,9 @@ and the (mis)specification condition (nine levels; see
 below). This yielded $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
 conditions, each replicated 800 times.
 
-Sample sizes span the small-to-moderate range typical of applied moderated
-mediation research, where interaction terms are estimated with limited power
-[@Hayes2015; @Preacher2007]. The interaction magnitudes include a null condition
+Sample sizes entails the small-to-moderate range, where interaction terms 
+are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
+magnitudes include a null condition
 ($a_3 = 0$) to assess Type I error and false-positive coverage of the imm, and
 two nonzero levels representing small and moderate latent moderation effects.
 Reliability levels of $0.5$ and $0.7$ were chosen because measurement error is
@@ -446,20 +446,24 @@ assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007;
 @Cham2012]. The misspecification conditions follow the moderated-mediation 
 framework for the two structural omissions [@Preacher2007] and prior 
 latent-interaction simulation work for the two measurement omissions 
-[@Brandt2020]. They were chosen as interpretable threats, acting respectively 
+[@Brandt2020]. They were also chosen as interpretable threats, acting respectively 
 as a measured mediator–outcome confounder, a conflated moderated direct effect, 
 exposure-correlated measurement error, and an unmeasured residual confounder 
-[@VanderWeele2015; @Edwards2007]. The nine levels are detailed below.
+[@VanderWeele2015; @Edwards2007]. The misspecification cases are detailed below.
 
-### Estimators
+### Estimation Approaches
 
 We compared a two-step estimator against two system-wide estimators. The
-two-step approach is LSAM [@RosseelLoh2024; @Rosseel2025]. In this case, the 
-interacting predictors $X$ and $W$ shared a single measurement block, 
+two-step approach is LSAM [@RosseelLoh2024; @Rosseel2025], whose measurement model
+was estimated by ML in the first step. In this case, the
+interacting predictors $X$ and $W$ shared a single measurement block,
 while $M$ and $Y$ formed their own blocks. The two
-system-wide estimators are LMS [@KleinMoosbrugger2000] and the extended
-unconstrained product-indicator approach with double mean centering, which we
-refer to as UPI throughout [@KelavaBrandt2009; @Marsh2004; @Lin2010].
+system-wide estimators are LMS [@KleinMoosbrugger2000], with robust standard
+errors, and the extended unconstrained product-indicator approach with double mean
+centering, which we refer to as UPI throughout, estimated with robust maximum
+likelihood (MLR), which combines Huber–White sandwich standard errors with a
+scaled (Yuan–Bentler) test statistic to accommodate the nonnormality of the
+indicator products [@KelavaBrandt2009; @Marsh2004; @Lin2010].
 
 ### Data Generation
 
