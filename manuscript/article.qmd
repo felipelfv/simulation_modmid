@@ -1,5 +1,5 @@
 ---
-title: "Latent Variables Moderated Mediation Using Correct and Misspecified Models"
+title: "Latent Variable Moderated Mediation Using Correct and Misspecified Models"
 shorttitle: "Moderated Mediation With Latent Variables"
 
 author:
@@ -52,9 +52,6 @@ author-note:
 abstract: |
   TODO: Abstract.
 
-impact-statement: |
-  TODO: Translational abstract.
-
 keywords: [moderated mediation, structural equation modeling, latent interaction, measurement error, model misspecification]
 
 language:
@@ -87,18 +84,18 @@ Mediation analysis is a well-known procedure in the behavioral and social
 sciences [@Hayes2018; @Preacher2007; @Pieters2017; @Charlton2021]. In its 
 basic and standard form, the effect of an independent variable on an outcome is 
 decomposed into a direct effect and an indirect effect transmitted through a 
-mediator, with all variables observed. This basic single mediator model has 
-since been extended, for example by allowing the indirect effect to depend on 
-a moderator and by adjusting for covariates [@Hayes2015; @Edwards2007; 
-@Preacher2007; @Montoya2024].
+mediator, with all variables observed. This basic single mediator model has
+since been extended in a number of directions, most relevant here being the
+case in which the indirect effect is allowed to depend on a moderator
+[@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; @MacKinnonFairchild2007].
 
-A more fundamental concern arises from measurement. Many constructs in 
+In this context, a fundamental concern arises from measurement. Many constructs in 
 psychology are not directly observed but are measured indirectly through 
 multiple items, that is, they are latent variables [@BollenHoyle2012].
 When such constructs are reduced to summary scores 
 (e.g., a sum or mean of the items) and analyzed as though they were observed, 
 measurement error is ignored. This error can bias the indirect effect and 
-inflate its uncertainty [@HoyleKenny1999; @ColePreacher2014], and it is 
+distort inferences about it [@HoyleKenny1999; @ColePreacher2014], and it is 
 especially problematic for the mediator, which acts at once as a predictor and 
 an outcome [@GonzalezMacKinnon2021]. To address this, structural equation 
 modelling (SEM) with latent variables has been proposed, especially in 
@@ -116,26 +113,25 @@ in general, whether for interactions or not [@Cham2012; @Fuller1987;
 Moderation mediation with latent variables is not straightforward in terms of statistical
 estimation. Indeed, a latent interaction involves the product of two latent 
 variables, which is unobserved and nonnormal even when its constituents are 
-normal [@KleinMoosbrugger2000]. Following this, a number of methods have been proposed to
+normal [@KelavaBrandt2022]. Following this, a number of methods have been proposed to
 estimate latent interactions [e.g., @AlginaMoulder2001; @Arminger1998;
-@AsparouhovMuthen2021; @Boker2023; @Bollen1995; @CoxKelcey2021; @HolstBudtz2020;
-@JoreskogYan1996; @KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007;
-@Marsh2004; @MooijaartBentler2010; @MooijaartSatorra2012; @WallAmemiya2000]. 
-Most adopt a joint ("system-wide") estimation
-strategy, in which the measurement and structural parameters are estimated
-simultaneously. This is the case of the known methods: latent moderated
-structural equations (LMS) and product-indicator (PI). Opposed to these 
-are structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
+@AsparouhovMuthen2021; @Boker2023; @Bollen1995; @JoreskogYan1996; @KennyJudd1984; 
+@KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; @MooijaartBentler2010; 
+@MooijaartSatorra2012; @WallAmemiya2000]. 
+Most adopt a joint ("system-wide") estimation strategy, in which the measurement and 
+structural parameters are estimated simultaneously. This is the case of the known 
+methods: latent moderated structural equations (LMS) and product-indicator (PI). 
+Opposed to these are structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
 @HolstBudtz2020; @NgChan2020; @RosseelLoh2024; @WallAmemiya2001; @WallAmemiya2003],
 in which the measurement model is estimated first and the structural model 
 afterward with the measurement parameters 
-held fixed. Most of the abovementioned approaches have so far been rarely applied in 
+held fixed. Many of the abovementioned approaches have so far been rarely applied in 
 practice, likely held back by limited software, slow estimation, and 
 error-prone implementations. With recent open-source implementations 
 [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and non-commercial software 
 [@Keller2025], this is likely to change.
 
-In this context, a further consideration concerns interpretation. Mediation is 
+Beyond estimation, a further consideration concerns interpretation. Mediation is 
 a hypothesis about causal effects, and causal interpretation requires 
 identification assumptions that *may* not be verified from the data alone 
 [@Imai2010; @Morelli2026; @Rohrer2022; @VanderWeele2015]. With latent variable 
@@ -155,13 +151,11 @@ this by estimating the measurement model on its own. Thus, because the structura
 model cannot then influence it, the estimated latent variables, and their 
 meaning, do not depend on the structure subsequently fit, and interpretational 
 confounding is avoided. Note, however, that this does not imply the 
-structure is correct [@VanderWeeleVansteelandt2022]. Local SAM (LSAM) is 
-one such method, which was recently extended to interaction and quadratic effects 
-among latent variables [@Rosseel2025; @Vieira2026], which makes it applicable to 
-latent variable moderated mediation.
+structure is correct [@VanderWeeleVansteelandt2022]. 
 
-To illustrate it, we take a mediation model with three latent variables, X, M, and
-Y, each with three indicators, and obtain a population covariance matrix from a
+To illustrate interpretational confounding, we take a mediation model with 
+three latent variables, X, M, and Y, each with three indicators, and 
+obtain a population covariance matrix from a
 correctly specified version. We then alter it so that the covariances between 
 the X and M indicators are unequal across the X indicators (3.0, 1.5, and 1.5, 
 with mean held at the implied value of 2.0), changing only their pattern, 
@@ -246,36 +240,57 @@ estimation mainly under distributional misspecification [e.g., @Cham2012; @Vieir
 @Lonati2025; @Brandt2014], and in only one case under misspecifications 
 at the measurement level [@Brandt2020]. Moreover, when in it comes to (moderated) mediation, 
 despite its popularity in applied research, only a few studies investigated it with 
-latent variables, and those always assumed a correctly specified (and saturated) model 
-[@FalkBiesanz2015; @Feng2020]. Two questions therefore remain open. 
-The first concerns the robustness of the estimators to structural and measurement
-misspecification, alone and in combination with nonnormal distributions, which is
-relevant because the estimators rely on different distributional assumptions
-[e.g., @Kelava2011; @Lonati2025; @Vieira2026]. Connected to this, the second concerns 
-how misspecification in the measurement model may affect the estimates, a question that is
-particularly relevant in moderated mediation, where the mediator functions simultaneously
-as an outcome and a predictor, and the effect of interest is a nonlinear (product)
-function of two structural coefficients.
+latent variables, and those always assumed a correctly specified (and saturated) model
+[@FalkBiesanz2015; @Feng2020].
+
+We therefore consider three approaches in this article, two system-wide and one
+two-step. The first, LMS, approximates the nonnormal distribution of the latent
+product by a finite mixture of normals and estimates the joint model by
+full-information maximum likelihood via an expectation–maximization (EM) algorithm
+[@KleinMoosbrugger2000; @Kelava2011]. The second, the unconstrained PI approach
+(UPI), forms products of the observed indicators to serve as indicators of the
+latent interaction and estimates the resulting model by maximum likelihood,
+optionally with robust standard errors and test statistics 
+[@KelavaBrandt2009; @Marsh2004; @Lonati2025; @Slupphaug2025; @Brandt2020]. 
+The third, local structural-after-measurement (LSAM), proceeds in two steps: it
+first estimates the measurement model with a standard estimator (e.g., maximum
+likelihood or generalized least squares) and then estimates the structural model
+with the measurement parameters held fixed. The second step is a path or
+regression model that can likewise be fit by various estimators 
+[@RosseelLoh2024; @Rosseel2025]. These approaches have been explained more 
+in-depth in previous research [see @Brandt2020; @Vieira2026; 
+@Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025].
 
 ### Present Research and Contributions
 
-This study evaluates LSAM, alongside LMS and a PI approach, for latent variable
-moderated mediation. We assess the three estimators across a wide range of
+This study evaluates LSAM, alongside LMS and UPI, for latent variable
+moderated mediation. We assess the three estimation approaches across a wide range of
 conditions and on a broad set of performance measures, both detailed in the
-next section. Thus, this study has three contributions to the literature.
+next section.
 
-These estimators have not been evaluated under misspecification of the
-measurement or the structural model in a large setting. Moreover, the LSAM
-approach has not been assessed for derived quantities such as the 
-index of moderated mediation [imm; @Hayes2015], which is a nonlinear functions of the 
-structural parameters whose behavior need not match that of their constituents. 
-Moreover, for such quantities inference has 
-relied on the bootstrap [@Hayes2015; @Tibbe2022], especially in the 
-limited prior work concerning (moderated) mediation with latent variables 
-[@FalkBiesanz2015; @Feng2020]. In this study, we adopt and evaluate 
-the Monte Carlo method, as it may be accurate enough without 
-the computational cost of the bootstrap, which can itself underperform at 
-small sample sizes.
+Two questions motivate this evaluation. The first concerns the robustness of
+these approaches to structural and measurement misspecification, alone and in
+combination with nonnormal distributions, which is relevant because they rely on
+different distributional assumptions [e.g., @Kelava2011; @Lonati2025; @Vieira2026].
+Connected to this, the second concerns how misspecification in the measurement
+model may affect the estimates, a question that is particularly relevant in
+moderated mediation, where the mediator functions simultaneously as an outcome
+and a predictor, and the effect of interest is a nonlinear function of two
+structural coefficients.
+
+This evaluation makes three contributions to the literature. First, we provide a
+large-scale assessment of these approaches under misspecification of the
+measurement and structural models, which has not been done before. Second, we
+assess them for a derived quantity, the index of moderated mediation [imm;
+@Hayes2015], a nonlinear function of the structural parameters whose behavior need
+not match that of its constituents and which has not previously been examined for
+LSAM. Third, whereas inference on such quantities has relied on the bootstrap
+[@Hayes2015; @Tibbe2022], especially in the limited prior work concerning
+(moderated) mediation with latent variables [@FalkBiesanz2015; @Feng2020], we
+adopt and evaluate the Monte Carlo method [@MacKinnonLockwood2004;
+@PreacherSelig2012; @Thoemmes2010], which may be accurate enough without the
+computational cost of the bootstrap, which can itself underperform at small
+sample sizes.
 
 ```{r}
 #| include: false
@@ -292,7 +307,7 @@ measures used to evaluate performance, following recent recommendations for
 the conduct and reporting of simulation studies [@Morris2019; @Siepe2024; 
 @Pawel2026].
 
-### Population Model and Estimand
+### Population Model and Estimands
 
 We study a moderated mediation model among four latent variables: an
 exogenous predictor $X$, a moderator $W$, a mediator $M$, and an outcome $Y$.
@@ -303,10 +318,10 @@ M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
 Y = b\,M + c'\,X + \zeta_Y,
 $$
 
-The primary estimands are the imm (i.e., $a_3 b$) and the interaction coefficient ($a_3$).
+The primary estimands are the interaction coefficient ($a_3$) and the imm (i.e., $a_3 b$).
 The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) 
 and the twelve freely estimated factor loadings serve as secondary estimands. 
-Note the index is a derived quantity rather than a free parameter, hence its 
+Note the imm is a derived quantity rather than a free parameter, hence its 
 true value is computed as $a_3 b$ implied by the correctly specified model.
 
 Population values were fixed at $a_1 = 0.4$, $a_2 = 0.3$, $b = 0.5$, and
