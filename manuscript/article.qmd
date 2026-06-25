@@ -729,29 +729,27 @@ should be avoided [@Morris2019].
 For the remaining structural coefficients ($a_1$, $a_2$, $b$, and
 $c'$), at high reliability and $N = 500$, we report their relative bias
 (@fig-param-bias), coverage (@fig-param-coverage), and SE/SD ratio
-(@fig-param-sesd) across all misspecification conditions and predictor
-distributions.
+(@fig-param-sesd) across all misspecification conditions and distributions.
 
-The coefficients show where each omission is absorbed. The two structural
-omissions act on the outcome equation: $c_2$ biases the mediator-outcome slope $b$
-and, more strongly, the direct effect $c'$, and $c_3$ is absorbed mainly by $b$.
+With respect to relative bias, the two structural omissions act on the 
+outcome equation: $c_2$ biases the mediator-outcome slope $b$
+and, more strongly, the direct effect $c'$, and $c_3$ is absorbed mainly by $b$ and $c'$ as well.
 Under LSAM the mediator-equation coefficients $a_1$ and $a_2$ stay essentially
 unbiased under both structural omissions, since LSAM estimates the mediator block
-in isolation; the system-wide estimators, by contrast, leak $c_2$ into the mediator
-equation, biasing $a_2$ (about 11% at the medium level) and, to a lesser extent,
-$a_1$, and likewise carry part of $c_3$ into $c'$. The cross-loading (`cl`) is the
+in isolation; the system-wide estimators, by contrast, propagate $c_2$ into the mediator
+equation, biasing $a_2$ and likewise carry part of $c_3$ into $c'$. The cross-loading (`cl`) is the
 most disruptive, biasing all four coefficients for every estimator, because the
 omitted $X$ loading on $m_3$ distorts the mediator's relations to the other latent
 variables. The residual covariance (`rc`) slightly inflates $b$ and biases $c'$
 downward for all three. Across conditions the bias is consistently smaller under
 LSAM than under the system-wide estimators.
 
-Taken together, under correct specification the three estimators recover the imm
-and $a_3$ with little bias and near-nominal coverage, and differ mainly in a
-calibration and efficiency trade-off. LMS is the most efficient but runs liberal
-and is the most sensitive to nonnormality. LSAM is the best calibrated in both
-coverage and Type I error at a modest efficiency cost. UPI is intermediate but
-unstable at the smallest sample size.
+Coverage follows this bias pattern: near nominal where bias is small and dropping
+where bias is large, most sharply under the cross-loading and, for the
+outcome-side coefficients $b$ and $c'$, under $c_2$ and $c_3$. The SE/SD ratio
+stays close to one for all three estimators, with one clear exception: for $b$
+and $c'$ under $c_3$ the standard errors are underestimated, most pronounced
+under heavy-tailed $t_5$ predictors.
 
 ```{r}
 #| label: fig-baseline-bias
@@ -874,40 +872,35 @@ knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 We evaluated three estimation approaches in the context of a latent variable 
 moderated mediation model, the two-step LSAM and the system-wide LMS and UPI, 
 under correct specification and under a large number of structural and measurement 
-misspecifications. 
+misspecifications as well as distributional violations. 
 
 Under correct specification, all three recovered the imm and the interaction
 coefficient with negligible relative bias and near-nominal coverage, differing
 mainly in terms of coverage, Type I error, and the SE/SD ratio on one side, and
 relative RMSE and power on the other. LMS had the lowest relative RMSE and the
 highest power but showed below-nominal coverage and inflated Type I error,
-increasingly so under nonnormal predictors, and was the most affected by the skewed
-($\chi^2$) conditions. LSAM kept coverage and Type I error closest to nominal, at the cost of a higher
-relative RMSE and lower power, while UPI fell in between, accurate in relative bias
+increasingly so under nonnormal predictors. 
+LSAM yielded coverage and Type I error closest to nominal, at the cost of a higher
+relative RMSE and lower power in some cases, while UPI fell in between, accurate in relative bias
 but the least stable at the smallest sample size and low reliability. The two
-standard-error measures, the SE/SD ratio and the relative bias of the variance
-estimator, agreed: both stayed near one at high reliability but were strained at low
-reliability and small samples, where UPI overestimated standard errors, UPI and
-LSAM struggled the most under the $\chi^2$ predictors skewed in opposite directions,
-and a few extreme replications inflated them for every approach and most severely
-for LMS. Larger samples and higher reliability
-improved every measure, and the residual relative bias under the $\chi^2$
-predictors shrank with sample size for LSAM but persisted for LMS.
+standard error performance measures, the SE/SD ratio and the relative bias of the variance
+estimator, showed similar results: both stayed near one at high reliability but not at low
+reliability and small samples. Indeed, UPI overestimated standard errors, UPI and
+LSAM struggled the most under the $\chi^2$ predictors skewed in opposite directions.
 
-Under misspecification, LSAM was the more robust approach. Because it estimates each
-measurement block separately and the structural model afterward, the bias from an
-omission was more limited than under the system-wide estimators: the structural
+Under misspecification, LSAM was the more robust approach. The bias from an
+omission was more limited in LSAM than under the system-wide estimators: the structural
 omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side coefficients
-but left the mediator equation, and hence $a_3$, unaffected, whereas LMS and UPI
-also biased $a_3$. The omitted cross-loading (`cl`) was the most damaging
-throughout, biasing every coefficient and sharply lowering the coverage of $a_3$
+but left the mediator equation, and hence the interaction coefficient, unaffected, whereas LMS and UPI
+also biased the interaction coefficient. The omitted cross-loading (`cl`) was the most damaging
+throughout, biasing every coefficient and sharply lowering the coverage of the interaction coefficient
 under the system-wide estimators at low reliability, while LSAM remained near
 nominal; the residual covariance (`rc`) had little effect. Across conditions the
 relative bias was consistently smaller under LSAM, and it increased with the
 magnitude of the omission and at lower reliability.
 
 These patterns are broadly consistent with previous research. The bias of LMS under
-nonnormal predictors alongside its stability under normality reproduces earlier
+specific types of nonnormality alongside its stability under normality reproduces earlier
 findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], and the behavior of
 LSAM mirrors that of the closely related two-stage method of moments on which it
 builds [@RosseelLoh2024; @Rosseel2025; @WallAmemiya2000]. Add something about misspecification [..]
@@ -915,11 +908,11 @@ builds [@RosseelLoh2024; @Rosseel2025; @WallAmemiya2000]. Add something about mi
 Finally, although this article evaluated the estimation approaches from a
 statistical, inferential perspective, the moderated mediation model itself rests on
 strong causal assumptions [@VanderWeele2015]. This carries a practical consequence
-for applied researchers: good statistical performance is not, on its own, a
-justification for a causal research question or claim. Work addressing the causal
+for applied researchers: good statistical performance of the estimation approaches in 
+certain conditions is not, on its own, a justification for a causal research question or claim. 
+Work addressing the causal
 interpretation of mediation continues to develop, and we direct interested readers
-to this literature [@Morelli2026; @Rohrer2022; @Imai2010;
-@VanderWeeleVansteelandt2022]. 
+to this literature [@Morelli2026; @Rohrer2022; @Imai2010]. 
 Moreover, as we showed, misspecification has strong consequences
 across all three estimation approaches, and many of those may be highly plausible in
 certain context and fields.
