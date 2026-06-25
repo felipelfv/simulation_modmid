@@ -89,8 +89,8 @@ since been extended in a number of directions, most relevant here being the
 case in which the indirect effect is allowed to depend on a moderator
 [@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; @MacKinnonFairchild2007].
 
-In this context, a fundamental concern arises from measurement. Many constructs in 
-psychology are not directly observed but are measured indirectly through 
+In this context, a fundamental concern may arise from measurement. Many constructs in 
+under investigation are not directly observed but are measured indirectly through 
 multiple items, that is, they are latent variables [@BollenHoyle2012].
 When such constructs are reduced to summary scores 
 (e.g., a sum or mean of the items) and analyzed as though they were observed, 
@@ -142,7 +142,7 @@ variables must validly represent the intended constructs
 interpretational confounding [@Burt1976], a discrepancy between the empirical 
 meaning assigned to a latent variable through its estimated 
 measurement parameters and the meaning intended by the researcher. Under 
-system-wide estimation, the measurement and structural parameters are fit
+system-wide estimation, the measurement and structural parameters are estimated
 jointly, so the estimated loadings, and with them the empirical meaning of a
 latent variable, can change with the structural model that is imposed. The 
 latent variable is then no longer anchored to its indicators alone, and 
@@ -243,8 +243,8 @@ despite its popularity in applied research, only a few studies investigated it w
 latent variables, and those always assumed a correctly specified (and saturated) model
 [@FalkBiesanz2015; @Feng2020].
 
-We therefore consider three approaches in this article, two system-wide and one
-two-step. The first, LMS, approximates the nonnormal distribution of the latent
+Therefore, in this article, we evaluate LSAM, alongside LMS and UPI, under a latent
+variable moderated mediation model. The first, LMS, approximates the nonnormal distribution of the latent
 product by a finite mixture of normals and estimates the joint model by
 full-information maximum likelihood (ML) via an expectation–maximization (EM) algorithm
 [@KleinMoosbrugger2000; @Kelava2011]. The second, the unconstrained PI approach
@@ -257,30 +257,21 @@ first estimates the measurement model with a standard estimator (e.g., ML or
 generalized least squares) and then estimates the structural model
 with the measurement parameters held fixed. The second step is a path or
 regression model that can likewise be fit by various estimators 
-[@RosseelLoh2024; @Rosseel2025]. These approaches have been explained more 
-in-depth in previous research [see @Brandt2020; @Vieira2026; 
-@Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025].
+[@RosseelLoh2024; @Rosseel2025]. These approaches have been explained more
+in-depth in previous research [see @Brandt2020; @Vieira2026;
+@Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025]. We assess the
+three estimation approaches across a wide range of conditions and on a broad set
+of performance measures, both detailed in the next section.
 
 ### Present Research and Contributions
 
-This study evaluates LSAM, alongside LMS and UPI, for latent variable
-moderated mediation. We assess the three estimation approaches across a wide range of
-conditions and on a broad set of performance measures, both detailed in the
-next section.
-
-Two questions motivate this evaluation. The first concerns the robustness of
-these approaches to structural and measurement misspecification, alone and in
-combination with nonnormal distributions, which is relevant because they rely on
-different distributional assumptions [e.g., @Kelava2011; @Lonati2025; @Vieira2026].
-Connected to this, the second concerns how misspecification in the measurement
-model may affect the estimates, a question that is particularly relevant in
-moderated mediation, where the mediator functions simultaneously as an outcome
-and a predictor, and the effect of interest is a nonlinear function of two
-structural coefficients.
-
-This evaluation makes three contributions to the literature. First, we provide a
+This study makes three contributions to the literature. First, we provide a
 large-scale assessment of these approaches under misspecification of the
-measurement and structural models, which has not been done before. Second, we
+measurement and structural models, which has not been done before, with the
+single exception of @Brandt2020, who examined misspecification only at the
+measurement level and, of the approaches we consider, only the UPI, while
+varying distributional aspects in a limited setting. Here, we additionally 
+use nonnormal copulas to generate distributional violations. Second, we
 assess them for a derived quantity, the index of moderated mediation [imm;
 @Hayes2015], a nonlinear function of the structural parameters whose behavior need
 not match that of its constituents and which has not previously been examined for
@@ -334,7 +325,8 @@ because $a_3$ contributes to the variance of $M$, the explained variance is
 naturally higher with a larger $a_3$ and lower when its effect is null. Each latent variable is 
 measured by four congeneric indicators with loadings $1.0$, $0.8$, $0.7$, 
 and $0.6$. @fig-model shows the population
-model, where the structural misspecifications studied below are drawn in grey.
+model, where the measurement and structural misspecifications 
+studied below are drawn in grey.
 
 ```{tikz}
 %| label: fig-model
@@ -428,18 +420,18 @@ We employed a fully factorial design crossing five factors: sample size
 ($a_3 \in \{0, 0.20, 0.40\}$), measurement reliability (low $= 0.5$,
 high $= 0.7$), the distribution of the exogenous latent predictors (normal, 
 uniform, $t$, and two right-skewed $\chi^2$ distributions), 
-and the (mis)specification condition (nine levels; see
-below). This yielded $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
+and the (mis)specification conditions (nine case; see
+Data Generation below). This yielded $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
 conditions, each replicated 800 times.
 
 Sample sizes entails the small-to-moderate range, where interaction terms 
 are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
-magnitudes include a null condition
-($a_3 = 0$) to assess Type I error and false-positive coverage of the imm, and
-two nonzero levels representing small and moderate latent moderation effects.
-Reliability levels of $0.5$ and $0.7$ were chosen because measurement error is
-amplified in product terms and is therefore especially consequential for latent
-interaction estimation [@Lonati2025; @Vieira2026].
+magnitudes include a null condition to assess Type I error for the interaction 
+coefficient and imm, and two nonzero levels representing small and moderate 
+latent moderation effects. Reliability levels of $0.5$ and $0.7$ were chosen 
+because measurement error is amplified in product terms and is therefore 
+especially consequential for latent
+interaction estimation [@Lonati2025; @Vieira2026; @Brandt2020].
 Nonnormality of the latent predictors is both empirically common and 
 methodologically central for latent interaction estimators, whose distributional 
 assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; 
@@ -453,17 +445,14 @@ exposure-correlated measurement error, and an unmeasured residual confounder
 
 ### Estimation Approaches
 
-We compared a two-step estimator against two system-wide estimators. The
-two-step approach is LSAM [@RosseelLoh2024; @Rosseel2025], whose measurement model
+LSAM [@RosseelLoh2024; @Rosseel2025], with the measurement model
 was estimated by ML in the first step. In this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
-while $M$ and $Y$ formed their own blocks. The two
-system-wide estimators are LMS [@KleinMoosbrugger2000], with robust standard
+while $M$ and $Y$ formed their own blocks. LMS [@KleinMoosbrugger2000], with robust standard
 errors, and the extended unconstrained product-indicator approach with double mean
 centering, which we refer to as UPI throughout, estimated with robust maximum
 likelihood (MLR), which combines Huber–White sandwich standard errors with a
-scaled (Yuan–Bentler) test statistic to accommodate the nonnormality of the
-indicator products [@KelavaBrandt2009; @Marsh2004; @Lin2010].
+scaled (Yuan–Bentler) test statistic [@KelavaBrandt2009; @Marsh2004; @Lin2010].
 
 ### Data Generation
 
@@ -488,7 +477,7 @@ $\theta_{\eta j}$ were scaled to the target reliability $\omega \in \{0.5, 0.7\}
 
 The nine (mis)specification conditions comprise one correctly specified condition
 and four families of misspecification, each at two empirically calibrated 
-magnitudes (standardized $0.25$ and $0.50$, detailed in Appendix A). 
+magnitudes (standardized $0.25$ and $0.50$, detailed in Appendix A; similar to @Brandt2020). 
 Two are structural: an omitted direct effect of the moderator on the outcome 
 ($c_2$) and an omitted moderated direct effect ($c_3$). The others are in the 
 measurement model: a cross-loading of a mediator indicator on $X$ (`cl`) and a 
@@ -504,17 +493,17 @@ estimator is compared on an identical set of replications. First, we checked
 convergence: a fit was treated as nonconverged
 when any estimate, standard error, or confidence-interval bound—for any structural
 coefficient or loading—was missing or non-finite, and a replication was removed
-from all estimators whenever any one of them did not converge. We also flagged
-inadmissible solutions, where any residual (unique) variance was nonpositive or
-the latent covariance matrix was not positive definite. Second, among the
+from all estimators whenever any one of them did not converge. Second, among the
 remaining replications, we screened for outliers, identified per
 condition, method, and parameter as point estimates beyond the interquartile range
 $\pm\,3$, together with replications whose estimated standard error exceeded
 $10$ on any parameter of interest^[We added the standard error criterion because,
 even after excluding point estimate outliers, a single LMS replication, in one
 condition, retained an anomalous standard error; it was thus the only replication
-removed based on this criteria.]. Again, a replication flagged for any estimator
-was removed from all of them.
+removed based on this criteria.]. Again, a replication flagged as an outlier 
+for any estimation approach was removed from all of them. We also flagged
+inadmissible solutions, where any residual (unique) variance was nonpositive or
+the latent covariance matrix was not positive definite.
 
 ### Performance Measures
 
