@@ -352,7 +352,7 @@ grey.
 ```{tikz}
 %| label: fig-model
 %| fig-cap: "Population Model for the Simulation Study."
-%| apa-note: "*Note*. $X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators; circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
+%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators; circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
 %| fig-align: center
 %| fig-width: 9
 %| fig-height: 6
@@ -718,9 +718,9 @@ in combination with specific nonnormal distributions (see @fig-relbiasvar and
 Coverage between 92.5% and 97.5% was considered acceptable. 
 Under correct specification with normal predictors, coverage is around the
 nominal level with all three approaches (@fig-coverage-imm and @fig-coverage-a3)
-for the imm and $a_3$. It goes down for both slightly under heavy-tailed 
-($t_5$) and $\chi^2$ predictors for LMS and UPI, respectively, but only with a
-smaller sample size and low reliability.
+for the interaction coefficient and imm. Still with a correct specification, 
+it goes down for both slightly under heavy-tailed ($t_5$) and $\chi^2$ predictors 
+for LMS and UPI, respectively, but only with a smaller sample size and low reliability.
 
 Under misspecification, $c_2$ and $c_3$ reduce the imm coverage, since its 
 interval is then centered on a biased estimate, with the largest drop for the 
@@ -783,7 +783,7 @@ under heavy-tailed $t_5$ predictors.
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) Under the Correctly Specified 
 #| Condition Across Sample Sizes, Reliability, Interaction Values, and 
 #| Distributions"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
@@ -794,7 +794,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 #| fig-cap: "Relative Bias of the Interaction Coefficient ($a_3$) Under the 
 #| Correctly Specified Condition Across Sample Sizes, Reliability, Interaction 
 #| Values, and Distributions"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
@@ -805,7 +805,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for relative 
+#| apa-note: "The grey band marks the acceptable region for relative 
 #| bias (within 0.10 of the true value). MCSEs are not shown."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
@@ -816,7 +816,7 @@ knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 #| fig-cap: "Relative RMSE of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The error bars represent the MCSE. No acceptable region 
+#| apa-note: "The error bars represent the MCSE. No acceptable region 
 #| is defined for this measure."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
@@ -826,7 +826,7 @@ knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
 #| label: fig-sesd-imm
 #| fig-cap: "SE/SD of the imm ($a_3 b$) Across Distributions, Reliability, and 
 #| (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure. 
+#| apa-note: "The grey band marks the acceptable region for the measure. 
 #| The MCSE is not computed for the SE/SD ratio."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
@@ -836,7 +836,7 @@ knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 #| label: fig-sesd-a3
 #| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure. 
+#| apa-note: "The grey band marks the acceptable region for the measure. 
 #| The MCSE is not computed for the SE/SD ratio."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
@@ -846,7 +846,7 @@ knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 #| label: fig-coverage-imm
 #| fig-cap: "Coverage of the imm ($a_3 b$) Across Distributions, Reliability, 
 #| and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
@@ -856,7 +856,7 @@ knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
 #| label: fig-coverage-a3
 #| fig-cap: "Coverage of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
@@ -867,7 +867,7 @@ knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
 #| fig-cap: "Type I Error of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_typeI_a3-0.png")
@@ -878,7 +878,7 @@ knitr::include_graphics("../plots/both_typeI_a3-0.png")
 #| fig-cap: "Power for the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) 
 #| Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and 
 #| $500$ at $a_3 = 0.2$"
-#| apa-note: "*Note.* The error bars represent the MCSE. No acceptable region 
+#| apa-note: "The error bars represent the MCSE. No acceptable region 
 #| is defined for this measure."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_power_a3-0.2.png")
@@ -889,7 +889,7 @@ knitr::include_graphics("../plots/both_power_a3-0.2.png")
 #| fig-cap: "Relative Bias of the Structural Coefficients 
 #| ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at 
 #| High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
@@ -900,7 +900,7 @@ knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
 #| fig-cap: "Coverage of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$)
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
@@ -911,7 +911,7 @@ knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 #| fig-cap: "SE/SD of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) 
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure. 
+#| apa-note: "The grey band marks the acceptable region for the measure. 
 #| The MCSE is not computed for the SE/SD ratio."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
@@ -938,7 +938,7 @@ whereas LSAM stays centered on zero.
 ```{r}
 #| label: fig-load
 #| fig-cap: "Performance of the Cross-Loaded Mediator Indicator Loading ($m_3$) Across All Measures, Distributions, and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band in each panel marks the acceptable region for that measure."
+#| apa-note: "The grey band in each panel marks the acceptable region for that measure."
 #| out-width: "100%"
 knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 ```
@@ -1197,7 +1197,7 @@ in every condition.
 #| the Interaction Coefficient ($a_3$) Across Distributions and 
 #| (Mis)specifications for $N = 200$ and $500$ at High Reliability and 
 #| $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE. Cells above ten are truncated."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
@@ -1209,7 +1209,7 @@ knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
 #| the Interaction Coefficient ($a_3$) Across Distributions and 
 #| (Mis)specifications for $N = 200$ and $500$ at Low Reliability and 
 #| $a_3 = 0.2$"
-#| apa-note: "*Note.* The grey band marks the acceptable region for the measure, 
+#| apa-note: "The grey band marks the acceptable region for the measure, 
 #| and the error bars represent the MCSE. Cells above ten are truncated."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
