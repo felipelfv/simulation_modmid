@@ -700,23 +700,18 @@ We interpret SE/SD ratios below 0.90 (underestimation) or above 1.10
 estimator. Note that the standard errors for the imm are based on
 the Monte Carlo method.
 
-The results were highly similar for both the interaction coefficient and imm. 
+Throughout distributions and (mis)specifications, with high reliability, 
+the results were very similar for both the interaction coefficient and imm. 
 The SE/SD ratio is unbiased for all three approaches 
-(@fig-sesd-imm and @fig-sesd-a3) in the case of a high reliability throughout 
-distributions and (mis)specifications. In case of low reliability and smaller 
+(@fig-sesd-imm and @fig-sesd-a3). In case of low reliability and smaller 
 sample size, we observed an overestimation for UPI throughout distributions. 
-Moreover, with low reliability and smaller sample size, in the $\chi^2$ in 
+Moreover, also with low reliability and smaller sample size, in the $\chi^2$ in 
 opposite directions, LSAM and UPI struggled the most throughout all 
 misspecifications, including with the correct one. With respect to the relative 
 bias of the variance, apart from the similar observations as aforementioned, 
 we further observe that some misspecifications affect in particular LMS
 in combination with specific nonnormal distributions (see @fig-relbiasvar and 
 @fig-relbiasvar-low in Appendix B).
-
-Under misspecification the SE/SD ratio remains near one for all three. The
-relative bias of the variance stays near one at high reliability, but
-becomes unstable at low reliability, where a few extreme replications 
-inflate it for every method and most severely for LMS.
 
 ### Coverage
 
