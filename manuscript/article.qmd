@@ -352,7 +352,7 @@ grey.
 ```{tikz}
 %| label: fig-model
 %| fig-cap: "Population Model for the Simulation Study."
-%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators; circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
+%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators. Circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
 %| fig-align: center
 %| fig-width: 9
 %| fig-height: 6
@@ -806,7 +806,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
 #| apa-note: "The grey band marks the acceptable region for relative 
-#| bias (within 0.10 of the true value). MCSEs are not shown."
+#| bias. MCSEs are not shown."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 ```
