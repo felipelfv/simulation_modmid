@@ -16,9 +16,10 @@ The design is a full factorial of 4 sample sizes × 3 interaction effects × 2
 reliabilities × 5 distributions × 9 misspecifications = 1080 conditions, each run
 for 800 replications.
 
-<sub>This work is licensed under a [Creative Commons Attribution 4.0 International
-License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/). This project and the
-preregistration for it are archived at
+<sub>The code in this repository is licensed under the [MIT License](LICENSE). The
+manuscript, figures, and other non-code content are licensed under a [Creative
+Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+This project and the preregistration for it are archived at
 <https://doi.org/10.5281/zenodo.20703258>.</sub>
 
 ## Repository Structure
