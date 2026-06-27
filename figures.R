@@ -56,13 +56,13 @@ method_fills  <- c(LSAM = "grey25", LMS = "grey55", UPI = "grey85")
 
 # shared facet + scale + theme layers; caller may override the facet
 apa_grid <- function(facets = facet_grid(distr_exo ~ rel + n,
-                       labeller = labeller(distr_exo = dist_labeller, n = n_labeller))) list(
-  facets,
-  scale_shape_manual(values = method_shapes),
-  scale_linetype_manual(values = method_lines),
-  theme_bw(base_size = 10),
-  theme(legend.position = "bottom", panel.grid.minor = element_blank(),
-        strip.text = element_text(face = "bold")))
+                                         labeller = labeller(distr_exo = dist_labeller, n = n_labeller))) list(
+                                           facets,
+                                           scale_shape_manual(values = method_shapes),
+                                           scale_linetype_manual(values = method_lines),
+                                           theme_bw(base_size = 10),
+                                           theme(legend.position = "bottom", panel.grid.minor = element_blank(),
+                                                 strip.text = element_text(face = "bold")))
 
 # per metric: axis label, MCSE column (NULL = none), acceptable band, reference line
 metric_spec <- list(
@@ -107,18 +107,16 @@ fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(2
   slice_geoms(d, metric) + apa_grid()
 }
 
-# baseline relative bias for the imm and a3 under the normal, correctly specified
-# condition, across ALL sample sizes, both reliabilities, and both nonzero
-# interaction values: parameter (rows) x reliability + a3 (cols), x = sample size,
-# line + point per method, +/- 1 MCSE bars.
-fig_baseline_bias <- function(a3v = c(0.2, 0.4)) {
+# baseline relative bias for one parameter (imm or a3) under the correctly specified
+# condition, across ALL sample sizes, both reliabilities, both nonzero interaction
+# values, and all distributions: distribution (rows) x reliability + a3 (cols),
+# x = sample size, line + point per method, +/- 1 MCSE bars.
+fig_baseline_bias <- function(param = "imm", a3v = c(0.2, 0.4)) {
   m <- metric_spec[["rel_bias"]]
   d <- summary_tbl |>
-    filter(parameter %in% c("imm", "a3"), distr_exo == "normal",
-           misspec == "none", a3 %in% a3v) |>
+    filter(parameter == param, misspec == "none", a3 %in% a3v) |>
     prep_factors() |>
-    mutate(parameter = factor(parameter, levels = c("imm", "a3")),
-           n = factor(n, levels = c(100, 200, 300, 500)))
+    mutate(n = factor(n, levels = c(100, 200, 300, 500)))
   ggplot(d, aes(n, rel_bias, shape = method, linetype = method, group = method)) +
     annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
              fill = "grey60", alpha = 0.25) +
@@ -128,8 +126,8 @@ fig_baseline_bias <- function(a3v = c(0.2, 0.4)) {
                   linetype = "solid", color = "grey30") +
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.8) +
-    facet_grid(parameter ~ rel + a3,
-               labeller = labeller(parameter = param_labeller, a3 = a3_labeller)) +
+    facet_grid(distr_exo ~ rel + a3,
+               labeller = labeller(distr_exo = dist_labeller, a3 = a3_labeller)) +
     scale_shape_manual(values = method_shapes) +
     scale_linetype_manual(values = method_lines) +
     theme_bw(base_size = 10) +
@@ -334,10 +332,13 @@ save_rotated <- function(plot, file, w, h, dpi = 150) {
 save_rotated(fig_combo_both("rel_bias", 0.2),
              file.path(plot_dir, "combo_rel_bias_a3-0.2.png"), w = 9.5, h = 8)
 
-# baseline relative bias under the normal, correctly specified condition across all
-# sample sizes, both reliabilities, and both nonzero interaction values
-ggsave(file.path(plot_dir, "baseline_rel_bias.png"),
-       fig_baseline_bias(c(0.2, 0.4)), width = 10, height = 5.5, dpi = 150)
+# baseline relative bias under the correctly specified condition across all sample
+# sizes, both reliabilities, both nonzero interaction values, and all distributions;
+# one figure per parameter (imm, a3)
+ggsave(file.path(plot_dir, "baseline_rel_bias_imm.png"),
+       fig_baseline_bias("imm", c(0.2, 0.4)), width = 10, height = 9, dpi = 150)
+ggsave(file.path(plot_dir, "baseline_rel_bias_a3.png"),
+       fig_baseline_bias("a3", c(0.2, 0.4)), width = 10, height = 9, dpi = 150)
 
 # relative RMSE, Type I error (a3 = 0) and power (a3 = 0.2): tall bar panels, upright
 save_bar_both("rel_rmse", 0.2)
