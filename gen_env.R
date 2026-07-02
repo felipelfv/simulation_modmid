@@ -2,6 +2,7 @@ library(rix)
 
 rix(date = "2026-05-11", # available_dates(); 1.8.x quarto (1.9.37 has a pandoc bug)
     r_pkgs = c("covsim", "rvinecopulib",
+               "tidyr", "ggplot2", "simhelpers", "dplyr",
                "knitr"),                   # knitr: R engine quarto uses for code chunks
     system_pkgs = "quarto",                # quarto CLI to render the paper
     # LaTeX deps for the Quarto PDF; extend as the build reports missing .sty

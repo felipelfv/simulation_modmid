@@ -324,7 +324,7 @@ save_rotated <- function(plot, file, w, h, dpi = 150) {
   grid::grid.draw(ggplot2::ggplotGrob(plot))
 }
 
-# --- create all figures ---------------------------------------------------------
+# create all figures
 # wide multi-panel figures are saved rotated 90 degrees so they sit large on the
 # portrait end-pages; the tall bar figures and lm3 stay upright.
 
