@@ -41,10 +41,16 @@ jobs:
     - name: Render manuscript
       run: nix-shell --run "quarto render manuscript/article.qmd"
 
+    - name: Stage docs for Pages
+      run: |
+        mkdir -p docs
+        cp manuscript/article.pdf docs/article.pdf
+        printf '<meta http-equiv="refresh" content="0; url=article.pdf">' > docs/index.html
+
     - name: Push rendered manuscript
       run: |
         git pull --rebase --autostash origin main
-        git add manuscript/article.pdf
+        git add manuscript/article.pdf docs/
         if git diff --cached --quiet; then
           echo "No changes to commit."
         else
