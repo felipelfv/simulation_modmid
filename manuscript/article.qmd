@@ -48,8 +48,7 @@ author-note:
     manuscript can be found at <https://doi.org/10.5281/zenodo.20703258>."
     financial-support: "This project was funded by the Special Research Fund
     (BOF) of Ghent University (BOF/24J/2023/144)."
-    gratitude: "We would like to thank Sofia Morelli for the helpful comments 
-    and discussions."
+    gratitude: "We gratefully acknowledge the Borchard Foundation for supporting the work summarized in this article. We also thank Sofia Morelli for the helpful comments and discussions."
 
 abstract: |
   Moderated mediation is common in the behavioral and social sciences, but it
@@ -440,11 +439,11 @@ We employed a fully factorial design crossing five factors: sample size
 ($N \in \{100, 200, 300, 500\}$), interaction magnitude
 ($a_3 \in \{0, 0.20, 0.40\}$), measurement reliability (low $= 0.5$,
 high $= 0.7$), the distribution of the exogenous latent predictors (normal, 
-uniform, $t$, and two right-skewed $\chi^2$ distributions), 
-and the (mis)specification conditions (nine case; see
+uniform, $t$, and two $\chi^2$ conditions with same- or opposite-direction
+skew), and the (mis)specification conditions (nine cases; see
 Data Generation below). This yielded 
 $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
-conditions, each replicated 800 times.
+conditions, each replicated 1000 times.
 
 Sample sizes entails the small to moderate range, where interaction terms 
 are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
