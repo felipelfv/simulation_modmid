@@ -112,7 +112,7 @@ case in which the indirect effect is allowed to depend on a moderator
 [@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; @MacKinnonFairchild2007].
 
 In this context, a fundamental concern may arise from measurement. Many 
-constructs in under investigation are not directly observed but are measured 
+constructs under investigation are not directly observed but are measured 
 indirectly through multiple items, that is, they are latent variables 
 [@BollenHoyle2012]. When such constructs are reduced to summary scores 
 (e.g., a sum or mean of the items) and analyzed as though they were observed, 
@@ -132,7 +132,7 @@ yet we also note that latent variables do not necessarily improve power
 in general, whether for interactions or not [@Cham2012; @Fuller1987; 
 @LedgerwoodShrout2011; @WangRhemtulla2021].
 
-Moderation mediation with latent variables is not straightforward in terms of
+Moderated mediation with latent variables is not straightforward in terms of
 statistical estimation. Indeed, a latent interaction involves the product of
 two latent variables, which is unobserved and nonnormal even when its 
 constituents are normal [@KelavaBrandt2022]. Following this, a number of 
@@ -259,7 +259,7 @@ in which it occurs [@BainterBollen2014]. Prior simulation work has examined
 latent interaction estimation mainly under distributional misspecification 
 [e.g., @Cham2012; @Vieira2026; @Lonati2025; @Brandt2014], and in only one case 
 under misspecifications at the measurement level [@Brandt2020]. Moreover, when 
-in it comes to (moderated) mediation, despite its popularity in applied 
+it comes to (moderated) mediation, despite its popularity in applied 
 research, only a few studies investigated it with latent variables, and those 
 assumed a correctly specified (and saturated) model
 [@FalkBiesanz2015; @Feng2020].
@@ -445,7 +445,7 @@ Data Generation below). This yielded
 $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
 conditions, each replicated 1000 times.
 
-Sample sizes entails the small to moderate range, where interaction terms 
+Sample sizes cover the small to moderate range, where interaction terms 
 are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
 magnitudes include a null condition to assess Type I error for the interaction 
 coefficient and imm, and two nonzero levels representing small and moderate 
@@ -469,7 +469,7 @@ The misspecification cases are detailed below.
 ### Estimation Approaches
 
 LSAM [@RosseelLoh2024; @Rosseel2025], with the measurement model
-was estimated by ML in the first step. In this case, the
+estimated by ML in the first step. In this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
 while $M$ and $Y$ formed their own blocks. LMS [@KleinMoosbrugger2000], 
 with robust standard errors, and the extended UPI approach with 
@@ -525,7 +525,7 @@ $\pm\,3$, together with replications whose estimated standard error exceeded
 $10$ on any parameter of interest^[We added the standard error criterion because,
 even after excluding point estimate outliers, a single LMS replication, in one
 condition, retained an anomalous standard error; it was thus the only replication
-removed based on this criteria.]. Again, a replication flagged as an outlier 
+removed based on this criterion.]. Again, a replication flagged as an outlier 
 for any estimation approach was removed from all of them. We also flagged
 inadmissible solutions, where any residual (unique) variance was nonpositive or
 the latent covariance matrix was not positive definite. 
@@ -619,8 +619,8 @@ versions, code, manuscript, and materials, see the project repository.
 We present the results in three sections. First, the results for the 
 interaction coefficient and the imm are reported. We then turn to the 
 remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), 
-and we close with the estimated factor loadings (i.e., $m_3$), focusing mainly on 
-the cross-loaded indicator. Moreover, due to the large number of conditions, 
+and we close with the estimated factor loadings, focusing mainly on that of 
+the cross-loaded indicator ($m_3$). Moreover, due to the large number of conditions, 
 we focused on a subset of the conditions. Namely, we fix the 
 interaction coefficient at 0.2 in most cases (except for Type I error, 
 which by construction requires a zero interaction) and display a limited 
@@ -925,8 +925,8 @@ ratio, and relative bias of the variance estimator shown together at high
 reliability and $N = 500$ (@fig-load). For $m_3$, the omitted cross-loading (`cl`)
 is the only consequential misspecification: its relative bias rises sharply (above
 $0.5$ at the medium level, somewhat less for LSAM) and its coverage collapses
-toward zero. The two standard error measures, by contrast, yielded to certain 
-extent acceptable deviations: across conditions the SE/SD ratio and the relative 
+toward zero. The two standard error measures, by contrast, yielded, to a certain
+extent, acceptable deviations: across conditions the SE/SD ratio and the relative 
 bias of the variance estimator both stay within the desirable range, deviating 
 strongly under the largest cross-loading, and the most so for LSAM. 
 We also highlight that a subtler pattern, negligible in size, appears under the 
@@ -961,7 +961,7 @@ accurate in relative bias but the least stable at the smallest sample size and
 low reliability. The two standard error performance measures, the SE/SD ratio 
 and the relative bias of the variance estimator, showed similar results: both 
 stayed near one at high reliability but not at low reliability and small 
-samples. Indeed, UPI overestimated standard errors, UPI and LSAM struggled the 
+samples. Indeed, UPI overestimated standard errors, and UPI and LSAM struggled the 
 most under the $\chi^2$ predictors skewed in opposite directions.
 
 Under misspecification, LSAM was the more robust approach. The bias from an
