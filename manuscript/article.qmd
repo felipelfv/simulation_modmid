@@ -106,31 +106,32 @@ Mediation analysis is a well-known procedure in the behavioral and social
 sciences [@Hayes2018; @Preacher2007; @Pieters2017; @Charlton2021]. In its 
 basic and standard form, the effect of an independent variable on an outcome is 
 decomposed into a direct effect and an indirect effect transmitted through a 
-mediator, with all variables observed. This basic single mediator model has
+mediator, with all variables observed. This single mediator model has
 since been extended in a number of directions, most relevant here being the
 case in which the indirect effect is allowed to depend on a moderator
 [@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; @MacKinnonFairchild2007].
 
-In this context, a fundamental concern may arise from measurement. Many 
-constructs under investigation are not directly observed but are measured 
-indirectly through multiple items, that is, they are latent variables 
-[@BollenHoyle2012]. When such constructs are reduced to summary scores 
+In this context, a fundamental concern may arise from measurement. Many
+constructs under investigation are not directly observed but are measured
+indirectly through multiple items, that is, they are latent variables
+[@BollenHoyle2012]. When such constructs are reduced to summary scores
 (e.g., a sum or mean of the items) and analyzed as though they were observed, 
-measurement error is ignored. This error can bias the indirect effect and 
-distort inferences about it [@HoyleKenny1999; @ColePreacher2014], and it is 
-especially problematic for the mediator, which acts at once as a predictor and 
-an outcome [@GonzalezMacKinnon2021]. To address this, structural equation 
-modelling (SEM) with latent variables has been advocated, especially in 
-the context of mediation [@CheungLau2008;
-@FalkBiesanz2015; @LedgerwoodShrout2011; @Montoya2024]. 
-It estimates structural relationships between common factors, from
-which indicator-specific unique variance has been partitioned, provided the
-measurement model is correctly specified [@Bollen1989; @Rhemtulla2020].
-The problem is compounded under moderation, where the product term is even 
-less reliable than either of its constituents [@Bohrnstedt1978; @Busemeyer1983]; 
-yet we also note that latent variables do not necessarily improve power 
-in general, whether for interactions or not [@Cham2012; @Fuller1987; 
-@LedgerwoodShrout2011; @WangRhemtulla2021].
+a restrictive measurement structure is imposed rather than tested 
+[@McNeishWolf2020] and measurement error is left unmodelled. This error can 
+attenuate or inflate the indirect effect and distort inferences about it 
+[@ColePreacher2014; @HoyleKenny1999], and it is especially consequential for 
+the mediator, which acts at once as a predictor and an outcome 
+[@GonzalezMacKinnon2021]. The problem is compounded under moderation, 
+where the product term is even less reliable than either of its constituents 
+[@Bohrnstedt1978; @Busemeyer1983]. To address this, structural equation 
+modelling (SEM) with latent variables has been advocated, especially in the 
+context of mediation [@CheungLau2008; @FalkBiesanz2015; @LedgerwoodShrout2011; 
+@Montoya2024]. It estimates structural relationships between common factors, 
+from which indicator-specific unique variance has been partitioned, provided the 
+measurement model is correctly specified [@Bollen1989; @DeShon1998; 
+@Rhemtulla2020]. Yet we also note that latent variables do not necessarily 
+improve power in general, whether for interactions or not [@Cham2012; 
+@Fuller1987; @LedgerwoodShrout2011; @WangRhemtulla2021].
 
 Moderated mediation with latent variables is not straightforward in terms of
 statistical estimation. Indeed, a latent interaction involves the product of
@@ -148,11 +149,28 @@ product-indicator (PI). Opposed to these are structural-after-measurement
 (SAM) approaches [@CoxKelcey2021; @HolstBudtz2020; @NgChan2020; @Rosseel2025; 
 @WallAmemiya2001; @WallAmemiya2003], in which the measurement model is 
 estimated first and the structural model afterward with the measurement 
-parameters held fixed. Many of the abovementioned approaches have so far been 
+parameters held fixed. Many of these approaches have so far been 
 rarely applied in practice, likely held back by limited software, slow 
 estimation, and error-prone implementations. With recent open-source 
 implementations [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and 
 non-commercial software [@Keller2025], this is likely to change.
+
+The distinction between the two strategies matters beyond estimation. Under 
+system-wide estimation, the consequences of a misspecification are not confined 
+to the part of the model in which it occurs [@BainterBollen2014]: the estimated 
+loadings, and with them the empirical meaning of a latent variable, can change 
+with the structural model that is imposed. The latent variable is then no longer 
+anchored to its indicators alone, and the model is subject to interpretational 
+confounding [@Burt1976], a discrepancy between the empirical meaning assigned 
+to a latent variable through its estimated measurement parameters and the 
+meaning intended by the researcher [see also @GonzalezMacKinnon2021]. This is 
+of particular concern in mediation, which is a hypothesis about causal effects 
+whose interpretation already rests on identification assumptions that *may*
+not be verified from the data alone [@Imai2010; @Morelli2026; @Rohrer2022; 
+@VanderWeele2015], and more so with latent variables [@Sterner2024; @VanderWeeleVansteelandt2022]. Because SAM fixes the measurement model before 
+any structure is fit, the estimated latent variables and their meaning do 
+not depend on the structural model that follows, although this does not 
+imply that the structure is correct [@VanderWeeleVansteelandt2022].
 
 Beyond estimation, a further consideration concerns interpretation. Mediation is 
 a hypothesis about causal effects, and causal interpretation requires 
@@ -165,16 +183,14 @@ variables must validly represent the intended constructs
 interpretational confounding [@Burt1976], a discrepancy between the empirical 
 meaning assigned to a latent variable through its estimated 
 measurement parameters and the meaning intended by the researcher. Under 
-system-wide estimation, the measurement and structural parameters are estimated
-jointly, so the estimated loadings, and with them the empirical meaning of a
-latent variable, can change with the structural model that is imposed. The 
-latent variable is then no longer anchored to its indicators alone, and 
-inferences about it need not be consistent across structural models. SAM avoids
-this by estimating the measurement model on its own. Thus, because the structural 
-model cannot then influence it, the estimated latent variables, and their 
-meaning, do not depend on the structure subsequently fit, and interpretational 
-confounding is avoided. Note, however, that this does not imply the 
-structure is correct [@VanderWeeleVansteelandt2022]. 
+system-wide estimation, the consequences of a misspecification are not confined 
+to the part of the model in which it occurs [@BainterBollen2014]: the estimated 
+loadings, and with them the empirical meaning of a latent variable, can change 
+with the structural model that is imposed. Given that a SAM approach fixes the 
+measurement model before any structure is fit, the estimated latent variables 
+and their meaning do not depend on the structural model that follows, although 
+this does not imply that the structure is correct 
+[@VanderWeeleVansteelandt2022].
 
 To illustrate interpretational confounding, we take a mediation model with 
 three latent variables, X, M, and Y, each with three indicators, and 
@@ -188,10 +204,8 @@ one omitting the mediator and one including it, by system-wide SEM and by SAM
 @tbl-interp-confounding, the loadings of X estimated by system-wide 
 SEM depend on the structural model: once the mediator enters, the loadings of 
 $x_2$ and $x_3$ fall below their true value of one, even though the measurement 
-of X is unchanged, so the empirical meaning of X shifts with the structure 
-imposed. SAM estimates the measurement model from the indicators alone, so 
-the X loadings are identical with and without the mediator and stay at their
-true values.
+of X is unchanged, whereas the SAM loadings are identical with and without the 
+mediator and stay at their true values
 
 ```{r}
 #| label: tbl-interp-confounding
@@ -251,57 +265,36 @@ knitr::asis_output(paste0("\\begin{center}\n",
   "\n\\end{center}"))
 ```
 
-The example involves a single, deliberate change to the structural model,
-but it reflects a more general property of system-wide estimation. That is, 
-because the measurement and structural parameters are estimated jointly, the 
-consequences of a misspecification are not confined to the part of the model 
-in which it occurs [@BainterBollen2014]. Prior simulation work has examined 
-latent interaction estimation mainly under distributional misspecification 
-[e.g., @Cham2012; @Vieira2026; @Lonati2025; @Brandt2014], and in only one case 
-under misspecifications at the measurement level [@Brandt2020]. Moreover, when 
-it comes to (moderated) mediation, despite its popularity in applied 
-research, only a few studies investigated it with latent variables, and those 
-assumed a correctly specified (and saturated) model
-[@FalkBiesanz2015; @Feng2020].
-
-Therefore, in this article, we evaluate a SAM approach, alongside LMS and UPI, 
-under a latent variable moderated mediation model. The first, local SAM (LSAM),
-proceeds in two steps: it first estimates the measurement model with a standard
-estimator (e.g., ML or generalized least squares) and then estimates the
-structural model with the measurement parameters held fixed. The second step is
-a path or regression model that can likewise be fit by various estimators
-[@RosseelLoh2024; @Rosseel2025]. The second, LMS, approximates
-the nonnormal distribution of the latent product by a finite mixture of normals
-and estimates the joint model by full-information maximum likelihood (ML) via an expectation–maximization (EM) algorithm [@KleinMoosbrugger2000; @Kelava2011].
-The third, the unconstrained PI approach (UPI) forms products of the observed 
-indicators to serve as indicators of the latent interaction and estimates the
-resulting model by ML, optionally with robust standard errors and test
-statistics [@KelavaBrandt2009; @Marsh2004; @Lonati2025; @Slupphaug2025;
-@Brandt2020]. These approaches have been explained more
-in-depth in previous research [see @Brandt2020; @Vieira2026;
-@Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025]. We assess 
-these estimation approaches across a wide range of conditions and on a broad set
-of performance measures, both detailed in the next section.
+Despite this, prior simulation work has examined latent interaction estimation 
+mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
+@Lonati2025; @Brandt2014], and in only one case under misspecification at the 
+measurement level [@Brandt2020], which considered only the UPI among the 
+approaches studied here and in a limited setting of conditions. Moreover, when 
+it comes to (moderated) mediation, despite its popularity in applied research, 
+only a few studies have investigated it with latent variables, and those 
+assumed a correctly specified (and saturated) model [@FalkBiesanz2015; 
+@Feng2020]. In this article, we therefore evaluate three estimation approaches 
+for a latent variable moderated mediation model: local SAM (LSAM; @Rosseel2025), 
+LMS [@KleinMoosbrugger2000; @Kelava2011], and the unconstrained PI approach 
+(UPI; @KelavaBrandt2009; @Marsh2004). These approaches have been explained more 
+in-depth in previous research and we refer readers to it 
+[e.g., @Brandt2020; @Vieira2026; @Lonati2025; @Rosseel2025; @Kelava2011; 
+@Lin2010; @Slupphaug2025].
 
 ### Present Research and Contributions
 
-This study makes three contributions to the literature. First, we provide a
-large-scale assessment of these approaches under misspecification of the
-measurement and structural models, which has not been done before, with the
-single exception of @Brandt2020, who examined misspecification only at the
-measurement level and, of the approaches we consider, only the UPI, while
-varying distributional aspects in a limited setting. Here, we additionally 
-use nonnormal copulas to generate distributional violations. Second, we
-assess them for a derived quantity, the index of moderated mediation (imm;
-@Hayes2015), a nonlinear function of the structural parameters whose behavior 
-need not match that of its constituents and which has not previously been 
-examined for LSAM. Third, whereas inference on such quantities has relied on 
-the bootstrap [@Hayes2015; @Tibbe2022], especially in the limited prior work 
-concerning (moderated) mediation with latent variables [@FalkBiesanz2015; 
-@Feng2020], we adopt and investigate the Monte Carlo method 
-[@MacKinnonLockwood2004; @PreacherSelig2012], which may be 
-accurate enough without the computational cost of the bootstrap, which can 
-itself underperform at small sample sizes.
+This study makes two contributions. First, we extend @Brandt2020, who 
+examined only the UPI and only misspecification of the measurement model, to
+LSAM and LMS and to a wider set of conditions, such as misspecification of 
+the structural model and distributional violations generated with nonnormal 
+copulas. Second, we evaluate the estimation approaches on the index of moderated 
+mediation (imm; @Hayes2015) itself, with inference by the Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012]. Although the imm is the quantity 
+of substantive interest in moderated mediation, its performance has hardly been 
+studied, and to our knowledge never with latent variables, even though as a 
+nonlinear function of the structural parameters its behavior need not follow 
+that of its constituents. Inference on it has so far relied on the bootstrap 
+[@Hayes2015; @Tibbe2022; @FalkBiesanz2015; @Feng2020], which is computationally 
+costly and can itself underperform at small sample sizes. 
 
 ```{r}
 #| include: false
