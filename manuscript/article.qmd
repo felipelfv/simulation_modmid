@@ -155,23 +155,6 @@ estimation, and error-prone implementations. With recent open-source
 implementations [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and 
 non-commercial software [@Keller2025], this is likely to change.
 
-The distinction between the two strategies matters beyond estimation. Under 
-system-wide estimation, the consequences of a misspecification are not confined 
-to the part of the model in which it occurs [@BainterBollen2014]: the estimated 
-loadings, and with them the empirical meaning of a latent variable, can change 
-with the structural model that is imposed. The latent variable is then no longer 
-anchored to its indicators alone, and the model is subject to interpretational 
-confounding [@Burt1976], a discrepancy between the empirical meaning assigned 
-to a latent variable through its estimated measurement parameters and the 
-meaning intended by the researcher [see also @GonzalezMacKinnon2021]. This is 
-of particular concern in mediation, which is a hypothesis about causal effects 
-whose interpretation already rests on identification assumptions that *may*
-not be verified from the data alone [@Imai2010; @Morelli2026; @Rohrer2022; 
-@VanderWeele2015], and more so with latent variables [@Sterner2024; @VanderWeeleVansteelandt2022]. Because SAM fixes the measurement model before 
-any structure is fit, the estimated latent variables and their meaning do 
-not depend on the structural model that follows, although this does not 
-imply that the structure is correct [@VanderWeeleVansteelandt2022].
-
 Beyond estimation, a further consideration concerns interpretation. Mediation is 
 a hypothesis about causal effects, and causal interpretation requires 
 identification assumptions that *may* not be verified from the data alone 
@@ -192,24 +175,9 @@ and their meaning do not depend on the structural model that follows, although
 this does not imply that the structure is correct 
 [@VanderWeeleVansteelandt2022].
 
-To illustrate interpretational confounding, we take a mediation model with 
-three latent variables, X, M, and Y, each with three indicators, and 
-obtain a population covariance matrix from a
-correctly specified version. We then alter it so that the covariances between
-the X and M indicators are unequal across the X indicators (3, 1, and 1,
-rather than the implied value of 2), so their association with M no longer
-follows a single common factor. To the same data we fit two structural models, 
-one omitting the mediator and one including it, by system-wide SEM and by SAM 
-($N = 200$), and compare the estimated loadings of X. As shown in 
-@tbl-interp-confounding, the loadings of X estimated by system-wide 
-SEM depend on the structural model: once the mediator enters, the loadings of 
-$x_2$ and $x_3$ fall below their true value of one, even though the measurement 
-of X is unchanged, whereas the SAM loadings are identical with and without the 
-mediator and stay at their true values
-
 ```{r}
-#| label: tbl-interp-confounding
-#| tbl-cap: "Illustration for Interpretational Confounding."
+#| label: interp-confounding
+#| include: false
 library(lavaan)
 
 model.pop <- '
@@ -250,20 +218,26 @@ fit_it <- function(estimator, model) {
 }
 xload <- function(fit) lavInspect(fit, "est")$lambda[c("x1", "x2", "x3"), "X"]
 
-tab <- data.frame(
-  Parameter = c("Loading of $x_1$", "Loading of $x_2$", "Loading of $x_3$"),
-  True = c(1, 1, 1),
-  `SEM, no M` = xload(fit_it(sem, model_nomed)),
-  `SEM, with M` = xload(fit_it(sem, model_med)),
-  `SAM, no M` = xload(fit_it(sam, model_nomed)),
-  `SAM, with M` = xload(fit_it(sam, model_med)),
-  check.names = FALSE
-)
-knitr::asis_output(paste0("\\begin{center}\n",
-  knitr::kable(tab, digits = 2, booktabs = TRUE, escape = FALSE, 
-               format = "latex"),
-  "\n\\end{center}"))
+lam_sem_nomed <- xload(fit_it(sem, model_nomed))
+lam_sem_med   <- xload(fit_it(sem, model_med))
+lam_sam_nomed <- xload(fit_it(sam, model_nomed))
+lam_sam_med   <- xload(fit_it(sam, model_med))
 ```
+
+To illustrate interpretational confounding, we take a mediation model with 
+three latent variables, X, M, and Y, each with three indicators, and 
+obtain a population covariance matrix from a
+correctly specified version. We then alter it so that the covariances between
+the X and M indicators are unequal across the X indicators (3, 1, and 1,
+rather than the implied value of 2), so their association with M no longer
+follows a single common factor. To the same data we fit two structural models, 
+one omitting the mediator and one including it, by system-wide SEM and by SAM 
+($N = 200$), and compare the estimated loadings of X. Without the mediator, 
+both approaches recover the true loadings of one. 
+Once the mediator enters, the system-wide loadings of $x_2$ and $x_3$ drop to 
+`r sprintf("%.2f", lam_sem_med["x2"])`, even though the measurement of X is 
+unchanged, whereas the SAM loadings remain at one with and without the 
+mediator.
 
 Despite this, prior simulation work has examined latent interaction estimation 
 mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
