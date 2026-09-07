@@ -19,10 +19,10 @@ rix(date = "2026-05-11", # available_dates(); 1.8.x quarto (1.9.37 has a pandoc 
     git_pkgs = list(
       list(package_name = "lavaan",
            repo_url = "https://github.com/yrosseel/lavaan",
-           commit = "337e951"),
+           commit = "34f69c74f0f65067c7d01f75be4b9f67b8493aff"),
       list(package_name = "modsem",
            repo_url = "https://github.com/Kss2k/modsem",
-           commit = "6a1ed1b")
+           commit = "5c365472e7ffd2796654c77530e5c305946a3e80")
     ),
     project_path = ".",
     overwrite = TRUE

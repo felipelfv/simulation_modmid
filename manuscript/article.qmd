@@ -489,10 +489,11 @@ from all estimators whenever any one of them did not converge. Second, among the
 remaining replications, we screened for outliers, identified per
 condition, method, and parameter as point estimates beyond the interquartile range
 $\pm\,3$, together with replications whose estimated standard error exceeded
-$10$ on any parameter of interest^[We added the standard error criterion because,
-even after excluding point estimate outliers, a single LMS replication, in one
-condition, retained an anomalous standard error; it was thus the only replication
-removed based on this criterion.]. Again, a replication flagged as an outlier 
+$10$ on any parameter of interest^[We added the standard error criterion because
+some replications retained anomalous standard errors despite acceptable point
+estimates. It additionally removed 125 replications (about $0.01\%$ of the
+globally converged ones), predominantly for UPI at the smallest sample size
+with low reliability and skewed $\chi^2$ predictors.]. Again, a replication flagged as an outlier
 for any estimation approach was removed from all of them. We also flagged
 inadmissible solutions, where any residual (unique) variance was nonpositive or
 the latent covariance matrix was not positive definite. 
@@ -601,16 +602,16 @@ about convergence and outliers is available in the repository
 
 ## Convergence and Outliers
 
-Convergence was high throughout. LSAM converged in essentially every replication
-(at least $99.8\%$ across all conditions) and LMS in at least $98.7\%$. 
-UPI was the least stable, with its convergence rate falling to about $91\%$ 
-in the worst condition (the smallest sample size, low reliability, and 
-skewed $\chi^2$ predictors). At high reliability, however, UPI converged in 
-at least $99\%$ of replications regardless of sample size, distribution, or 
-misspecification. Outliers were likewise rare, staying below about $1\%$ in 
-most conditions and reaching their highest values, up to roughly $11\%$ for UPI 
-and $8\%$ for LSAM, only at $N = 100$ with low reliability and skewed ($\chi^2$) 
-predictors. Note the results reported below did not exclude inadmissible 
+Convergence was high throughout. LSAM converged in every replication across
+all conditions, and LMS in at least $99.9\%$.
+UPI was the least stable, with its convergence rate falling to about $92\%$
+in the worst condition (the smallest sample size, low reliability, and
+skewed $\chi^2$ predictors). At high reliability, however, UPI converged in
+at least $99\%$ of replications regardless of sample size, distribution, or
+misspecification. Outliers were likewise rare, staying below $1\%$ in
+the majority of conditions and reaching their highest values, up to roughly
+$11\%$ for UPI and $8\%$ for LSAM, only at $N = 100$ with low reliability and
+skewed ($\chi^2$) predictors. Note the results reported below did not exclude inadmissible 
 solutions. In fact, excluding them leads to negligible changes, with the few 
 differences confined to the smallest sample size, low reliability, $\chi^2$ 
 conditions, mainly for UPI.
