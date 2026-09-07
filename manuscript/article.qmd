@@ -162,11 +162,12 @@ variables must validly represent the intended constructs
 [@GonzalezMacKinnon2021]. In fact, when they do not, the model is subject to 
 interpretational confounding [@Burt1976], a discrepancy between the empirical 
 meaning assigned to a latent variable through its estimated 
-measurement parameters and the meaning intended by the researcher. Under 
-system-wide estimation, the consequences of a misspecification are not confined 
-to the part of the model in which it occurs [@BainterBollen2014]: the estimated 
-loadings, and with them the empirical meaning of a latent variable, can change 
-with the structural model that is imposed. Given that a SAM approach fixes the 
+measurement parameters and the meaning intended by the researcher. This 
+reflects an underlying property of system-wide estimation, namely that the 
+consequences of a misspecification are not confined to the part of the model 
+in which it occurs [@BainterBollen2014]. The estimated loadings, and with them 
+the empirical meaning of a latent variable, can change with the structural 
+model that is imposed. Given that a SAM approach fixes the 
 measurement model before any structure is fit, the estimated latent variables 
 and their meaning do not depend on the structural model that follows, although 
 this does not imply that the structure is correct 
@@ -245,9 +246,9 @@ it comes to (moderated) mediation, despite its popularity in applied research,
 only a few studies have investigated it with latent variables, and those 
 assumed a correctly specified (and saturated) model [@FalkBiesanz2015; 
 @Feng2020]. In this article, we therefore evaluate three estimation approaches 
-for a latent variable moderated mediation model: local SAM (LSAM; @Rosseel2025), 
+for a latent variable moderated mediation model: local SAM [LSAM; @Rosseel2025], 
 LMS [@KleinMoosbrugger2000; @Kelava2011], and the unconstrained PI approach 
-(UPI; @KelavaBrandt2009; @Marsh2004). These approaches have been explained 
+[UPI; @KelavaBrandt2009; @Marsh2004]. These approaches have been explained 
 extensively in previous research and we refer readers to it 
 [e.g., @Brandt2020; @Vieira2026; @Lonati2025; @Rosseel2025; @Kelava2011; 
 @Lin2010; @Slupphaug2025].
@@ -260,7 +261,7 @@ approaches considered here, only the UPI. We add LSAM and LMS and a
 considerably broader design, detailed in the next section, that includes 
 misspecification of the structural model. Second, we 
 evaluate the estimation approaches on the index of moderated mediation 
-(imm; [@Hayes2015]) itself, a nonlinear function of the structural parameters 
+[imm; @Hayes2015] itself, a nonlinear function of the structural parameters 
 whose behavior need not follow that of its constituents. With latent 
 variables, its performance has been examined only for system-wide 
 estimators, under a correctly specified model, and with bias-corrected 
@@ -469,8 +470,8 @@ $\theta_{\eta j}$ were scaled to the target reliability $\omega \in \{0.5, 0.7\}
 
 The nine (mis)specification conditions comprise one correctly specified condition
 and four types of misspecification, each at two empirically calibrated 
-magnitudes (standardized $0.25$ and $0.50$, detailed in @apx-calibration; similar to 
-@Brandt2020). Two are structural: an omitted direct effect of the moderator on 
+magnitudes (standardized $0.25$ and $0.50$, detailed in @apx-calibration), 
+similar to @Brandt2020. Two are structural: an omitted direct effect of the moderator on 
 the outcome ($c_2$) and an omitted moderated direct effect ($c_3$). The others 
 are in the measurement model: a cross-loading of a mediator indicator on $X$ 
 (`cl`) and a residual covariance between a mediator and an outcome indicator 
