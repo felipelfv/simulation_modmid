@@ -75,14 +75,14 @@ word-count: true
 floatsintext: false
 numbered-lines: false
 link-citations: false
-mask: false
+mask: false # change to true as journal wants both
 
 bibliography: "references.bib"
 
 format:
   apaquarto-pdf:
     documentmode: man
-    keep-tex: false
+    keep-tex: false # change to true to have the latex file
     include-in-header:
       text: |
         \raggedbottom
@@ -126,8 +126,8 @@ improve power in general, whether for interactions or not [@Cham2012;
 @Fuller1987; @LedgerwoodShrout2011; @WangRhemtulla2021].
 
 Moderated mediation with latent variables is not straightforward in terms of
-statistical estimation. Indeed, a latent interaction^[We use *interaction* and 
-*moderation* interchangeably, as the focus is on estimation, but we highlight 
+statistical estimation. Indeed, a latent interaction^[We use interaction and 
+moderation interchangeably, as the focus is on estimation, but we highlight 
 they imply different interpretations and causal assumptions [@VanderWeele2009; 
 @VanderWeele2015]. An interaction also need not be a product term, although 
 that is the most common functional form used by researchers [@Rimpler2026].] 
@@ -477,7 +477,7 @@ are in the measurement model: a cross-loading of a mediator indicator on $X$
 (`rc`). In every case the effect is present in the 
 population but omitted from the estimated model.
 
-### Nonconvergence, Outliers, and Inadmissible Solutions
+### Convergence, Outliers, and Inadmissible Solutions
 
 Following previous research [@Lonati2025; @Vieira2026], replications were 
 screened before analysis in two sequential steps. In both, a replication 
@@ -602,7 +602,7 @@ interaction coefficient and imm are shown at both reliability levels.
 The entire set of results as well as detailed information 
 about convergence and outliers is available in the repository.
 
-## Convergence and Outliers
+## Convergence, Outliers, and Inadmissible Solutions
 
 Convergence was high throughout. LSAM converged in every replication across
 all conditions, and LMS in at least $99.9\%$.
