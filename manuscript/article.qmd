@@ -48,31 +48,23 @@ author-note:
     manuscript can be found at <https://doi.org/10.5281/zenodo.20703258>."
     financial-support: "This project was funded by the Special Research Fund
     (BOF) of Ghent University (BOF/24J/2023/144)."
-    gratitude: "We gratefully acknowledge the Borchard Foundation for supporting the work summarized in this article. We also thank Sofia Morelli for the helpful comments and discussions."
+    gratitude: "We gratefully acknowledge the Borchard Foundation for 
+    supporting the work summarized in this article. We also thank Sofia Morelli 
+    for the helpful comments and discussions."
 
 abstract: |
-  Moderated mediation is common in the behavioral and social sciences, but it
-  is seldom estimated with latent variables, and the approaches that estimate
-  it have rarely been compared under realistic departures from a correctly
-  specified model. We assessed three estimators of a latent moderated mediation 
-  model, the two-step local structural-after-measurement approach (LSAM) and 
-  the system-wide latent moderated structural equations (LMS) and 
-  unconstrained product-indicator (UPI) methods, focusing on the 
-  interaction coefficient and the index of moderated mediation (imm), 
-  for which inference followed the Monte Carlo method. In a fully factorial 
-  simulation crossing sample size, interaction magnitude, measurement 
-  reliability, the distribution of the exogenous predictors, and nine 
-  (mis)specification conditions, we evaluated relative bias, relative RMSE,
-  coverage, standard error accuracy, Type I error, and power. Under correct
-  specification, all three estimators recovered the imm and the interaction
-  coefficient with negligible relative bias, but differed in coverage, Type I
-  error, standard error accuracy, relative RMSE, and power. Results concerning
-  the distributional violations followed previous literature. Under 
-  misspecification, LSAM was the most robust in general, leaving some estimates
-  unaffected by specific omissions that led to biased results under the 
-  system-wide estimators. Even so, this robustness was not absolute, as both
-  measurement and structural misspecifications degraded performance across the
-  metrics. 
+  Moderated mediation is seldom estimated with latent variables, and its
+  estimators have rarely been compared under model misspecification. In a
+  preregistered simulation we evaluated three estimation approaches of a 
+  latent moderated mediation model, the local structural-after-measurement 
+  approach (LSAM) and two system-wide methods, across sample size, interaction
+  magnitude, reliability, predictor distribution, and nine (mis)specification
+  conditions. Under correct specification, all three recovered the interaction
+  coefficient and index of moderated mediation, differing only modestly in 
+  bias, mean squared error, coverage, standard errors, Type I error, and power. 
+  Under misspecification, LSAM was most robust, leaving some estimates 
+  unaffected by omissions that biased the system-wide estimators, although all 
+  misspecifications degraded performance.
 
 keywords: [moderated mediation, structural equation modeling, latent interaction, measurement error, model misspecification]
 
@@ -262,7 +254,8 @@ examined only the UPI and only misspecification of the measurement model, to
 LSAM and LMS and to a wider set of conditions, such as misspecification of 
 the structural model and distributional violations generated with nonnormal 
 copulas. Second, we evaluate the estimation approaches on the index of moderated 
-mediation (imm; @Hayes2015) itself, with inference by the Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012]. Although the imm is the quantity 
+mediation (imm; @Hayes2015) itself, with inference by the Monte Carlo method 
+[@MacKinnonLockwood2004; @PreacherSelig2012]. Although the imm is the quantity 
 of substantive interest in moderated mediation, its performance has hardly been 
 studied, and to our knowledge never with latent variables, even though as a 
 nonlinear function of the structural parameters its behavior need not follow 
