@@ -106,6 +106,9 @@ gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
 
   # omitted residual covariance: replace independent residuals for m3 and y3
   # with a correlated pair (corr = msp$rcov, marginal SDs preserved)
+  # note: overwriting is intentional. the independent errors m3/y3 got in
+  # make_indicators are discarded, which wastes 2n rnorm draws but leaves the
+  # final data exactly as specified.
   if (msp$rcov != 0) {
     sd_m3 <- e_sd_m[3]; sd_y3 <- e_sd_y[3]
     Sigma <- matrix(c(sd_m3^2, msp$rcov*sd_m3*sd_y3,
