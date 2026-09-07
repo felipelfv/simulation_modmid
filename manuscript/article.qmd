@@ -60,7 +60,7 @@ abstract: |
   approach (LSAM) and two system-wide methods, across sample size, interaction
   magnitude, reliability, predictor distribution, and nine (mis)specification
   conditions. Under correct specification, all three recovered the interaction
-  coefficient and index of moderated mediation, differing only modestly in 
+  coefficient and index of moderated mediation, differing modestly in 
   bias, mean squared error, coverage, standard errors, Type I error, and power. 
   Under misspecification, LSAM was most robust, leaving some estimates 
   unaffected by omissions that biased the system-wide estimators, although all 
@@ -126,11 +126,16 @@ improve power in general, whether for interactions or not [@Cham2012;
 @Fuller1987; @LedgerwoodShrout2011; @WangRhemtulla2021].
 
 Moderated mediation with latent variables is not straightforward in terms of
-statistical estimation. Indeed, a latent interaction involves the product of
-two latent variables, which is unobserved and nonnormal even when its 
-constituents are normal [@KelavaBrandt2022]. Following this, a number of 
-methods have been proposed to estimate latent interactions 
-[e.g., @AlginaMoulder2001; @Arminger1998;
+statistical estimation. Indeed, a latent interaction^[We use *interaction* and 
+*moderation* interchangeably, as the focus is on estimation, but we highlight 
+they imply different interpretations and causal assumptions [@VanderWeele2009; 
+@VanderWeele2015]. An interaction also need not be a product term, although 
+that is the most common functional form used by researchers [@Rimpler2026].] 
+involves the product 
+of two latent variables, which is unobserved and nonnormal 
+even when its constituents are normal [@KelavaBrandt2022]. Following this, a
+number of methods have been proposed to estimate nonlinear effects among 
+latent variables [e.g., @AlginaMoulder2001; @Arminger1998;
 @AsparouhovMuthen2021; @Boker2023; @Bollen1995; @JoreskogYan1996; 
 @KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; 
 @MooijaartBentler2010; @MooijaartSatorra2012; @WallAmemiya2000]. 
@@ -242,26 +247,29 @@ assumed a correctly specified (and saturated) model [@FalkBiesanz2015;
 @Feng2020]. In this article, we therefore evaluate three estimation approaches 
 for a latent variable moderated mediation model: local SAM (LSAM; @Rosseel2025), 
 LMS [@KleinMoosbrugger2000; @Kelava2011], and the unconstrained PI approach 
-(UPI; @KelavaBrandt2009; @Marsh2004). These approaches have been explained more 
-in-depth in previous research and we refer readers to it 
+(UPI; @KelavaBrandt2009; @Marsh2004). These approaches have been explained 
+extensively in previous research and we refer readers to it 
 [e.g., @Brandt2020; @Vieira2026; @Lonati2025; @Rosseel2025; @Kelava2011; 
 @Lin2010; @Slupphaug2025].
 
 ### Present Research and Contributions
 
 This study makes two contributions. First, we extend @Brandt2020, who 
-examined only the UPI and only misspecification of the measurement model, to
-LSAM and LMS and to a wider set of conditions, such as misspecification of 
-the structural model and distributional violations generated with nonnormal 
-copulas. Second, we evaluate the estimation approaches on the index of moderated 
-mediation (imm; @Hayes2015) itself, with inference by the Monte Carlo method 
-[@MacKinnonLockwood2004; @PreacherSelig2012]. Although the imm is the quantity 
-of substantive interest in moderated mediation, its performance has hardly been 
-studied, and to our knowledge never with latent variables, even though as a 
-nonlinear function of the structural parameters its behavior need not follow 
-that of its constituents. Inference on it has so far relied on the bootstrap 
-[@Hayes2015; @Tibbe2022; @FalkBiesanz2015; @Feng2020], which is computationally 
-costly and can itself underperform at small sample sizes. 
+examined misspecification only at the measurement level and, among the 
+approaches considered here, only the UPI. We add LSAM and LMS and a 
+considerably broader design, detailed in the next section, that includes 
+misspecification of the structural model. Second, we 
+evaluate the estimation approaches on the index of moderated mediation 
+(imm; [@Hayes2015]) itself, a nonlinear function of the structural parameters 
+whose behavior need not follow that of its constituents. With latent 
+variables, its performance has been examined only for system-wide 
+estimators, under a correctly specified model, and with bias-corrected 
+bootstrap inference [@CheungLau2017; @Feng2020]. Bootstrapping is 
+computationally expensive, and its variants differ modestly in performance 
+and rank differently depending on the criterion [@FalkBiesanz2015; @Tibbe2022]. 
+The Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012] needs only 
+the estimates and their covariance matrix, but has not been examined for the 
+imm. We address that here.
 
 ```{r}
 #| include: false
@@ -274,7 +282,7 @@ invisible(1 + 1)
 # Simulation Design and Performance Evaluation
 
 In this section we describe the design of the simulation study and the
-measures used to evaluate performance, following recent recommendations for 
+measures used to evaluate performance, following some recent recommendations for 
 the conduct and reporting of simulation studies [@Morris2019; @Siepe2024; 
 @Pawel2026].
 
@@ -300,7 +308,7 @@ $c' = 0.15$, with $\mathrm{cor}(X, W) = 0.3$. The interaction coefficient $a_3$
 is a design factor (see below). These coefficients, together with the structural
 disturbance variances, were chosen so that under the baseline condition (normal
 exogenous predictors and a correctly specified model) each dependent latent
-variable has $R^2 = 0.30$ at the interaction level $a_3 = 0.20$. Note that, 
+variable has $R^2 = 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
 because $a_3$ contributes to the variance of $M$, the explained variance is 
 naturally higher with a larger $a_3$ and lower when its effect is null. Each 
 latent variable is measured by four congeneric indicators with loadings 
@@ -433,10 +441,9 @@ estimated by ML in the first step. In this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
 while $M$ and $Y$ formed their own blocks. LMS [@KleinMoosbrugger2000], 
 with robust standard errors, and the extended UPI approach with 
-double mean centering, referred to as UPI throughout, estimated with robust 
-maximum likelihood (MLR), which combines Huber–White sandwich standard errors 
-with a scaled (Yuan–Bentler) test statistic [@KelavaBrandt2009; @Marsh2004; 
-@Lin2010].
+double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], referred to 
+as UPI throughout, estimated with robust maximum likelihood (MLR), that is, 
+ML with Huber–White sandwich standard errors.
 
 ### Data Generation
 
@@ -475,9 +482,9 @@ population but omitted from the estimated model.
 Following previous research [@Lonati2025; @Vieira2026], replications were 
 screened before analysis in two sequential steps, each applied globally 
 so that every estimator is compared on an identical set of replications. 
-First, we checked convergence: a fit was treated as nonconverged
-when any estimate, standard error, or confidence-interval bound—for any structural
-coefficient or loading—was missing or non-finite, and a replication was removed
+First, we checked convergence. A fit was treated as nonconverged
+when any estimate, standard error, or confidence-interval bound of any structural
+coefficient or loading was missing or non-finite, and a replication was removed
 from all estimators whenever any one of them did not converge. Second, among the
 remaining replications, we screened for outliers, identified per
 condition, method, and parameter as point estimates beyond the interquartile range
@@ -486,10 +493,12 @@ $10$ on any parameter of interest^[We added the standard error criterion because
 some replications retained anomalous standard errors despite acceptable point
 estimates. It additionally removed 125 replications (about $0.01\%$ of the
 globally converged ones), predominantly for UPI at the smallest sample size
-with low reliability and skewed $\chi^2$ predictors.]. Again, a replication flagged as an outlier
+with low reliability and skewed $\chi^2$ predictors.]. Again, a replication 
+flagged as an outlier
 for any estimation approach was removed from all of them. We also flagged
 inadmissible solutions, where any residual (unique) variance was nonpositive or
-the latent covariance matrix was not positive definite. 
+the covariance matrix of the exogenous latent variables and latent 
+disturbances was not positive definite. 
 
 ### Performance Measures
 
