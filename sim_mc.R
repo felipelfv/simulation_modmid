@@ -88,7 +88,7 @@ saveRDS(design, file.path(results_dir, "design.rds"))
 
 chi_df <- 2L; t_df <- 5L
 
-# calibration (from calibrate_final.R): misspec_coefs = beta coefs per cell (pure lookup);
+# calibration (from calibrate.R): misspec_coefs = beta coefs per cell (pure lookup);
 # vy_ratios = var(Y) inflation ratios to hold Y reliability at its `none` value under c2/c3.
 cal           <- readRDS(file.path(results_dir, "calibration.rds"))
 misspec_coefs <- cal$misspec_coefs

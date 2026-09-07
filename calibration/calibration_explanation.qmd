@@ -16,8 +16,8 @@ execute:
 
 This document explains, in the order things actually happen, what the 
 calibration and the data generation do. It is split into the population model,
-the calibration step (`calibrate_final.R`, run once), and the data-generation 
-step (`gen_data` inside `sim_mc_final.R`, run every replication), because the 
+the calibration step (`calibrate.R`, run once), and the data-generation 
+step (`gen_data` inside `sim_mc.R`, run every replication), because the 
 calibration exists only to supply two tables with values that the data 
 generation then uses and needs.
 
@@ -321,7 +321,7 @@ cell.
 
 # What Calibration Computes (by Order)
 
-For each distribution and each $a_3$, `calibrate_final.R` draws a single very 
+For each distribution and each $a_3$, `calibrate.R` draws a single very 
 large sample, $n_{\text{cal}} = 10^6$, of $(X, W)$ and forms the product $X W$. 
 It then builds the latent mediator and the *clean* outcome (no misspecification 
 terms),
