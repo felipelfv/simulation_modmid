@@ -143,8 +143,9 @@ latent variables [e.g., @AlginaMoulder2001; @Arminger1998;
 Most adopt a joint ("system-wide") estimation strategy, in which the 
 measurement and structural parameters are estimated simultaneously. This is 
 the case of the known methods: latent moderated structural equations (LMS) and 
-product-indicator (PI). Opposed to these are structural-after-measurement 
-(SAM) approaches [@CoxKelcey2021; @HolstBudtz2020; @NgChan2020; @Rosseel2025; 
+unconstrained product indicator (UPI). Opposed to these are 
+structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
+@HolstBudtz2020; @NgChan2020; @Rosseel2025; 
 @WallAmemiya2001; @WallAmemiya2003], in which the measurement model is 
 estimated first and the structural model afterward with the measurement 
 parameters held fixed. Many of these approaches have so far been 
@@ -247,8 +248,8 @@ latent variables, and those assumed a correctly specified (and saturated) model
 [@CheungLau2017; @FalkBiesanz2015; @Feng2020]. In this article, we therefore 
 evaluate three estimation approaches for a latent variable moderated mediation 
 model: local SAM [LSAM\; @Rosseel2025], LMS [@KleinMoosbrugger2000; 
-@Kelava2011], and the unconstrained PI approach [UPI\; @KelavaBrandt2009; 
-@Marsh2004]. These approaches have been explained extensively in previous 
+@Kelava2011], and UPI [@KelavaBrandt2009; @Marsh2004]. 
+These approaches have been explained extensively in previous 
 research and we refer readers to it [e.g., @Brandt2020; @Vieira2026; 
 @Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025].
 
@@ -439,46 +440,47 @@ The misspecification cases are detailed below.
 
 ### Estimation Approaches
 
-LSAM [@RosseelLoh2024; @Rosseel2025], with the measurement model
-estimated by ML in the first step. In this case, the
+LSAM [@RosseelLoh2024; @Rosseel2025; @Vieira2026], with the measurement model
+estimated by maximum likelihood (ML) in the first step. In this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
 while $M$ and $Y$ formed their own blocks. LMS [@KleinMoosbrugger2000], 
 with robust standard errors, and the extended UPI approach with 
-double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], referred to 
-as UPI throughout, estimated with robust maximum likelihood (MLR), that is, 
-ML with Huber–White sandwich standard errors.
+double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], estimated with 
+robust maximum likelihood, that is, with Huber–White sandwich 
+standard errors.
 
 ### Data Generation
 
 @apx-calibration describes the complete data-generating mechanism in detail. 
 Briefly, the latent variables $X$ and $W$ were drawn from a bivariate
 distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the
-vine-to-anything (VITA) algorithm [@Gronneberg2022; @Foldnes2015]. Five exogenous
-distributions were examined, each standardized to mean $0$ and variance $1$.
-Thus, the conditions differ only in distributional shape, not in scale or
-location. Specifically, the normal condition draws $X, W \sim \mathcal{N}(0, 1)$
-through a forced Gaussian copula, whereas the remaining four combine non-normal
-margins with a non-Gaussian copula: uniform, $t_5$, and two $\chi^2(2)$
-conditions in which $X$ and $W$ are skewed in the same or in opposite directions. 
-Given that, $M$ and $Y$ were generated from the 
-structural equations above with independent Gaussian disturbances 
+vine-to-anything (VITA) algorithm [@Gronneberg2022; @Foldnes2015]. Five 
+exogenous distributions were examined, each standardized to mean $0$ and 
+variance $1$. Thus, the conditions differ only in distributional shape, 
+not in scale or location. Specifically, the normal condition draws 
+$X, W \sim \mathcal{N}(0, 1)$ through a forced Gaussian copula, whereas the 
+remaining four combine non-normal margins with a non-Gaussian copula: 
+uniform, $t_5$, and two $\chi^2(2)$ conditions in which $X$ and $W$ are skewed 
+in the same or in opposite directions. Given that, $M$ and $Y$ were generated 
+from the structural equations above with independent Gaussian disturbances 
 $\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$, 
 and the four indicators ($j = 1, \dots, 4$) of each latent variable
 $\eta \in \{X, W, M, Y\}$ were formed as 
 $z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$,
 with loadings $\lambda = (1, 0.8, 0.7, 0.6)$ and Gaussian errors
 $\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$ whose variances 
-$\theta_{\eta j}$ were scaled to the target reliability $\omega \in \{0.5, 0.7\}$.
+$\theta_{\eta j}$ were scaled to the target reliability 
+$\omega \in \{0.5, 0.7\}$.
 
-The nine (mis)specification conditions comprise one correctly specified condition
-and four types of misspecification, each at two empirically calibrated 
-magnitudes (standardized $0.25$ and $0.50$, detailed in @apx-calibration), 
-similar to @Brandt2020. Two are structural: an omitted direct effect of the 
-moderator on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$). 
-The others are in the measurement model: a cross-loading of a mediator indicator 
-on $X$ (`cl`) and a residual covariance between a mediator and an outcome 
-indicator (`rc`). In every case the effect is present in the 
-population but omitted from the estimated model.
+The nine (mis)specification conditions comprise one correctly specified 
+condition and four types of misspecification, each at two empirically 
+calibrated magnitudes (standardized $0.25$ and $0.50$, detailed in 
+@apx-calibration), similar to @Brandt2020. Two are structural: an omitted 
+direct effect of the moderator on the outcome ($c_2$) and an omitted moderated 
+direct effect ($c_3$). The others are in the measurement model: a cross-loading 
+of a mediator indicator on $X$ (`cl`) and a residual covariance between a 
+mediator and an outcome indicator (`rc`). In every case the effect is present 
+in the population but omitted from the estimated model.
 
 ### Convergence, Outliers, and Inadmissible Solutions
 
@@ -487,22 +489,21 @@ screened before analysis in two sequential steps. In both, a replication
 flagged for any one estimator was removed for all three, so that every 
 estimator is compared on an identical set of replications. 
 First, we checked convergence. A fit was treated as nonconverged
-when any estimate, standard error, or confidence-interval bound of any structural
-coefficient or loading was missing or non-finite, and a replication was removed
-from all estimators whenever any one of them did not converge. Second, among the
-remaining replications, we screened for outliers, identified per
-condition, method, and parameter as point estimates beyond the interquartile range
-$\pm\,3$, together with replications whose estimated standard error exceeded
-$10$ on any parameter of interest^[We added the standard error criterion because
-some replications retained anomalous standard errors despite acceptable point
-estimates. It additionally removed 125 replications (about $0.01\%$ of the
-globally converged ones), predominantly for UPI at the smallest sample size
-with low reliability and skewed $\chi^2$ predictors.]. Again, a replication 
-flagged as an outlier
-for any estimation approach was removed from all of them. We also flagged
-inadmissible solutions, where any residual (unique) variance was nonpositive or
-the covariance matrix of the exogenous latent variables and latent 
-disturbances was not positive definite. 
+when any estimate, standard error, or confidence-interval bound of any 
+structural coefficient or loading was missing or non-finite, and a replication 
+was removed from all estimators whenever any one of them did not converge. 
+Second, among the remaining replications, we screened for outliers, identified 
+per condition, method, and parameter as point estimates beyond the interquartile 
+range $\pm\,3$, together with replications whose estimated standard error 
+exceeded $10$ on any parameter of interest^[We added the standard error 
+criterion because some replications retained anomalous standard errors despite 
+acceptable point estimates. It additionally removed 125 replications 
+(about $0.01\%$ of the globally converged ones), predominantly for UPI at the 
+smallest sample size with low reliability and skewed $\chi^2$ predictors.]. 
+Again, a replication flagged as an outlier for any estimation approach was 
+removed from all of them. We also flagged inadmissible solutions, where any 
+residual (unique) variance was nonpositive or the covariance matrix of the 
+exogenous latent variables and latent disturbances was not positive definite. 
 
 ### Performance Measures
 
@@ -517,7 +518,7 @@ On top of that, where applicable, we also report the rejection rate
 ```{r}
 #| label: tbl-performance
 #| tbl-cap: "Subset of the Performance Measures for Evaluating Parameter Estimates"
-#| apa-note: "$\\hat\\theta_k$ is the estimate of parameter $\\theta$ in replication $k$ ($k = 1, \\dots, K$ usable replications), $\\bar{\\hat\\theta}$ its mean, $S_{\\hat\\theta}^2$ its sample variance, and $S_{\\hat\\theta}$ its standard deviation; $\\mathrm{RMSE} = \\sqrt{\\tfrac{1}{K}\\sum_k (\\hat\\theta_k-\\theta)^2}$; $\\widehat{SE}_k$ is the estimated standard error, $\\overline{SE^2} = \\tfrac{1}{K}\\sum_k \\widehat{SE}_k^2$, and $L_k, U_k$ the confidence-interval limits; $c$ and $r$ denote coverage and rejection rate, and $\\rho$ the relative bias of the variance estimator. The subscript $(j)$ marks a leave-one-out jackknife replicate. The MCSEs for relative RMSE and the relative bias of the variance estimator are computed by jackknife; the others are closed-form, and dashes mark MCSEs that are not computed."
+#| apa-note: "$\\hat\\theta_k$ is the estimate of parameter $\\theta$ in replication $k$ ($k = 1, \\dots, K$ usable replications), $\\bar{\\hat\\theta}$ its mean, $S_{\\hat\\theta}^2$ its sample variance, and $S_{\\hat\\theta}$ its standard deviation (SD); the root mean square error is $\\mathrm{RMSE} = \\sqrt{\\tfrac{1}{K}\\sum_k (\\hat\\theta_k-\\theta)^2}$; $\\widehat{SE}_k$ is the estimated standard error (SE), $\\overline{SE^2} = \\tfrac{1}{K}\\sum_k \\widehat{SE}_k^2$, and $L_k, U_k$ the confidence-interval limits; $c$ and $r$ denote coverage and rejection rate, and $\\rho$ the relative bias of the variance estimator. The subscript $(j)$ marks a leave-one-out jackknife replicate. The MCSEs for relative RMSE and the relative bias of the variance estimator are computed by jackknife; the others are closed-form, and dashes mark MCSEs that are not computed."
 g <- function(x) paste0("\\textit{", x, "}")
 tab <- data.frame(
   measure = c(
@@ -781,8 +782,7 @@ predictors.
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) Under the Correctly Specified 
 #| Condition Across Sample Sizes, Reliability, Interaction Values, and 
 #| Distributions"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 ```
@@ -792,8 +792,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 #| fig-cap: "Relative Bias of the Interaction Coefficient ($a_3$) Under the 
 #| Correctly Specified Condition Across Sample Sizes, Reliability, Interaction 
 #| Values, and Distributions"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 ```
@@ -803,8 +802,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for relative 
-#| bias. MCSEs are not shown."
+#| apa-note: "The grey band marks the acceptable region for relative bias. Monte Carlo standard errors (MCSEs) are not shown. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 ```
@@ -814,8 +812,7 @@ knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 #| fig-cap: "Relative RMSE of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The error bars represent the MCSE. No acceptable region 
-#| is defined for this measure."
+#| apa-note: "The error bars represent the Monte Carlo standard error (MCSE). No acceptable region is defined for this measure. imm = index of moderated mediation; RMSE = root mean square error; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
 ```
@@ -824,8 +821,7 @@ knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
 #| label: fig-sesd-imm
 #| fig-cap: "SE/SD of the imm ($a_3 b$) Across Distributions, Reliability, and 
 #| (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. 
-#| The MCSE is not computed for the SE/SD ratio."
+#| apa-note: "The grey band marks the acceptable region for the measure. The MCSE is not computed for the SE/SD ratio. imm = index of moderated mediation; SE/SD = ratio of the mean estimated standard error to the empirical standard deviation of the estimates; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 ```
@@ -834,8 +830,7 @@ knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 #| label: fig-sesd-a3
 #| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. 
-#| The MCSE is not computed for the SE/SD ratio."
+#| apa-note: "The grey band marks the acceptable region for the measure. The MCSE is not computed for the SE/SD ratio. SE/SD = ratio of the mean estimated standard error to the empirical standard deviation of the estimates; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 ```
@@ -844,8 +839,7 @@ knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 #| label: fig-coverage-imm
 #| fig-cap: "Coverage of the imm ($a_3 b$) Across Distributions, Reliability, 
 #| and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
 ```
@@ -854,8 +848,7 @@ knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
 #| label: fig-coverage-a3
 #| fig-cap: "Coverage of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
 ```
@@ -865,8 +858,7 @@ knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
 #| fig-cap: "Type I Error of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0$"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_typeI_a3-0.png")
 ```
@@ -876,8 +868,7 @@ knitr::include_graphics("../plots/both_typeI_a3-0.png")
 #| fig-cap: "Power for the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) 
 #| Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and 
 #| $500$ at $a_3 = 0.2$"
-#| apa-note: "The error bars represent the MCSE. No acceptable region 
-#| is defined for this measure."
+#| apa-note: "The error bars represent the Monte Carlo standard error (MCSE). No acceptable region is defined for this measure. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_power_a3-0.2.png")
 ```
@@ -887,8 +878,7 @@ knitr::include_graphics("../plots/both_power_a3-0.2.png")
 #| fig-cap: "Relative Bias of the Structural Coefficients 
 #| ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at 
 #| High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
 ```
@@ -898,8 +888,7 @@ knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
 #| fig-cap: "Coverage of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$)
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, 
-#| and the error bars represent the MCSE."
+#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 ```
@@ -909,8 +898,7 @@ knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 #| fig-cap: "SE/SD of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) 
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. 
-#| The MCSE is not computed for the SE/SD ratio."
+#| apa-note: "The grey band marks the acceptable region for the measure. The MCSE is not computed for the SE/SD ratio. SE/SD = ratio of the mean estimated standard error to the empirical standard deviation of the estimates; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 ```
@@ -935,7 +923,7 @@ whereas LSAM stays centered on zero.
 ```{r}
 #| label: fig-load
 #| fig-cap: "Performance of the Cross-Loaded Mediator Indicator Loading ($m_3$) Across All Measures, Distributions, and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "The grey band in each panel marks the acceptable region for that measure."
+#| apa-note: "The grey band in each panel marks the acceptable region for that measure. SE/SD = ratio of the mean estimated standard error to the empirical standard deviation of the estimates; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 ```
