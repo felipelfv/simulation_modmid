@@ -103,15 +103,8 @@ from `results/calibration.rds`, so copy it there first.
 ### Step 1: Run the simulation
 
 ```sh
-mkdir -p results && cp calibration/calibration_results.rds results/calibration.rds
 nix-shell --pure --run 'OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 Rscript sim_mc.R'
 ```
-
-This is the exact command used for the reported run. The environment variables
-pin BLAS/OpenMP to one thread per worker: the nix R links a multithreaded
-OpenBLAS, and since `sim_mc.R` already runs one worker per physical core via
-`mclapply`, unpinned BLAS threads oversubscribe the machine (roughly 6x slower
-per replication in our benchmark) without changing the estimates.
 
 `sim_mc.R` builds the design grid (`results/design.rds`), reads
 `results/calibration.rds`, and runs every condition in parallel via
