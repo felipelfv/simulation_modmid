@@ -46,6 +46,10 @@ author-note:
     study-registration: "This study was preregistered."
     data-sharing: "The preregistration, data, code, and materials for this 
     manuscript can be found at <https://doi.org/10.5281/zenodo.20703258>."
+    conflict-of-interest: "The authors report there are no competing interests 
+    to declare. Generative AI (Claude, Anthropic) was used to assist with 
+    language editing and for creating the figures. All content was reviewed and 
+    approved by the authors."
     financial-support: "This project was funded by the Special Research Fund
     (BOF) of Ghent University (BOF/24J/2023/144)."
     gratitude: "We gratefully acknowledge the Borchard Foundation for 
@@ -82,7 +86,7 @@ bibliography: "references.bib"
 format:
   apaquarto-pdf:
     documentmode: man
-    keep-tex: false # change to true to have the latex file
+    keep-tex: true # change to true to have the latex file
     include-in-header:
       text: |
         \raggedbottom
@@ -110,14 +114,14 @@ indirectly through multiple items, that is, they are latent variables
 [@BollenHoyle2012]. When such constructs are reduced to summary scores
 (e.g., a sum or mean of the items) and analyzed as though they were observed, 
 a restrictive measurement structure is imposed rather than tested 
-[@McNeishWolf2020] and measurement error is left unmodelled. This error can 
+[@McNeishWolf2020] and measurement error is left unmodeled. This error can 
 attenuate or inflate the indirect effect and distort inferences about it 
 [@ColePreacher2014; @HoyleKenny1999], and it is especially consequential for 
 the mediator, which acts at once as a predictor and an outcome 
 [@GonzalezMacKinnon2021]. The problem is compounded under moderation, 
 where the product term is even less reliable than either of its constituents 
 [@Bohrnstedt1978; @Busemeyer1983]. To address this, structural equation 
-modelling (SEM) with latent variables has been advocated, especially in the 
+modeling (SEM) with latent variables has been advocated, especially in the 
 context of mediation [@CheungLau2008; @FalkBiesanz2015; @LedgerwoodShrout2011; 
 @Montoya2024]. It estimates structural relationships between common factors, 
 from which indicator-specific unique variance has been partitioned, provided the 
@@ -317,12 +321,12 @@ naturally higher with a larger $a_3$ and lower when its effect is null. Each
 latent variable is measured by four congeneric indicators with loadings 
 $1.0$, $0.8$, $0.7$, and $0.6$. @fig-model shows the population model, where 
 the measurement and structural misspecifications studied below are drawn in 
-grey.
+gray.
 
 ```{tikz}
 %| label: fig-model
 %| fig-cap: "Population Model for the Simulation Study."
-%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators. Circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Grey elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
+%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators. Circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Gray elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
 %| fig-align: center
 %| fig-width: 9
 %| fig-height: 6
@@ -395,7 +399,7 @@ grey.
 \draw[->] (M)  -- node[above,font=\footnotesize] {$b$} (Y);
 \draw[->] (X)  to[bend left=22] node[above,font=\footnotesize] {$c'$} (Y);
 
-% misspecifications (grey): c2/c3 structural, cl/rc measurement
+% misspecifications (gray): c2/c3 structural, cl/rc measurement
 \draw[mis] (W)  to[bend right=24] node[below,sloped,font=\footnotesize,text=gray] {$c_2$} (Y);
 \draw[mis] (XW) to[bend right=34] node[below,sloped,font=\footnotesize,text=gray] {$c_3$} (Y);
 \draw[mis] (X) to[out=68,in=128] node[above,font=\footnotesize,text=gray,pos=0.62] {cl} (m3.north);
@@ -774,7 +778,7 @@ under $t_5$ predictors.
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) Under the Correctly Specified 
 #| Condition Across Sample Sizes, Reliability, Interaction Values, and 
 #| Distributions"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 ```
@@ -784,7 +788,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 #| fig-cap: "Relative Bias of the Interaction Coefficient ($a_3$) Under the 
 #| Correctly Specified Condition Across Sample Sizes, Reliability, Interaction 
 #| Values, and Distributions"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator."
 #| out-width: "100%"
 knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 ```
@@ -794,7 +798,7 @@ knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 #| fig-cap: "Relative Bias of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for relative bias. Monte Carlo standard errors (MCSEs) are not shown. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for relative bias. Monte Carlo standard errors (MCSEs) are not shown. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/combo_rel_bias_a3-0.2.png")
 ```
@@ -813,7 +817,7 @@ knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
 #| label: fig-sesd-imm
 #| fig-cap: "SE/SD of the imm ($a_3 b$) Across Distributions, Reliability, and 
 #| (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 ```
@@ -822,7 +826,7 @@ knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
 #| label: fig-sesd-a3
 #| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 ```
@@ -831,7 +835,7 @@ knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
 #| label: fig-coverage-imm
 #| fig-cap: "Coverage of the imm ($a_3 b$) Across Distributions, Reliability, 
 #| and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
 ```
@@ -840,7 +844,7 @@ knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
 #| label: fig-coverage-a3
 #| fig-cap: "Coverage of the Interaction Coefficient ($a_3$) Across Distributions, 
 #| Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
 ```
@@ -850,7 +854,7 @@ knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
 #| fig-cap: "Type I Error of the imm ($a_3 b$) and the Interaction Coefficient 
 #| ($a_3$) Across Distributions, Reliability, and (Mis)specifications for 
 #| $N = 200$ and $500$ at $a_3 = 0$"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/both_typeI_a3-0.png")
 ```
@@ -870,7 +874,7 @@ knitr::include_graphics("../plots/both_power_a3-0.2.png")
 #| fig-cap: "Relative Bias of the Structural Coefficients 
 #| ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at 
 #| High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
 ```
@@ -880,7 +884,7 @@ knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_high.png")
 #| fig-cap: "Coverage of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$)
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 ```
@@ -890,7 +894,7 @@ knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 #| fig-cap: "SE/SD of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) 
 #| Across Distributions and (Mis)specifications at High Reliability, $N = 500$, 
 #| and $a_3 = 0.2$"
-#| apa-note: "The grey band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band marks the acceptable region for the measure. The Monte Carlo standard error (MCSE) is not computed for the SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 ```
@@ -911,7 +915,7 @@ $\chi^2$ predictors. The remaining omissions leave the loading unaffected.
 ```{r}
 #| label: fig-load
 #| fig-cap: "Performance of the Cross-Loaded Mediator Indicator Loading ($m_3$) Across All Measures, Distributions, and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
-#| apa-note: "The grey band in each panel marks the acceptable region for that measure. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
+#| apa-note: "The gray band in each panel marks the acceptable region for that measure. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; n = no misspecification."
 #| out-width: "100%"
 knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 ```
@@ -1005,11 +1009,9 @@ certain context and fields.
 
 # Calibration and Data Generation {#apx-calibration}
 
-This appendix gives the formulas behind the data-generating mechanism. The full
-derivations, with worked numerical examples and even more details, 
-are in the project repository. The calibration that fixes the variance
-parameters is given first, followed by the three-stage data generation that uses
-them.
+This appendix gives the formulas behind the data-generating mechanism. The 
+calibration that fixes the variance parameters comes first, followed by the 
+three-stage data generation that uses them.
 
 ## Calibration
 
