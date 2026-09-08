@@ -128,7 +128,7 @@ from which indicator-specific unique variance has been partitioned, provided the
 measurement model is correctly specified [@Bollen1989; @DeShon1998; 
 @Rhemtulla2020]. Yet we also note that latent variables do not necessarily 
 improve power in general, whether for interactions or not [@Cham2012; 
-@Fuller1987; @LedgerwoodShrout2011; @WangRhemtulla2021].
+@LedgerwoodShrout2011; @WangRhemtulla2021].
 
 Moderated mediation with latent variables is not straightforward in terms of
 statistical estimation. Indeed, a latent interaction^[We use interaction and 
