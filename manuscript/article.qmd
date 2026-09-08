@@ -133,8 +133,8 @@ improve power in general, whether for interactions or not [@Cham2012;
 Moderated mediation with latent variables is not straightforward in terms of
 statistical estimation. Indeed, a latent interaction^[We use interaction and 
 moderation interchangeably, as the focus is on estimation, but we highlight 
-they imply different interpretations and causal assumptions [@VanderWeele2009; 
-@VanderWeele2015]. An interaction also need not be a product term, although 
+they imply different interpretations and causal assumptions [@VanderWeele2009]. 
+An interaction also need not be a product term, although 
 that is the most common functional form used by researchers [@Rimpler2026].] 
 involves the product 
 of two latent variables, which is unobserved and nonnormal 
@@ -148,7 +148,7 @@ the case of the known methods: latent moderated structural equations (LMS) and
 unconstrained product indicator (UPI). Opposed to these are 
 structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
 @HolstBudtz2020; @NgChan2020; @Rosseel2025; 
-@WallAmemiya2001; @WallAmemiya2003], in which the measurement model is 
+@WallAmemiya2000; @WallAmemiya2003], in which the measurement model is 
 estimated first and the structural model afterward with the measurement 
 parameters held fixed. Many of these approaches have so far been 
 rarely applied in practice, likely held back by limited software, slow 
@@ -159,7 +159,7 @@ non-commercial software [@Keller2025], this is likely to change.
 Beyond estimation, a further consideration concerns interpretation. Mediation is 
 a hypothesis about causal effects, and causal interpretation requires 
 identification assumptions that *may* not be verified from the data alone 
-[@Imai2010; @Morelli2026; @Rohrer2022; @VanderWeele2015]. With latent variable 
+[@Imai2010; @Morelli2026; @Rohrer2022]. With latent variable 
 models, further caution is needed [@Sterner2024; @VanderWeeleVansteelandt2022]. 
 We focus on one that is central to interpretation: the estimated latent 
 variables must validly represent the intended constructs 
@@ -433,7 +433,7 @@ The misspecification conditions follow the moderated mediation
 framework for the two structural omissions [@Preacher2007] and prior 
 latent interaction simulation work for the two measurement omissions 
 [@Brandt2020]. They were also chosen as interpretable violations, acting 
-respectively as a measured mediator–outcome confounder [@VanderWeele2015], a 
+respectively as a measured mediator–outcome confounder [@Imai2010], a 
 conflated moderated direct effect [@Edwards2007], exposure-correlated 
 measurement error in the mediator [@VanderWeeleValeri2012; @Fritz2016], and 
 a shared unmeasured cause of a mediator and an outcome indicator [@Cole2007]. 
@@ -985,7 +985,7 @@ structural omissions left its mediator equation untouched.
 
 Finally, although this article evaluated the estimation approaches from a 
 statistical, inferential perspective, the moderated mediation model itself 
-rests on strong causal assumptions [@VanderWeele2015]. This carries a practical 
+rests on strong causal assumptions [@Imai2010; @Rohrer2022]. This carries a practical 
 consequence for applied researchers: good statistical performance of the 
 estimation approaches under investigation in certain conditions is not, on 
 its own, a justification for a causal research question or claim. 
