@@ -427,13 +427,14 @@ Nonnormality of the latent predictors is both empirically common and
 methodologically central for latent interaction estimators, whose distributional 
 assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; 
 @Cham2012; @Lonati2025; @Vieira2026]. 
-The misspecification conditions follow the moderated-mediation 
+The misspecification conditions follow the moderated mediation 
 framework for the two structural omissions [@Preacher2007] and prior 
 latent interaction simulation work for the two measurement omissions 
 [@Brandt2020]. They were also chosen as interpretable violations, acting 
-respectively as a measured mediator–outcome 
-confounder, a conflated moderated direct effect, exposure-correlated measurement 
-error, and an unmeasured residual confounder [@VanderWeele2015; @Edwards2007]. 
+respectively as a measured mediator–outcome confounder [@VanderWeele2015], a 
+conflated moderated direct effect [@Edwards2007], exposure-correlated 
+measurement error in the mediator [@VanderWeeleValeri2012; @Fritz2016], and 
+a shared unmeasured cause of a mediator and an outcome indicator [@Cole2007]. 
 The misspecification cases are detailed below.
 
 ### Estimation Approaches
