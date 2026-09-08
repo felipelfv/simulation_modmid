@@ -101,7 +101,8 @@ decomposed into a direct effect and an indirect effect transmitted through a
 mediator, with all variables observed. This single mediator model has
 since been extended in a number of directions, most relevant here being the
 case in which the indirect effect is allowed to depend on a moderator
-[@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; @MacKinnonFairchild2007].
+[@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; 
+@MacKinnonFairchild2007].
 
 In this context, a fundamental concern may arise from measurement. Many
 constructs under investigation are not directly observed but are measured
@@ -165,11 +166,11 @@ meaning assigned to a latent variable through its estimated
 measurement parameters and the meaning intended by the researcher. This 
 reflects an underlying property of system-wide estimation, namely that the 
 consequences of a misspecification are not confined to the part of the model 
-in which it occurs [@BainterBollen2014]. Given that a SAM approach fixes the 
-measurement model before any structure is fit, the estimated latent variables 
-and their meaning do not depend on the structural model that follows, although 
-this does not imply that the structure is correct 
-[@VanderWeeleVansteelandt2022].
+in which it occurs [@BainterBollen2014]. @Burt1976 proposed estimating the 
+measurement model first, as a SAM approach does [e.g., @RosseelLoh2024], so 
+that the estimated latent variables and their meaning do not depend on the 
+structural model that follows, although this does not imply that the structure 
+is correct [@VanderWeeleVansteelandt2022].
 
 ```{r}
 #| label: interp-confounding
@@ -237,38 +238,40 @@ mediator.
 
 Despite this, prior simulation work has examined latent interaction estimation 
 mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
-@Lonati2025; @Brandt2014], and in only one case under misspecification at the 
-measurement level [@Brandt2020], which considered only the UPI among the 
-approaches studied here and in a limited setting of conditions. Moreover, when 
-it comes to (moderated) mediation, despite its popularity in applied research, 
-only a few studies have investigated it with latent variables, and those 
-assumed a correctly specified (and saturated) model [@FalkBiesanz2015; 
-@Feng2020]. In this article, we therefore evaluate three estimation approaches 
-for a latent variable moderated mediation model: local SAM [LSAM; @Rosseel2025], 
-LMS [@KleinMoosbrugger2000; @Kelava2011], and the unconstrained PI approach 
-[UPI; @KelavaBrandt2009; @Marsh2004]. These approaches have been explained 
-extensively in previous research and we refer readers to it 
-[e.g., @Brandt2020; @Vieira2026; @Lonati2025; @Rosseel2025; @Kelava2011; 
-@Lin2010; @Slupphaug2025].
+@Lonati2025; @Brandt2014], and in only two cases under misspecification at the 
+measurement level [@Brandt2020; @NavarroSchermelleh2025], which between them 
+considered only the UPI and LMS among the approaches studied here in limited 
+settings. Moreover, when it comes to (moderated) mediation, despite its 
+popularity in applied research, only a few studies have investigated it with 
+latent variables, and those assumed a correctly specified (and saturated) model 
+[@CheungLau2017; @FalkBiesanz2015; @Feng2020]. In this article, we therefore 
+evaluate three estimation approaches for a latent variable moderated mediation 
+model: local SAM [LSAM\; @Rosseel2025], LMS [@KleinMoosbrugger2000; 
+@Kelava2011], and the unconstrained PI approach [UPI\; @KelavaBrandt2009; 
+@Marsh2004]. These approaches have been explained extensively in previous 
+research and we refer readers to it [e.g., @Brandt2020; @Vieira2026; 
+@Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025].
 
 ### Present Research and Contributions
 
-This study makes two contributions. First, we extend @Brandt2020, who 
-examined misspecification only at the measurement level and, among the 
-approaches considered here, only the UPI. We add LSAM and LMS and a 
-considerably broader design, detailed in the next section, that includes 
-misspecification of the structural model. Second, we 
-evaluate the estimation approaches on the index of moderated mediation 
-[imm; @Hayes2015] itself, a nonlinear function of the structural parameters 
-whose behavior need not follow that of its constituents. With latent 
-variables, its performance has been examined only for system-wide 
-estimators, under a correctly specified model, and with bias-corrected 
-bootstrap inference [@CheungLau2017; @Feng2020]. Bootstrapping is 
-computationally expensive, and its variants differ modestly in performance 
-and rank differently depending on the criterion [@FalkBiesanz2015; @Tibbe2022]. 
-The Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012] needs only 
-the estimates and their covariance matrix, but has not been examined for the 
-imm. We address that here.
+This study makes two contributions. First, we evaluate LSAM alongside LMS 
+and UPI under both measurement and structural misspecification, in a 
+considerably broader design than previous studies, detailed in the 
+next section. The robustness of LSAM to model misspecification has itself 
+been examined only in linear models [@RosseelLoh2024], with later research 
+disputing it for measurement misspecifications and expecting it to hold 
+mainly for structural misspecifications in non-saturated structural models 
+[@Robitzsch2022], a case not yet tested for models with nonlinear effects. 
+Second, we obtain inference for the index of moderated mediation 
+[imm\; @Hayes2015], a nonlinear function of the structural parameters, with 
+the Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012] rather 
+than the bootstrap used in the latent variable studies above 
+[@CheungLau2017; @Feng2020]. Bootstrapping is computationally expensive, and 
+its variants differ modestly in performance and rank differently depending 
+on the criterion [@FalkBiesanz2015; @Tibbe2022], whereas the Monte Carlo 
+method needs only the estimates and their covariance matrix. Whether it 
+performs adequately for the imm in the context under investigation, which has 
+not been examined, is a question we address here.
 
 ```{r}
 #| include: false
@@ -969,7 +972,10 @@ the interaction coefficient under the system-wide estimators at low reliability,
 while LSAM remained near nominal; the residual covariance (`rc`) had little 
 effect. Across conditions the relative bias was consistently smaller under 
 LSAM, and it increased with the magnitude of the omission and at lower 
-reliability.
+reliability. This pattern matches the expectation of @Robitzsch2022 that the 
+advantage of SAM lies in structural rather than measurement misspecification, 
+since the cross-loading biased LSAM as well, whereas the structural omissions 
+left its mediator equation untouched.
 
 These patterns are broadly consistent with previous research. The results for 
 the LMS and UPI approaches under specific types of nonnormality alongside 
@@ -980,6 +986,10 @@ measurement misspecifications results is aligned with @Brandt2020.
 There, omitting a cross-loading was likewise a damaging misspecification, 
 and the UPI approach was biased under it, whereas the two-stage method of 
 moments on which LSAM builds attained the smallest RMSE in those conditions. 
+@NavarroSchermelleh2025 likewise found the latent interaction effect 
+underestimated under omitted cross-loadings with LMS, which they trace to 
+the biased predictor covariance entering the variance of the interaction 
+term. 
 Even so, that study found no estimator free of bias and none uniformly best, 
 as we also observed.
 
