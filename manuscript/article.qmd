@@ -58,16 +58,17 @@ author-note:
 
 abstract: |
   Moderated mediation is seldom estimated with latent variables, and its
-  estimators have rarely been compared under model misspecification. In a
+  estimation methods have rarely been compared under misspecification. In a
   preregistered simulation we evaluated three estimation approaches of a 
   latent moderated mediation model, the local structural-after-measurement 
   approach (LSAM) and two system-wide methods, across sample size, interaction
   magnitude, reliability, predictor distribution, and nine (mis)specification
-  conditions. Under correct specification, all three recovered the interaction
+  conditions. Under correct specification, all recovered the interaction
   coefficient and index of moderated mediation, differing modestly in 
-  bias, mean squared error, coverage, standard errors, Type I error, and power. 
+  bias, root mean square error, coverage, standard errors, Type I error, and 
+  power. 
   Under misspecification, LSAM was most robust, leaving some estimates 
-  unaffected by omissions that biased the system-wide estimators, although all 
+  unaffected by omissions that biased the system-wide approaches, although all 
   misspecifications degraded performance.
 
 keywords: [moderated mediation, structural equation modeling, latent interaction, measurement error, model misspecification]
@@ -144,8 +145,8 @@ latent variables [e.g., @Boker2023; @Bollen1995; @KennyJudd1984;
 @KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; @MooijaartBentler2010]. 
 Most adopt a joint ("system-wide") estimation strategy, in which the 
 measurement and structural parameters are estimated simultaneously. This is 
-the case of the known methods: latent moderated structural equations (LMS) and 
-unconstrained product indicator (UPI). Opposed to these are 
+the case of the two best-known methods, latent moderated structural equations 
+(LMS) and the unconstrained product indicator (UPI) approach. Opposed to these are 
 structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
 @HolstBudtz2020; @NgChan2020; @Rosseel2025; 
 @WallAmemiya2000; @WallAmemiya2003], in which the measurement model is 
@@ -298,7 +299,7 @@ The structural model is as follows
 
 $$
 M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
-Y = b\,M + c'\,X + \zeta_Y,
+Y = b\,M + c'\,X + \zeta_Y.
 $$
 
 The primary estimands are the interaction coefficient ($a_3$) and the imm 
@@ -323,7 +324,7 @@ gray.
 ```{tikz}
 %| label: fig-model
 %| fig-cap: "Population Model for the Simulation Study."
-%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators. Circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every estimator fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Gray elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
+%| apa-note: "$X$, $W$, $M$, and $Y$ are latent variables, each measured by four congeneric indicators. Circles are latent variables and $X{\\times}W$ is the latent interaction. Black elements form the correctly specified model that every approach fits ($a_1$, $a_2$, $a_3$, $b$, $c'$, and the $X$--$W$ covariance). Gray elements are the misspecifications present in the population but omitted from the fitted model: two in the structural part, an omitted moderator effect on the outcome ($c_2$) and an omitted moderated direct effect ($c_3$); and two in the measurement part, an omitted cross-loading of $X$ on $m_3$ (cl) and an omitted residual covariance between $m_3$ and $y_3$ (rc). Residual variances and intercepts are not shown."
 %| fig-align: center
 %| fig-width: 9
 %| fig-height: 6
@@ -411,11 +412,11 @@ We employed a fully factorial design crossing five factors: sample size
 ($N \in \{100, 200, 300, 500\}$), interaction magnitude
 ($a_3 \in \{0, 0.20, 0.40\}$), measurement reliability (low $= 0.5$,
 high $= 0.7$), the distribution of the exogenous latent predictors (normal, 
-uniform, $t$, and two $\chi^2$ conditions with same- or opposite-direction
+uniform, $t_5$, and two $\chi^2$ conditions with same- or opposite-direction
 skew), and the (mis)specification conditions (nine cases; see
 Data Generation below). This yielded 
 $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
-conditions, each replicated 1000 times.
+conditions, each replicated 1,000 times.
 
 Sample sizes cover the small to moderate range, where interaction terms 
 are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
@@ -426,7 +427,7 @@ because measurement error is amplified in product terms and is therefore
 especially consequential for latent
 interaction estimation [@Lonati2025; @Vieira2026; @Brandt2020].
 Nonnormality of the latent predictors is both empirically common and 
-methodologically central for latent interaction estimators, whose distributional 
+methodologically central for latent interaction approaches, whose distributional 
 assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; 
 @Cham2012; @Lonati2025; @Vieira2026]. 
 The misspecification conditions follow the moderated mediation 
@@ -441,11 +442,13 @@ The misspecification cases are detailed below.
 
 ### Estimation Approaches
 
-LSAM [@RosseelLoh2024; @Rosseel2025; @Vieira2026], with the measurement model
-estimated by maximum likelihood (ML) in the first step. In this case, the
+We used LSAM [@RosseelLoh2024; @Rosseel2025; @Vieira2026], with the 
+measurement model estimated by maximum likelihood (ML) in the first step. In 
+this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
-while $M$ and $Y$ formed their own blocks. LMS [@KleinMoosbrugger2000], 
-with robust standard errors, and the extended UPI approach with 
+while $M$ and $Y$ formed their own blocks. We further used LMS 
+[@KleinMoosbrugger2000], with robust standard errors, and the extended UPI 
+approach with 
 double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], estimated with 
 robust ML, that is, with Huber–White sandwich standard errors.
 
@@ -459,9 +462,9 @@ exogenous distributions were examined, each standardized to mean $0$ and
 variance $1$. Thus, the conditions differ only in distributional shape, 
 not in scale or location. Specifically, the normal condition draws 
 $X, W \sim \mathcal{N}(0, 1)$ through a forced Gaussian copula, whereas the 
-remaining four combine non-normal margins with a non-Gaussian copula: 
+remaining four combine nonnormal margins with a non-Gaussian copula: 
 uniform, $t_5$, and two $\chi^2(2)$ conditions in which $X$ and $W$ are skewed 
-in the same or in opposite directions. Given that, $M$ and $Y$ were generated 
+in the same or in opposite directions. Then, $M$ and $Y$ were generated 
 from the structural equations above with independent Gaussian disturbances 
 $\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$, 
 and the four indicators ($j = 1, \dots, 4$) of each latent variable
@@ -491,10 +494,10 @@ estimator is compared on an identical set of replications.
 First, we checked convergence. A fit was treated as nonconverged
 when any estimate, standard error, or confidence-interval bound of any 
 structural coefficient or loading was missing or non-finite, and a replication 
-was removed from all estimators whenever any one of them did not converge. 
+was removed from all approaches whenever any one of them did not converge. 
 Second, among the remaining replications, we screened for outliers, identified 
-per condition, method, and parameter as point estimates beyond the interquartile 
-range $\pm\,3$, together with replications whose estimated standard error 
+per condition, method, and parameter as point estimates more than three 
+interquartile ranges below the first or above the third quartile, together with replications whose estimated standard error 
 exceeded $10$ on any parameter of interest^[We added the standard error 
 criterion because some replications retained anomalous standard errors despite 
 acceptable point estimates. It additionally removed 125 replications 
@@ -510,9 +513,9 @@ exogenous latent variables and latent disturbances was not positive definite.
 Performance was assessed with the measures implemented in the *simhelpers*
 package [@Joshi2025], computed for the imm, the structural coefficients, and the
 loadings. These measures, with their empirical and Monte Carlo standard error 
-(MCSE) calculations, are listed in @tbl-performance. Note the MCSE are
-obtained in closed form where available and by jackknife otherwise. 
-On top of that, where applicable, we also report the rejection rate 
+(MCSE) calculations, are listed in @tbl-performance. Note that the MCSEs 
+are obtained in closed form where available and by jackknife otherwise. 
+In addition, where applicable, we report the rejection rate 
 (Type I error when $a_3 = 0$, power otherwise).
 
 ```{r}
@@ -596,10 +599,10 @@ interaction coefficient and the imm are reported. We then turn to the
 remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), 
 and we close with the estimated factor loadings, focusing mainly on that of 
 the cross-loaded indicator ($m_3$). Moreover, due to the large number of 
-conditions, we focused on a subset of the conditions. Specifically, in large 
-part, we fix the interaction coefficient at 0.2 and display a limited 
-number of sample sizes: $N = 200$ and $500$ for the interaction coefficient and 
-imm, and solely $N = 500$ for the structural coefficients and loadings. 
+conditions, we focus on a subset of them. In most figures we fix the 
+interaction coefficient at 0.2 and show $N = 200$ and $500$ for the 
+interaction coefficient and imm, and solely $N = 500$ for the structural 
+coefficients and loadings. 
 For the latter two, we further restrict to high reliability, whereas the 
 interaction coefficient and imm are shown at both reliability levels. 
 The entire set of results as well as detailed information 
@@ -627,7 +630,7 @@ confined to the smallest sample size, low reliability, $\chi^2$ conditions.
 
 We interpret values whose absolute relative bias exceeds 0.10 (10%) as biased, 
 following previous research [@Brandt2014; @Vieira2026]. Under correct 
-specification with normal predictors, all three estimators 
+specification with normal predictors, all three approaches 
 recover both the interaction coefficient and imm without bias at every sample 
 size and reliability level, and the same holds under uniform and $t$ 
 predictors apart from single LMS cells at $N = 100$ with low reliability 
@@ -659,16 +662,16 @@ omission alone.
 
 Under correct specification with normal predictors, the relative RMSE of 
 both the interaction coefficient and the imm falls with sample size and 
-reliability for all three estimators, with LMS the most efficient, LSAM 
+reliability for all three approaches, with LMS the most efficient, LSAM 
 intermediate, and UPI the least (@fig-rmse). In general, the same holds for both 
 quantities under the nonnormal predictors. 
 
 Under misspecification, the structural omissions ($c_2$ and $c_3$) 
-inflate the RMSE of the imm for all three estimators. Under $c_3$ the 
-inflation is clearly larger for the system-wide estimators, especially at low 
+inflate the RMSE of the imm for all three approaches. Under $c_3$ the 
+inflation is clearly larger for the system-wide approaches, especially at low 
 reliability, whereas under $c_2$ the three are more similar. For the 
 interaction coefficient, $c_3$ inflates the RMSE for both system-wide 
-estimators, more so at low reliability, while LSAM is unaffected. The 
+approaches, more so at low reliability, while LSAM is unaffected. The 
 measurement omissions (`cl` and `rc`) have a negligible effect, except for 
 LMS under the medium `cl` at low reliability.
 
@@ -707,7 +710,7 @@ reliability.
 
 Under model misspecification, $c_2$ and $c_3$ reduce the imm coverage, 
 since its interval is then centered on a biased estimate, with the largest 
-decrease for the system-wide estimators under $c_3$ and, under same-skew 
+decrease for the system-wide approaches under $c_3$ and, under same-skew 
 $\chi^2$, for LMS under $c_2$ as well. This is larger with increasing sample 
 size and is present under most distributions, albeit with different 
 magnitudes. Moreover, under $t_5$ and same-skew $\chi^2$ predictors, 
@@ -966,18 +969,18 @@ remains to be made.
 
 These patterns are broadly consistent with previous research. The results for 
 the LMS and UPI approaches under specific types of nonnormality alongside 
-its stability under normality reproduces earlier findings 
+their stability under normality reproduce earlier findings 
 [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026] and the behavior of LSAM 
 also mirrors previous studies [@Rosseel2025; @Vieira2026]. Moreover, part of 
-measurement misspecifications results is aligned with @Brandt2020. 
+the measurement misspecification results is aligned with @Brandt2020. 
 There, omitting a cross-loading was likewise a damaging misspecification, 
 and the UPI approach was biased under it, whereas the two-stage method of 
 moments on which LSAM builds attained the smallest RMSE in those conditions. 
 @NavarroSchermelleh2025 likewise found the latent interaction effect 
 underestimated under omitted cross-loadings with LMS, which they trace to 
 the biased predictor covariance entering the variance of the interaction 
-term. Even so, @Brandt2020 found no estimator free of bias and none uniformly 
-best, as we also observed. Finally, the contrast between the structural and 
+term. Even so, @Brandt2020 found no approach free of bias and none uniformly 
+best, as we also observed. Lastly, the contrast between the structural and 
 the measurement omissions matches the expectation of @Robitzsch2022 that 
 the advantage of SAM lies in structural rather than measurement 
 misspecification, since the cross-loading biased LSAM as well, whereas the 
@@ -993,7 +996,7 @@ Work addressing the causal interpretation of mediation continues to develop,
 and we direct interested readers to this literature [@Morelli2026; @Imai2010]. 
 Moreover, as we showed, misspecification has strong consequences across all 
 three estimation approaches, and many of those may be highly plausible in 
-certain context and fields.
+certain contexts and fields.
 
 {{< pagebreak >}}
 
@@ -1137,7 +1140,7 @@ $$
      = \begin{bmatrix} 1 & 0.3 \\ 0.3 & 1 \end{bmatrix},
 $$
 
-\noindent so that the conditions differ only in marginal shape. Under the normal
+\noindent so that the conditions differ only in distributional shape. Under the normal
 condition, the predictors had Gaussian marginals with the specified covariance
 structure. Under the uniform condition, they had symmetric uniform marginals
 $\mathrm{U}(-\sqrt3, \sqrt3)$, which have mean $0$ and variance $1$. Under the
