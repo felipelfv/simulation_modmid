@@ -17,7 +17,7 @@ gen_exo <- function(n, distr_exo) {
     sigma <- matrix(c(1, rho, rho, 1), 2, 2)
     margin <- list(distr = "norm", mean = 0, sd = 1)
     vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
-                       family_set = "gauss")
+                       family_set = "gauss", cores = 1)
     e <- rvinecopulib::rvine(n, vine = vd)
     return(list(x = e[, 1], w = e[, 2]))
   }
@@ -27,7 +27,8 @@ gen_exo <- function(n, distr_exo) {
     # this for the mean 0, var 1
     # thus U{-sqrt(3),sqrt(3)} has var = 1
     margin <- list(distr = "unif", min = -sqrt(3), max = sqrt(3)) # bounded -+ sqrt(3)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6)
+    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
+                       cores = 1)
     e <- rvinecopulib::rvine(n, vine = vd)
     return(list(x = e[, 1], w = e[, 2]))
   }
@@ -43,7 +44,8 @@ gen_exo <- function(n, distr_exo) {
     nat_var <- t_df / (t_df - 2)
     sigma <- nat_var * matrix(c(1, rho, rho, 1), 2, 2)
     margin <- list(distr = "t", df = t_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6)
+    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
+                       cores = 1)
     e <- rvinecopulib::rvine(n, vine = vd)
     return(list(x = e[, 1] / sqrt(nat_var), w = e[, 2] / sqrt(nat_var)))
   }
@@ -56,7 +58,8 @@ gen_exo <- function(n, distr_exo) {
     nat_var <- 2 * chi_df
     sigma <- nat_var * matrix(c(1, rho_in, rho_in, 1), 2, 2)
     margin <- list(distr = "chisq", df = chi_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6)
+    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
+                       cores = 1)
     e <- rvinecopulib::rvine(n, vine = vd)
     x <- (e[, 1] - chi_df) / sqrt(nat_var)
     w <- (e[, 2] - chi_df) / sqrt(nat_var)

@@ -1,7 +1,7 @@
 # README
 
 This repository contains the code, materials, and manuscript for the simulation
-study **"Latent Variables Moderated Mediation Using Correct and Misspecified
+study **"Latent Variable Moderated Mediation Using Correct and Misspecified
 Models"** by Felipe Fontana Vieira and Yves Rosseel.
 
 The study compares three estimators of a latent moderated-mediation model under
@@ -14,7 +14,7 @@ misspecification:
 
 The design is a full factorial of 4 sample sizes × 3 interaction effects × 2
 reliabilities × 5 distributions × 9 misspecifications = 1080 conditions, each run
-for 800 replications.
+for 1,000 replications.
 
 <sub>The code in this repository is licensed under the [MIT License](LICENSE). The
 manuscript, figures, and other non-code content are licensed under a [Creative
@@ -24,8 +24,9 @@ This project and the preregistration for it are archived at
 
 ## Repository Structure
 
-The project consists of a set of R scripts forming a four stage pipeline, plus a
-Quarto manuscript and a Nix environment definition.
+The project consists of a set of R scripts forming a three-stage pipeline (simulation,
+analysis and figures, manuscript), plus a Quarto manuscript and a Nix environment
+definition. Calibration is a one-off prerequisite whose output is committed.
 
 ### 1. Simulation
 
@@ -36,7 +37,7 @@ Quarto manuscript and a Nix environment definition.
 ├── calibration/
 │   ├── calibrate.R                 # calibrates misspecification coefficients & residual variances
 │   ├── calibration_explanation.qmd # full derivation of the calibration scheme
-│   └── calibration_results.rds     # output (copied to results/calibration.rds for the sim)
+│   └── calibration_results.rds     # output; copy to results/calibration.rds before Step 1
 ├── sim_mc.R           # main driver: builds the design grid and runs all conditions in parallel
 └── helpers_mc.R       # data generation, the three estimators, MC/Wald inference, admissibility
                        #   checks, and the per-replication / per-condition workers (sourced by sim_mc.R)
@@ -48,8 +49,9 @@ The simulation writes its outputs to `results/`:
 results/
 ├── calibration.rds          # calibration lookup consumed by sim_mc.R
 ├── design.rds               # the 1080-row design grid
-├── estimates_mc.rds         # combined per-fit estimates (~1.3 GB, ~47M rows)
+├── estimates_mc.rds         # combined per-fit estimates (~1.8 GB, ~58M rows)
 ├── metrics_mc.rds           # combined per-replication fit metrics / timings
+├── progress.log             # per-condition progress written during the run
 ├── summary.rds              # performance metrics      (← analyze_mc.R)
 ├── rejection_imm_a3.rds     # Type I error / power     (← analyze_mc.R)
 └── convergence_report.rds   # convergence & outlier counts (← analyze_mc.R)
@@ -60,16 +62,15 @@ per condition, written by `sim_mc.R` for resumability) are intermediate
 artifacts combined into `estimates_mc.rds` at the end of Step 1, and are *not
 included* in this repository.
 
-The large combined outputs in `results/` are archived on Zenodo (DOI above) 
-rather than committed here. Download them into `results/` to re-run 
-`analyze_mc.R`. 
+`results/` is not committed. The large combined outputs are archived on Zenodo
+(DOI above); download them into `results/` to re-run `analyze_mc.R`.
 
 ### 2. Analysis and figures
 
 ```
 .
 ├── analyze_mc.R       # results/estimates_mc.rds → summary / rejection / convergence tables
-└── figures.R          # results/{summary,rejection_imm_a3}.rds → plots/*.png (14 figures)
+└── figures.R          # results/{summary,rejection_imm_a3}.rds → plots/*.png (16 figures, 14 used in the paper)
 ```
 
 ### 3. Manuscript
@@ -78,24 +79,39 @@ rather than committed here. Download them into `results/` to re-run
 manuscript/
 ├── article.qmd        # paper source (APA 7 via the apaquarto extension)
 ├── references.bib     # bibliography
-├── article.pdf        # rendered output (also built on push by .github/workflows/render.yaml)
+├── article.pdf        # rendered output
+├── article.tex        # kept LaTeX source of the rendered output
 └── _extensions/       # vendored apaquarto extension
+docs/
+├── article.pdf        # copy of the rendered PDF served via GitHub Pages
+└── index.html         # redirect to article.pdf
 ```
+
+`article.pdf`, `article.tex`, and `docs/` are rebuilt and committed on every
+push to `main` by the GitHub Actions workflow (`.github/workflows/render.yaml`).
 
 The manuscript embeds the figures from `plots/` directly (via
 `knitr::include_graphics`).
 
-## Workflow
+## Pipeline
 
 The pipeline runs in three stages, each consuming the previous stage's output.
 Calibration (`calibration/calibrate.R`) is a prerequisite whose result is
-already provided in `results/calibration.rds`.
+already provided as `calibration/calibration_results.rds`; `sim_mc.R` reads it
+from `results/calibration.rds`, so copy it there first.
 
 ### Step 1: Run the simulation
 
-```r
-Rscript sim_mc.R
+```sh
+mkdir -p results && cp calibration/calibration_results.rds results/calibration.rds
+nix-shell --pure --run 'OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 Rscript sim_mc.R'
 ```
+
+This is the exact command used for the reported run. The environment variables
+pin BLAS/OpenMP to one thread per worker: the nix R links a multithreaded
+OpenBLAS, and since `sim_mc.R` already runs one worker per physical core via
+`mclapply`, unpinned BLAS threads oversubscribe the machine (roughly 6x slower
+per replication in our benchmark) without changing the estimates.
 
 `sim_mc.R` builds the design grid (`results/design.rds`), reads
 `results/calibration.rds`, and runs every condition in parallel via
@@ -113,7 +129,7 @@ Rscript figures.R       # → plots/*.png
 
 `analyze_mc.R` applies the two convergence criteria (soft / strict), removes
 outliers, and computes performance metrics with Monte Carlo standard errors.
-`figures.R` turns those tables into the 14 paper figures.
+`figures.R` turns those tables into 16 figures, 14 of which appear in the paper.
 
 ### Step 3: Render the manuscript
 
@@ -167,8 +183,8 @@ Running `sim_mc.R` (Step 1) requires the following packages, all pinned in
 
 | Package | Version | Citation |
 |---|---|---|
-| modsem | 1.0.21 (git `6a1ed1b`) | Slupphaug, Mehmetoglu & Mittner (2025) |
-| lavaan | 0.7.1.2759 (git `337e951`) | Rosseel, Jorgensen & De Wilde (2026) |
+| modsem | 1.0.22 (git `5c36547`) | Slupphaug, Mehmetoglu & Mittner (2025) |
+| lavaan | 0.7.2.3207 (git `34f69c7`) | Rosseel, Jorgensen & De Wilde (2026) |
 | covsim | 1.1.0 | Grønneberg, Foldnes & Marcoulides (2022) |
 | rvinecopulib | 0.7.3.1.0 | Nagler & Vatter (2025) |
 
@@ -184,4 +200,4 @@ Running `analyze_mc.R` and `figures.R` (Step 2) requires:
 | tidyr | 1.3.2 | Wickham, Vaughan & Girlich (2025) |
 
 The environment itself is generated with `{rix}` 0.18.2 (Rodrigues & Baumann,
-2026). Versions above are those resolved by the pinned environment under R 4.5.1.
+2026). Versions above are those resolved by the pinned environment under R 4.6.0.
