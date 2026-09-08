@@ -140,10 +140,8 @@ involves the product
 of two latent variables, which is unobserved and nonnormal 
 even when its constituents are normal [@KelavaBrandt2022]. Following this, a
 number of methods have been proposed to estimate nonlinear effects among 
-latent variables [e.g., @AlginaMoulder2001; @Arminger1998;
-@AsparouhovMuthen2021; @Boker2023; @Bollen1995; @JoreskogYan1996; 
-@KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; 
-@MooijaartBentler2010; @MooijaartSatorra2012; @WallAmemiya2000]. 
+latent variables [e.g., @Boker2023; @Bollen1995; @KennyJudd1984; 
+@KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; @MooijaartBentler2010]. 
 Most adopt a joint ("system-wide") estimation strategy, in which the 
 measurement and structural parameters are estimated simultaneously. This is 
 the case of the known methods: latent moderated structural equations (LMS) and 
@@ -290,8 +288,7 @@ invisible(1 + 1)
 
 In this section we describe the design of the simulation study and the
 measures used to evaluate performance, following some recent recommendations for 
-the conduct and reporting of simulation studies [@Morris2019; @Siepe2024; 
-@Pawel2026].
+the conduct and reporting of simulation studies [@Siepe2024; @Pawel2026].
 
 ### Population Model and Estimands
 
@@ -457,7 +454,7 @@ robust ML, that is, with Huber–White sandwich standard errors.
 @apx-calibration describes the complete data-generating mechanism in detail. 
 Briefly, the latent variables $X$ and $W$ were drawn from a bivariate
 distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the
-vine-to-anything (VITA) algorithm [@Gronneberg2022; @Foldnes2015]. Five 
+vine-to-anything (VITA) algorithm [@Gronneberg2022]. Five 
 exogenous distributions were examined, each standardized to mean $0$ and 
 variance $1$. Thus, the conditions differ only in distributional shape, 
 not in scale or location. Specifically, the normal condition draws 
@@ -750,7 +747,7 @@ and power falls substantially under opposite-skew $\chi^2$ predictors, most
 for UPI and LSAM. Under misspecification, power barely changes for LSAM, 
 whereas for the system-wide approaches it rises under $c_3$ and falls under 
 the cross-loading. We note, however, that interpreting power in the case of 
-bias and inflated Type I error should be avoided [@Morris2019].
+bias and inflated Type I error should be avoided.
 
 ## Additional Structural Estimates
 
@@ -1131,7 +1128,7 @@ structural model, and the observed indicators through the measurement model.
 ### Stage I: Exogenous predictors
 
 The correlated predictors $(X, W)$ were generated with the vine-to-anything
-(VITA) method [@Gronneberg2022; @Foldnes2015], as implemented in the *covsim*
+(VITA) method [@Gronneberg2022], as implemented in the *covsim*
 package, with sampling via *rvinecopulib* [@Nagler2025]. They were specified to
 have mean $0$, variance $1$, and the covariance structure
 
