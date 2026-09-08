@@ -68,7 +68,7 @@ abstract: |
   bias, root mean square error, coverage, standard errors, Type I error, and 
   power. 
   Under misspecification, LSAM was most robust, leaving some estimates 
-  unaffected by omissions that biased the system-wide approaches, although all 
+  unaffected by omissions that biased the system-wide approaches, although most 
   misspecifications degraded performance.
 
 keywords: [moderated mediation, structural equation modeling, latent interaction, measurement error, model misspecification]
@@ -675,7 +675,7 @@ approaches, more so at low reliability, while LSAM is unaffected. The
 measurement omissions (`cl` and `rc`) have a negligible effect, except for 
 LMS under the medium `cl` at low reliability.
 
-### Standard errors
+### Standard Errors
 
 We interpret SE/SD ratios below 0.90 (underestimation) or above 1.10
 (overestimation) as biased [@Brandt2014; @Vieira2026], and similarly for 
@@ -721,7 +721,7 @@ lowering coverage under the system-wide approaches, while LSAM holds near
 nominal. We also note that $c_3$ affected LMS at low reliability, whereas 
 $c_2$ and `rc` leave coverage close to nominal.
 
-### Hypothesis Testing (Type I error and Power)
+### Hypothesis Testing (Type I Error and Power)
 
 Type I error rates between 2.5% and 7.5% were considered acceptable 
 (@fig-typei). Under correct model specification with normal predictors and 
