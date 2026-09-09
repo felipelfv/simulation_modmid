@@ -466,9 +466,9 @@ which has not been examined, is a question we address here.
 Evaluation}\label{simulation-design-and-performance-evaluation}
 
 In this section we describe the design of the simulation study and the
-measures used to evaluate performance, following some recent
-recommendations for the conduct and reporting of simulation studies
-(Pawel et al., 2025; Siepe et al., 2024).
+measures used to evaluate performance, following the preregistration and
+some recent recommendations for the conduct and reporting of simulation
+studies (Pawel et al., 2025; Siepe et al., 2024).
 
 \subsubsection{Population Model and
 Estimands}\label{population-model-and-estimands}
@@ -534,8 +534,8 @@ We employed a fully factorial design crossing five factors: sample size
 (\(a_3 \in \{0, 0.20, 0.40\}\)), measurement reliability (low \(= 0.5\),
 high \(= 0.7\)), the distribution of the exogenous latent predictors
 (normal, uniform, \(t_5\), and two \(\chi^2\) conditions with same- or
-opposite-direction skew), and the (mis)specification conditions (nine
-cases; see Data Generation below). This yielded
+opposite-direction skewness), and the (mis)specification conditions
+(nine cases; see Data Generation below). This yielded
 \(4 \times 3 \times 2 \times 5 \times 9 = 1{,}080\) conditions, each
 replicated 1,000 times.
 
@@ -543,8 +543,9 @@ Sample sizes cover the small to moderate range, where interaction terms
 are estimated with limited power (Brandt et al., 2020; Lonati et al.,
 2024). The interaction magnitudes include a null condition to assess
 Type I error for the interaction coefficient and imm, and two nonzero
-levels representing small and moderate latent moderation effects.
-Reliability levels of \(0.5\) and \(0.7\) were chosen because
+levels representing small and moderate latent moderation effects,
+following previous research (Feng et al., 2020; Klein \& Moosbrugger,
+2000). Reliability levels of \(0.5\) and \(0.7\) were chosen because
 measurement error is amplified in product terms and is therefore
 especially consequential for latent interaction estimation (Brandt et
 al., 2020; Lonati et al., 2024; Vieira et al., 2026). Nonnormality of
@@ -568,13 +569,14 @@ below.
 
 We used LSAM (Rosseel et al., 2025; Rosseel \& Loh, 2024; Vieira et al.,
 2026), with the measurement model estimated by maximum likelihood (ML)
-in the first step. In this case, the interacting predictors \(X\) and
-\(W\) shared a single measurement block, while \(M\) and \(Y\) formed
-their own blocks. We further used LMS (Klein \& Moosbrugger, 2000), with
-robust standard errors, and the extended UPI approach with double mean
-centering (Kelava \& Brandt, 2009; Lin et al., 2010; Marsh et al.,
-2004), estimated with robust ML, that is, with Huber--White sandwich
-standard errors.
+in the first step and with standard errors obtained as in Vieira et al.
+(2026) (see their Appendix A). In this case, the interacting predictors
+\(X\) and \(W\) shared a single measurement block, while \(M\) and \(Y\)
+formed their own blocks. We further used LMS (Klein \& Moosbrugger,
+2000), with robust standard errors, and the extended UPI approach with
+double mean centering (Kelava \& Brandt, 2009; Lin et al., 2010; Marsh
+et al., 2004), estimated with robust ML, that is, with Huber--White
+sandwich standard errors.
 
 \subsubsection{Data Generation}\label{data-generation}
 
@@ -619,13 +621,13 @@ Solutions}\label{convergence-outliers-and-inadmissible-solutions}
 
 Following previous research (Lonati et al., 2024; Vieira et al., 2026),
 replications were screened before analysis in two sequential steps. In
-both, a replication flagged for any one estimator was removed for all
-three, so that every estimator is compared on an identical set of
-replications. First, we checked convergence. A fit was treated as
-nonconverged when any estimate, standard error, or confidence-interval
-bound of any structural coefficient or loading was missing or
-non-finite, and a replication was removed from all approaches whenever
-any one of them did not converge. Second, among the remaining
+both, a replication that failed the screening for any one estimator was
+removed for all three, so that every estimator is compared on an
+identical set of replications. First, we checked convergence. A solution
+was treated as nonconverged when any estimate, standard error, or
+confidence-interval bound of any structural coefficient or loading was
+missing or non-finite, and a replication was removed from all approaches
+whenever any one of them did not converge. Second, among the remaining
 replications, we screened for outliers, identified per condition,
 method, and parameter as point estimates more than three interquartile
 ranges below the first or above the third quartile, together with
@@ -635,11 +637,11 @@ parameter of interest\footnote{We added the standard error criterion
   acceptable point estimates. It additionally removed 125 replications
   (about \(0.01\%\) of the globally converged ones), predominantly for
   UPI at the smallest sample size with low reliability and skewed
-  \(\chi^2\) predictors.}. Again, a replication flagged as an outlier
+  \(\chi^2\) predictors.}. Again, a replication identified as an outlier
 for any estimation approach was removed from all of them. We also
-flagged inadmissible solutions, where any residual (unique) variance was
-nonpositive or the covariance matrix of the exogenous latent variables
-and latent disturbances was not positive definite.
+identified inadmissible solutions, where any residual (unique) variance
+was nonpositive or the covariance matrix of the exogenous latent
+variables and latent disturbances was not positive definite.
 
 \subsubsection{Performance Measures}\label{performance-measures}
 
@@ -779,21 +781,21 @@ Figure~\ref{fig-baseline-bias-a3}). Moreover, the \(\chi^2\) conditions
 affect all three approaches, but differently. UPI and LSAM are biased
 only at \(N = 100\) with low reliability, where UPI shows the largest
 deviation, whereas LMS remains biased across all sample sizes at low
-reliability, negatively under opposite skew at the larger interaction
-and positively under same skew at the smaller one.
+reliability, negatively under opposite skewness at the larger
+interaction and positively under same skewness at the smaller one.
 
 Under misspecification, both \(c_2\) and \(c_3\) bias the imm for all
 three estimation approaches across distributions, as expected. The size
 of the bias nevertheless varies with the predictor distribution, being
-largest under normal and same-skew \(\chi^2\) predictors and smallest
-under opposite-skew \(\chi^2\) and \(t_5\) predictors. For the
-interaction coefficient, \(c_2\) produces essentially no bias for all
-approaches, whereas \(c_3\) leads to bias under the system-wide
+largest under normal and same-skewness \(\chi^2\) predictors and
+smallest under opposite-skewness \(\chi^2\) and \(t_5\) predictors. For
+the interaction coefficient, \(c_2\) produces essentially no bias for
+all approaches, whereas \(c_3\) leads to bias under the system-wide
 approaches. Among the measurement omissions, \texttt{cl} leaves the imm
 unbiased except for LMS in the \(\chi^2\) conditions, and attenuates the
 interaction coefficient only under the system-wide methods. Last,
 \texttt{rc} induces an upward bias in the imm at low reliability, most
-pronounced for LMS under same-skew \(\chi^2\), and leaves the
+pronounced for LMS under same-skewness \(\chi^2\), and leaves the
 interaction coefficient largely unchanged. For the structural omissions,
 the bias increases with the magnitude of the omission in every
 condition, and it is generally larger at low reliability
@@ -830,9 +832,9 @@ model specification with normal predictors, the SE/SD ratio of both the
 interaction coefficient and the imm is unbiased, except for UPI, which
 overestimates at \(N = 200\) with low reliability. Still at \(N = 200\)
 with low reliability, that overestimation extends to nonnormal
-conditions for UPI and, under opposite-skew \(\chi^2\), to LSAM. Note
-that with \(N = 500\), only UPI under opposite-skew \(\chi^2\) remains
-overestimated.
+conditions for UPI and, under opposite-skewness \(\chi^2\), to LSAM.
+Note that with \(N = 500\), only UPI under opposite-skewness \(\chi^2\)
+remains overestimated.
 
 Moreover, in general, model misspecification barely alters this pattern.
 The same deviations recur throughout all omissions, with some
@@ -840,8 +842,8 @@ fluctuations. With respect to the relative bias of the variance
 estimator, a similar pattern is observed across most conditions.
 Importantly, however, with \(N = 200\) at both reliability levels, UPI
 yielded overestimated values for both \(\chi^2\) conditions, while LSAM
-showed overestimated values for the opposite-skew \(\chi^2\) (figures
-available in the project repository).
+showed overestimated values for the opposite-skewness \(\chi^2\)
+(figures available in the project repository).
 
 \subsubsection{Coverage}\label{coverage}
 
@@ -852,16 +854,16 @@ the nominal level with all three approaches for the interaction
 coefficient and imm. Still with a correct specification, it slightly
 drops below the acceptable range under the \(t_5\) condition for all
 approaches across reliability levels and sample sizes, as well as under
-same-skew \(\chi^2\) but in this case mainly at \(N = 500\) and low
+same-skewness \(\chi^2\) but in this case mainly at \(N = 500\) and low
 reliability.
 
 Under model misspecification, \(c_2\) and \(c_3\) reduce the imm
 coverage, since its interval is then centered on a biased estimate, with
 the largest decrease for the system-wide approaches under \(c_3\) and,
-under same-skew \(\chi^2\), for LMS under \(c_2\) as well. This is
+under same-skewness \(\chi^2\), for LMS under \(c_2\) as well. This is
 larger with increasing sample size and is present under most
 distributions, albeit with different magnitudes. Moreover, under \(t_5\)
-and same-skew \(\chi^2\) predictors, coverage remains at or slightly
+and same-skewness \(\chi^2\) predictors, coverage remains at or slightly
 below the acceptable range across all omissions, sample sizes, and
 reliability levels. For the interaction coefficient, the medium
 cross-loading (\texttt{cl}) is the most damaging case, lowering coverage
@@ -880,8 +882,8 @@ conservative at \(N = 200\) with low reliability. Under the nonnormal
 predictors, LMS shows slightly inflated Type I error under \(t_5\) at
 both reliability levels and under both \(\chi^2\) conditions at low
 reliability, LSAM under \(t_5\) at high reliability, whereas UPI is
-conservative under opposite-skew \(\chi^2\) and uniform predictors at
-low reliability.
+conservative under opposite-skewness \(\chi^2\) and uniform predictors
+at low reliability.
 
 Under misspecification, this pattern largely persists throughout
 distributions. LMS shows inflated Type I error in most cells under
@@ -889,7 +891,7 @@ distributions. LMS shows inflated Type I error in most cells under
 structural omissions and the cross-loading at low reliability, and even
 under normal predictors for the medium \(c_3\). UPI is instead
 conservative in several cells at \(N = 200\) with low reliability and
-throughout under opposite-skew \(\chi^2\), whereas LSAM stays mostly
+throughout under opposite-skewness \(\chi^2\), whereas LSAM stays mostly
 within the acceptable range, with inflation confined largely to \(t_5\)
 predictors.
 
@@ -898,7 +900,7 @@ size and reliability under normal predictors, with LMS the most powerful
 (Figure~\ref{fig-power}). Under the nonnormal predictors, LMS keeps the
 highest power under \(\chi^2\), whereas under \(t_5\) and uniform
 predictors LSAM matches it, and power falls substantially under
-opposite-skew \(\chi^2\) predictors, most for UPI and LSAM. Under
+opposite-skewness \(\chi^2\) predictors, most for UPI and LSAM. Under
 misspecification, power barely changes for LSAM, whereas for the
 system-wide approaches it rises under \(c_3\) and falls under the
 cross-loading. We note, however, that interpreting power in the case of
