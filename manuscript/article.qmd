@@ -944,9 +944,9 @@ and inflated Type I error. LSAM yielded Type I error closest to nominal, at
 the cost of a higher relative RMSE and lower power in some cases, while UPI 
 fell in between, unbiased except at the smallest sample size with low 
 reliability, where it was also the least stable. Both standard error 
-measures stayed near one at high reliability but not at low reliability and 
-small samples, where UPI overestimated standard errors, and UPI and LSAM 
-struggled most under opposite-skewness $\chi^2$ predictors.
+measures stayed near one except in small samples, most at low reliability, 
+where UPI overestimated standard errors, and UPI and LSAM struggled most 
+under opposite-skewness $\chi^2$ predictors.
 
 Under misspecification, LSAM was the more robust approach. The structural 
 omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side 
@@ -975,12 +975,9 @@ of LMS and UPI under nonnormality and their stability under normality
 reproduce earlier findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], 
 as does that of LSAM [@Rosseel2025; @Vieira2026]. The measurement 
 misspecification results align with @Brandt2020, where an omitted 
-cross-loading was likewise damaging and biased UPI, whereas the two-stage 
-method of moments on which LSAM builds attained the smallest RMSE. 
+cross-loading was likewise damaging for every estimator, including UPI. 
 @NavarroSchermelleh2025 likewise found the latent interaction effect 
-underestimated under omitted cross-loadings with LMS, which they trace to 
-the biased predictor covariance entering the variance of the interaction 
-term. Even so, @Brandt2020 found no approach free of bias and none uniformly 
+underestimated under omitted cross-loadings with LMS. Even so, @Brandt2020 found no approach free of bias and none uniformly 
 best, as we also observed. Lastly, the contrast between the structural and 
 the measurement omissions matches the expectation of @Robitzsch2022 that 
 the advantage of SAM lies in structural rather than measurement 
