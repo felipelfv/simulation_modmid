@@ -383,7 +383,7 @@ parameters held fixed. Many of these approaches have so far been rarely
 applied in practice, likely held back by limited software, slow
 estimation, and error-prone implementations. With recent open-source
 implementations (Holst \& Budtz-Jørgensen, 2020; Rosseel et al., 2025;
-Slupphaug et al., 2024) and non-commercial software (Keller, 2025), this
+Slupphaug et al., 2025) and non-commercial software (Keller, 2025), this
 is likely to change.
 
 Beyond estimation, a further consideration concerns interpretation.
@@ -422,7 +422,7 @@ loadings, estimated before the structural model, remain at 1.
 
 Despite this, prior simulation work has examined latent interaction
 estimation mainly under distributional misspecification (Brandt et al.,
-2014; e.g., Cham et al., 2012; Lonati et al., 2024; Vieira et al.,
+2014; e.g., Cham et al., 2012; Lonati et al., 2025; Vieira et al.,
 2026), and in only two cases under misspecification at the measurement
 level (Brandt et al., 2020; Navarro \& Schermelleh-Engel, 2025), which
 between them considered only the UPI and LMS among the approaches
@@ -436,8 +436,8 @@ mediation model: local SAM (LSAM; Rosseel et al., 2025), LMS (Kelava et
 al., 2011; Klein \& Moosbrugger, 2000), and UPI (Kelava \& Brandt, 2009;
 Marsh et al., 2004). These approaches have been explained extensively in
 previous research and we refer readers to it (e.g., Brandt et al., 2020;
-Kelava et al., 2011; Lin et al., 2010; Lonati et al., 2024; Rosseel et
-al., 2025; Slupphaug et al., 2024; Vieira et al., 2026).
+Kelava et al., 2011; Lin et al., 2010; Lonati et al., 2025; Rosseel et
+al., 2025; Slupphaug et al., 2025; Vieira et al., 2026).
 
 \subsubsection{Present Research and
 Contributions}\label{present-research-and-contributions}
@@ -468,7 +468,7 @@ Evaluation}\label{simulation-design-and-performance-evaluation}
 In this section we describe the design of the simulation study and the
 measures used to evaluate performance, following the preregistration and
 some recent recommendations for the conduct and reporting of simulation
-studies (Pawel et al., 2025; Siepe et al., 2024).
+studies (Pawel et al., 2026; Siepe et al., 2024).
 
 \subsubsection{Population Model and
 Estimands}\label{population-model-and-estimands}
@@ -495,13 +495,14 @@ interaction coefficient \(a_3\) is a design factor (see below). These
 coefficients, together with the structural disturbance variances, were
 chosen so that under the baseline condition (normal exogenous predictors
 and a correctly specified model) each dependent latent variable has
-\(R^2 = 0.30\) at the interaction level \(a_3 = 0.20\). Also note that,
-because \(a_3\) contributes to the variance of \(M\), the explained
-variance is naturally higher with a larger \(a_3\) and lower when its
-effect is null. Each latent variable is measured by four congeneric
-indicators with loadings \(1.0\), \(0.8\), \(0.7\), and \(0.6\).
-Figure~\ref{fig-model} shows the population model, where the measurement
-and structural misspecifications studied below are drawn in gray.
+\(R^2 \approx 0.30\) at the interaction level \(a_3 = 0.20\). Also note
+that, because \(a_3\) contributes to the variance of \(M\), the
+explained variance is naturally higher with a larger \(a_3\) and lower
+when its effect is null. Each latent variable is measured by four
+congeneric indicators with loadings \(1.0\), \(0.8\), \(0.7\), and
+\(0.6\). Figure~\ref{fig-model} shows the population model, where the
+measurement and structural misspecifications studied below are drawn in
+gray.
 
 \begin{figure}[!htbp]
 
@@ -541,18 +542,18 @@ replicated 1,000 times.
 
 Sample sizes cover the small to moderate range, where interaction terms
 are estimated with limited power (Brandt et al., 2020; Lonati et al.,
-2024). The interaction magnitudes include a null condition to assess
+2025). The interaction magnitudes include a null condition to assess
 Type I error for the interaction coefficient and imm, and two nonzero
 levels representing small and moderate latent moderation effects,
 following previous research (Feng et al., 2020; Klein \& Moosbrugger,
 2000). Reliability levels of \(0.5\) and \(0.7\) were chosen because
 measurement error is amplified in product terms and is therefore
 especially consequential for latent interaction estimation (Brandt et
-al., 2020; Lonati et al., 2024; Vieira et al., 2026). Nonnormality of
+al., 2020; Lonati et al., 2025; Vieira et al., 2026). Nonnormality of
 the latent predictors is both empirically common and methodologically
 central for latent interaction approaches, whose distributional
 assumptions differ across approaches (Cham et al., 2012; Klein \&
-Moosbrugger, 2000; Klein \& Muthén, 2007; Lonati et al., 2024; Vieira et
+Moosbrugger, 2000; Klein \& Muthén, 2007; Lonati et al., 2025; Vieira et
 al., 2026). The misspecification conditions follow the moderated
 mediation framework for the two structural omissions (Preacher et al.,
 2007) and prior latent interaction simulation work for the two
@@ -619,7 +620,7 @@ model.
 \subsubsection{Convergence, Outliers, and Inadmissible
 Solutions}\label{convergence-outliers-and-inadmissible-solutions}
 
-Following previous research (Lonati et al., 2024; Vieira et al., 2026),
+Following previous research (Lonati et al., 2025; Vieira et al., 2026),
 replications were screened before analysis in two sequential steps. In
 both, a replication that failed the screening for any one estimator was
 removed for all three, so that every estimator is compared on an
@@ -629,19 +630,19 @@ confidence-interval bound of any structural coefficient or loading was
 missing or non-finite, and a replication was removed from all approaches
 whenever any one of them did not converge. Second, among the remaining
 replications, we screened for outliers, identified per condition,
-method, and parameter as point estimates more than three interquartile
-ranges below the first or above the third quartile, together with
-replications whose estimated standard error exceeded \(10\) on any
-parameter of interest\footnote{We added the standard error criterion
-  because some replications retained anomalous standard errors despite
-  acceptable point estimates. It additionally removed 125 replications
-  (about \(0.01\%\) of the globally converged ones), predominantly for
-  UPI at the smallest sample size with low reliability and skewed
-  \(\chi^2\) predictors.}. Again, a replication identified as an outlier
-for any estimation approach was removed from all of them. We also
-identified inadmissible solutions, where any residual (unique) variance
-was nonpositive or the covariance matrix of the exogenous latent
-variables and latent disturbances was not positive definite.
+method, and parameter of interest as point estimates more than three
+interquartile ranges below the first or above the third quartile,
+together with replications whose estimated standard error exceeded
+\(10\) on any parameter of interest\footnote{We added the standard error
+  criterion because some replications retained anomalous standard errors
+  despite acceptable point estimates. It additionally removed 125
+  replications (about \(0.01\%\) of the globally converged ones),
+  predominantly for UPI at the smallest sample size with low reliability
+  and skewed \(\chi^2\) predictors.}. Again, a replication identified as
+an outlier for any estimation approach was removed from all of them. We
+also identified inadmissible solutions, where any residual (unique)
+variance was nonpositive or the covariance matrix of the exogenous
+latent variables and latent disturbances was not positive definite.
 
 \subsubsection{Performance Measures}\label{performance-measures}
 
@@ -719,7 +720,7 @@ same estimated covariance matrix of the parameter estimates.
 Details}\label{reproducibility-and-computational-details}
 
 All analyses were conducted in R (R Core Team, 2025) using the
-\emph{lavaan} (Rosseel, 2012) and \emph{modsem} (Slupphaug et al., 2024)
+\emph{lavaan} (Rosseel, 2012) and \emph{modsem} (Slupphaug et al., 2025)
 packages for estimation, \emph{covsim} (Grønneberg et al., 2022) and
 \emph{rvinecopulib} (Nagler \& Vatter, 2025) for data generation, and
 \emph{simhelpers} (Joshi \& Pustejovsky, 2025) for performance
@@ -773,8 +774,8 @@ biased, following previous research (Brandt et al., 2014; Vieira et al.,
 2026). Under correct specification with normal predictors, all three
 approaches recover both the interaction coefficient and imm without bias
 at every sample size and reliability level, and the same holds under
-uniform and \(t\) predictors apart from single LMS cells at \(N = 100\)
-with low reliability (Figure~\ref{fig-baseline-bias-imm} and
+uniform and \(t_5\) predictors apart from single LMS cells at
+\(N = 100\) with low reliability (Figure~\ref{fig-baseline-bias-imm} and
 Figure~\ref{fig-baseline-bias-a3}). Moreover, the \(\chi^2\) conditions
 affect all three approaches, but differently. UPI and LSAM are biased
 only at \(N = 100\) with low reliability, where UPI shows the largest
@@ -1249,7 +1250,7 @@ remains to be made.
 These patterns are broadly consistent with previous research. The
 behavior of LMS and UPI under nonnormality and their stability under
 normality reproduce earlier findings (Brandt et al., 2014; Cham et al.,
-2012; Lonati et al., 2024; Vieira et al., 2026), as does that of LSAM
+2012; Lonati et al., 2025; Vieira et al., 2026), as does that of LSAM
 (Rosseel et al., 2025; Vieira et al., 2026). The measurement
 misspecification results align with Brandt et al. (2020), where an
 omitted cross-loading was likewise damaging and biased UPI, whereas the
@@ -1515,9 +1516,9 @@ Modeling: A Multidisciplinary Journal}, \emph{17}(3), 374--391.
 \url{https://doi.org/10.1080/10705511.2010.488999}
 
 \bibitem[\citeproctext]{ref-Lonati2025}
-Lonati, S., Rönkkö, M., \& Antonakis, J. (2024). Normality assumption in
-latent interaction models. \emph{Psychological Methods}.
-\url{https://doi.org/10.1037/met0000657}
+Lonati, S., Rönkkö, M., \& Antonakis, J. (2025). Normality assumption in
+latent interaction models. \emph{Psychological Methods}, \emph{30}(6),
+1242--1262. \url{https://doi.org/10.1037/met0000657}
 
 \bibitem[\citeproctext]{ref-MacKinnonFairchild2007}
 MacKinnon, D. P., Fairchild, A. J., \& Fritz, M. S. (2007). Mediation
@@ -1577,10 +1578,10 @@ Journal}, \emph{27}(4), 629--648.
 \url{https://doi.org/10.1080/10705511.2019.1664304}
 
 \bibitem[\citeproctext]{ref-Pawel2026}
-Pawel, S., Bartoš, F., Siepe, B. S., \& Lohmann, A. (2025). Handling
+Pawel, S., Bartoš, F., Siepe, B. S., \& Lohmann, A. (2026). Handling
 missingness, failures, and non-convergence in simulation studies: A
 review of current practices and recommendations. \emph{The American
-Statistician}, 1--18.
+Statistician}, \emph{80}(1), 31--48.
 \url{https://doi.org/10.1080/00031305.2025.2540002}
 
 \bibitem[\citeproctext]{ref-Pieters2017}
@@ -1666,9 +1667,10 @@ reporting. \emph{Psychological Methods}.
 \url{https://doi.org/10.1037/met0000695}
 
 \bibitem[\citeproctext]{ref-Slupphaug2025}
-Slupphaug, K. S., Mehmetoglu, M., \& Mittner, M. (2024). {modsem}: An
+Slupphaug, K. S., Mehmetoglu, M., \& Mittner, M. (2025). {modsem}: An
 {R} package for estimating latent interactions and quadratic effects.
-\emph{Structural Equation Modeling: A Multidisciplinary Journal}.
+\emph{Structural Equation Modeling: A Multidisciplinary Journal},
+\emph{32}(4), 717--729.
 \url{https://doi.org/10.1080/10705511.2024.2417409}
 
 \bibitem[\citeproctext]{ref-Sterner2024}
@@ -1746,9 +1748,9 @@ normal baseline.
 variances}\label{structural-residual-variances}
 
 The disturbance variances \(\psi_M, \psi_Y\) are fixed so that each
-structural equation explains a fraction \(R^2 = 0.30\) of its outcome's
-variance at the central interaction level \(a_3 = 0.2\) under the normal
-baseline. Writing the systematic part of \(M\) as
+structural equation explains a fraction \(R^2 \approx 0.30\) of its
+outcome's variance at the central interaction level \(a_3 = 0.2\) under
+the normal baseline. Writing the systematic part of \(M\) as
 \(S_M = a_1 X + a_2 W + a_3 (X W)\), its variance needs only second
 moments,
 
@@ -1827,8 +1829,8 @@ differ by misspecification,
 
 \[
 \begin{aligned}
-c_2: \quad & p = W,   && y_0 = b M + c' X + \varepsilon_Y, \\
-c_3: \quad & p = X W, && y_0 = b M + c' X + \varepsilon_Y, \\
+c_2: \quad & p = W,   && y_0 = b M + c' X + \zeta_Y, \\
+c_3: \quad & p = X W, && y_0 = b M + c' X + \zeta_Y, \\
 \texttt{cl}: \quad & p = X,   && y_0 = m_3 = \lambda_3 M + \delta_{m_3}.
 \end{aligned}
 \]
