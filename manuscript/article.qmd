@@ -957,7 +957,9 @@ $c_2$ and the interaction coefficient under $c_3$. The cross-loading (`cl`)
 was the most damaging throughout. Under the system-wide approaches it biased 
 the interaction coefficient and most structural coefficients and sharply 
 lowered coverage at low reliability, while under LSAM it affected only $a_1$ 
-and $c'$ and left the coverage of the interaction coefficient near nominal. 
+and $c'$ and left the coverage of the interaction coefficient near nominal, 
+although its standard errors for the affected loading were underestimated 
+under nonnormal predictors. 
 The residual covariance (`rc`) had little effect. Where bias was substantial, 
 it was smaller under LSAM, except for $c'$ under the structural omissions, 
 where the three were similar, and it increased with the magnitude of the omission and at lower 
