@@ -225,20 +225,18 @@ lam_sam_nomed <- xload(fit_it(sam, model_nomed))
 lam_sam_med   <- xload(fit_it(sam, model_med))
 ```
 
-To illustrate interpretational confounding, we take a mediation model with 
-three latent variables, X, M, and Y, each with three indicators, and 
-obtain a population covariance matrix from a
-correctly specified version. We then alter it so that the covariances between
-the X and M indicators are unequal across the X indicators (3, 1, and 1,
-rather than the implied value of 2), so their association with M no longer
-follows a single common factor. To the same data we fit two structural models, 
-one omitting the mediator and one including it, by system-wide SEM and by SAM 
-($N = 200$), and compare the estimated loadings of X. Without the mediator, 
-both approaches recover the true loadings of one. 
-Once the mediator enters, the system-wide loadings of $x_2$ and $x_3$ drop to 
-`r sprintf("%.2f", lam_sem_med["x2"])`, even though the measurement of X is 
-unchanged, whereas the SAM loadings remain at one with and without the 
-mediator.
+To illustrate interpretational confounding, we specify a population mediation 
+model with three latent variables, X, M, and Y, each with three indicators and 
+all loadings equal to 1, and derive its model-implied covariance matrix. We 
+then set the covariances of the M indicators with $x_1$, $x_2$, and $x_3$ to 
+3, 1, and 1, rather than the implied value of 2, so their association with M 
+no longer follows a single common factor. We fit the model to this matrix 
+($N = 200$) with and without the mediator, by system-wide SEM and by SAM, 
+and compare the estimated loadings of $x_2$ and $x_3$. Without the 
+mediator, both approaches recover the true loadings of 1. Once the mediator 
+enters, the system-wide loadings drop to 
+`r sprintf("%.2f", lam_sem_med["x2"])`, whereas the SAM loadings, estimated 
+before the structural model, remain at 1.
 
 Despite this, prior simulation work has examined latent interaction estimation 
 mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
