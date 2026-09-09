@@ -642,19 +642,20 @@ deviation, whereas LMS remains biased across all sample sizes at low
 reliability, negatively under opposite skewness at the larger interaction and 
 positively under same skewness at the smaller one.
 
-Under misspecification, both $c_2$ and $c_3$ bias the imm for all three 
-estimation approaches across distributions, as expected. The size of the bias 
+Under misspecification, $c_2$ biases the imm for all three estimation 
+approaches across distributions, and so does $c_3$ in most conditions, as 
+expected. The size of the bias 
 nevertheless varies with the predictor distribution, being largest under 
 normal and same-skewness $\chi^2$ predictors and smallest under opposite-skewness 
 $\chi^2$ and $t_5$ predictors. For the interaction coefficient, $c_2$ 
 produces essentially no bias for all approaches, whereas $c_3$ leads to bias 
-under the system-wide approaches. Among the measurement omissions, `cl` 
+under the system-wide approaches, mainly at low reliability. Among the measurement omissions, `cl` 
 leaves the imm unbiased except for LMS in the $\chi^2$ conditions, and 
 attenuates the interaction coefficient only under the system-wide methods. 
 Last, `rc` induces an upward bias in the imm at low reliability, most 
 pronounced for LMS under same-skewness $\chi^2$, and leaves the interaction 
 coefficient largely unchanged. For the structural omissions, the bias increases 
-with the magnitude of the omission in every condition, and it is generally 
+with the magnitude of the omission wherever it is present, and it is generally 
 larger at low reliability (@fig-bias). We therefore also note that the bias of 
 the interaction coefficient under $c_3$ is the one result not implied by the 
 omission alone.
@@ -686,9 +687,11 @@ for the imm are based on the Monte Carlo method (@fig-sesd-imm and
 SE/SD ratio of both the interaction coefficient and the imm is unbiased, except 
 for UPI, which overestimates at $N = 200$ with low reliability. Still at 
 $N = 200$ with low reliability, that overestimation 
-extends to nonnormal conditions for UPI and, under opposite-skewness $\chi^2$, to 
-LSAM. Note that with $N = 500$, only UPI under opposite-skewness $\chi^2$ remains 
-overestimated. 
+extends to the $t_5$ and $\chi^2$ conditions for UPI and, under 
+opposite-skewness $\chi^2$, to LSAM. Note that with $N = 500$, only UPI under 
+opposite-skewness $\chi^2$ remains overestimated, whereas the interaction 
+coefficient is slightly underestimated for all three approaches under $t_5$ at 
+high reliability and for LSAM under same-skewness $\chi^2$ at low reliability. 
 
 Moreover, in general, model misspecification barely alters this 
 pattern. The same deviations recur throughout all omissions, with some 
@@ -715,8 +718,8 @@ decrease for the system-wide approaches under $c_3$ and, under same-skewness
 $\chi^2$, for LMS under $c_2$ as well. This is larger with increasing sample 
 size and is present under most distributions, albeit with different 
 magnitudes. Moreover, under $t_5$ and same-skewness $\chi^2$ predictors, 
-coverage remains at or slightly below the acceptable range across all 
-omissions, sample sizes, and reliability levels. For the interaction 
+coverage remains at or slightly below the acceptable range under the 
+measurement omissions across sample sizes and reliability levels. For the interaction 
 coefficient, the medium cross-loading (`cl`) is the most damaging case, 
 lowering coverage under the system-wide approaches, while LSAM holds near 
 nominal. We also note that $c_3$ affected LMS at low reliability, whereas 
@@ -727,8 +730,8 @@ $c_2$ and `rc` leave coverage close to nominal.
 Type I error rates between 2.5% and 7.5% were considered acceptable 
 (@fig-typei). Under correct model specification with normal predictors and 
 $a_3 = 0$, the interaction coefficient and imm hold their nominal level 
-reasonably well for LSAM and LMS, while UPI is conservative at $N = 200$ with 
-low reliability. Under the nonnormal predictors, LMS shows slightly inflated 
+reasonably well for all three approaches, with some negligible conservativeness 
+for UPI at $N = 200$ with low reliability. Under the nonnormal predictors, LMS shows slightly inflated 
 Type I error under $t_5$ at both reliability levels and under both $\chi^2$ 
 conditions at low reliability, LSAM under $t_5$ at high reliability, whereas 
 UPI is conservative under opposite-skewness $\chi^2$ and uniform predictors at 
@@ -738,8 +741,9 @@ Under misspecification, this pattern largely persists throughout
 distributions. LMS shows inflated Type I error in most cells under $t_5$ 
 and both $\chi^2$ conditions, most severely under the structural omissions 
 and the cross-loading at low reliability, and even under normal predictors 
-for the medium $c_3$. UPI is instead conservative in several cells at 
-$N = 200$ with low reliability and throughout under opposite-skewness $\chi^2$, 
+for the medium $c_3$. UPI is instead conservative at low reliability, in 
+several cells at $N = 200$ and throughout under opposite-skewness $\chi^2$, 
+but also inflated under $t_5$ at high reliability for several omissions, 
 whereas LSAM stays mostly within the acceptable range, with inflation 
 confined largely to $t_5$ predictors.
 
@@ -750,7 +754,8 @@ under $\chi^2$, whereas under $t_5$ and uniform predictors LSAM matches it,
 and power falls substantially under opposite-skewness $\chi^2$ predictors, most 
 for UPI and LSAM. Under misspecification, power barely changes for LSAM, 
 whereas for the system-wide approaches it rises under $c_3$ and falls under 
-the cross-loading. We note, however, that interpreting power in the case of 
+the cross-loading, except for LMS under opposite-skewness $\chi^2$, where its 
+inflated Type I error lifts it. We note, however, that interpreting power in the case of 
 bias and inflated Type I error should be avoided.
 
 ## Additional Structural Estimates
@@ -772,7 +777,8 @@ is smaller under LSAM, except for $c'$ under the structural omissions.
 Coverage follows the bias, dropping most for $b$ under $c_2$, for $c'$ under 
 $c_3$, and for $a_1$ under `cl`. The SE/SD ratio stays within the acceptable 
 range, except for $b$ and $c'$ under $c_3$, which are underestimated, most 
-under $t_5$ predictors.
+under $t_5$ predictors for $c'$ and under $t_5$ and same-skewness $\chi^2$ 
+for $b$.
 
 ```{r}
 #| label: fig-baseline-bias-imm
@@ -903,7 +909,9 @@ knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 ## Measurement Loadings
 
 For the twelve freely estimated factor loadings, all but one are recovered 
-with acceptable performance across every measure and condition. Hence, we 
+with acceptable performance across every measure and essentially every 
+condition, the exceptions being noisy deviations of the relative bias of the 
+variance estimator at $N = 100$ with low reliability. Hence, we 
 display only the loading of the cross-loaded mediator indicator $m_3$, with 
 its relative bias, coverage, SE/SD ratio, and relative bias of the variance 
 estimator shown together at high reliability and $N = 500$ (@fig-load). For 
@@ -937,12 +945,10 @@ $\chi^2$ predictors at low reliability together with below-nominal coverage
 and inflated Type I error. LSAM yielded Type I error closest to nominal, at 
 the cost of a higher relative RMSE and lower power in some cases, while UPI 
 fell in between, unbiased except at the smallest sample size with low 
-reliability, where it was also the least stable. The two standard error 
-performance measures, the SE/SD ratio and the relative bias of the variance 
-estimator, showed similar results. Both stayed near one at high reliability 
-but not at low reliability and small samples, where UPI overestimated 
-standard errors, and UPI and LSAM struggled the most under the $\chi^2$ 
-predictors skewed in opposite directions.
+reliability, where it was also the least stable. Both standard error 
+measures stayed near one at high reliability but not at low reliability and 
+small samples, where UPI overestimated standard errors, and UPI and LSAM 
+struggled most under opposite-skewness $\chi^2$ predictors.
 
 Under misspecification, LSAM was the more robust approach. The structural 
 omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side 
@@ -964,19 +970,17 @@ confidence intervals that behaved like those of the interaction coefficient,
 with the deviations at low reliability and small samples reflecting the 
 standard errors of the underlying estimates. Under misspecification its 
 coverage dropped with the bias of its constituents rather than with the 
-interval width. The method thus appears to be an adequate and far cheaper 
-alternative to the bootstrap in this setting, although a direct comparison 
-remains to be made.
+interval width. The method thus appears an adequate and far cheaper 
+alternative to the bootstrap here, although a direct comparison remains to be 
+made.
 
-These patterns are broadly consistent with previous research. The results for 
-the LMS and UPI approaches under specific types of nonnormality alongside 
-their stability under normality reproduce earlier findings 
-[@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026] and the behavior of LSAM 
-also mirrors previous studies [@Rosseel2025; @Vieira2026]. Moreover, part of 
-the measurement misspecification results is aligned with @Brandt2020. 
-There, omitting a cross-loading was likewise a damaging misspecification, 
-and the UPI approach was biased under it, whereas the two-stage method of 
-moments on which LSAM builds attained the smallest RMSE in those conditions. 
+These patterns are broadly consistent with previous research. The behavior 
+of LMS and UPI under nonnormality and their stability under normality 
+reproduce earlier findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], 
+as does that of LSAM [@Rosseel2025; @Vieira2026]. The measurement 
+misspecification results align with @Brandt2020, where an omitted 
+cross-loading was likewise damaging and biased UPI, whereas the two-stage 
+method of moments on which LSAM builds attained the smallest RMSE. 
 @NavarroSchermelleh2025 likewise found the latent interaction effect 
 underestimated under omitted cross-loadings with LMS, which they trace to 
 the biased predictor covariance entering the variance of the interaction 
@@ -987,17 +991,14 @@ the advantage of SAM lies in structural rather than measurement
 misspecification, since the cross-loading biased LSAM as well, whereas the 
 structural omissions left its mediator equation untouched.
 
-Finally, although this article evaluated the estimation approaches from a 
-statistical, inferential perspective, the moderated mediation model itself 
-rests on strong causal assumptions [@Imai2010; @Rohrer2022]. This carries a practical 
-consequence for applied researchers: good statistical performance of the 
-estimation approaches under investigation in certain conditions is not, on 
-its own, a justification for a causal research question or claim. 
-Work addressing the causal interpretation of mediation continues to develop, 
-and we direct interested readers to this literature [@Morelli2026; @Imai2010]. 
-Moreover, as we showed, misspecification has strong consequences across all 
-three estimation approaches, and many of those may be highly plausible in 
-certain contexts and fields.
+Finally, although we evaluated the estimation approaches from a statistical 
+perspective, the moderated mediation model itself rests on strong causal 
+assumptions [@Imai2010; @Rohrer2022]. Good statistical performance in certain 
+conditions is therefore not, on its own, a justification for a causal claim, 
+and we direct interested readers to the developing literature on the causal 
+interpretation of mediation [@Morelli2026; @Imai2010]. Moreover, 
+misspecification had strong consequences across all three approaches, and 
+many of the omissions studied may be highly plausible in applied contexts.
 
 {{< pagebreak >}}
 
