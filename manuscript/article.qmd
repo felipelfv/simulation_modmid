@@ -599,15 +599,14 @@ We present the results in three sections. First, the results for the
 interaction coefficient and the imm are reported. We then turn to the 
 remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), 
 and we close with the estimated factor loadings, focusing mainly on that of 
-the cross-loaded indicator ($m_3$). Moreover, due to the large number of 
-conditions, we focus on a subset of them. In most figures we fix the 
+the cross-loaded indicator ($m_3$). Due to the large number of conditions, we focus on a subset. In most figures we fix the 
 interaction coefficient at 0.2 and show $N = 200$ and $500$ for the 
 interaction coefficient and imm, and solely $N = 500$ for the structural 
 coefficients and loadings. 
 For the latter two, we further restrict to high reliability, whereas the 
 interaction coefficient and imm are shown at both reliability levels. 
-The entire set of results as well as detailed information 
-about convergence and outliers is available in the repository.
+All results and detailed convergence and outlier information are available 
+in the repository.
 
 ## Convergence, Outliers, and Inadmissible Solutions
 
@@ -617,12 +616,9 @@ UPI was the least stable, with its convergence rate falling to about $92\%$
 in the worst condition (the smallest sample size, low reliability, and
 skewed $\chi^2$ predictors). At high reliability, however, UPI converged in
 at least $99\%$ of replications regardless of sample size, distribution, or
-misspecification. Outliers were likewise rare, staying below $1\%$ in
-the majority of conditions and reaching their highest values, up to roughly
-$11\%$ for UPI and $8\%$ for LSAM, only at $N = 100$ with low reliability and
-skewed ($\chi^2$) predictors. Note the results reported below did not 
-exclude inadmissible solutions, which arose almost exclusively for UPI. 
-In fact, excluding them leads to negligible changes, with the few differences 
+misspecification. Outliers were likewise rare, staying below $1\%$ in most conditions and reaching up to roughly $11\%$ for UPI and $8\%$ for LSAM, only at $N = 100$ with low reliability and
+skewed ($\chi^2$) predictors. The results reported below did not exclude inadmissible solutions, which 
+arose almost exclusively for UPI; excluding them leads to negligible changes, 
 confined to the smallest sample size, low reliability, $\chi^2$ conditions.
 
 ## Main Structural Estimates
@@ -722,7 +718,8 @@ coverage remains at or slightly below the acceptable range under the
 measurement omissions across sample sizes and reliability levels. For the interaction 
 coefficient, the medium cross-loading (`cl`) is the most damaging case, 
 lowering coverage under the system-wide approaches, while LSAM holds near 
-nominal. We also note that $c_3$ affected LMS at low reliability, whereas 
+nominal. We also note that $c_3$ lowered coverage for the system-wide 
+approaches at $N = 500$, most for LMS at low reliability, whereas 
 $c_2$ and `rc` leave coverage close to nominal.
 
 ### Hypothesis Testing (Type I Error and Power)
@@ -767,14 +764,15 @@ high reliability and $N = 500$, we report their relative bias
 Under correct specification, all approaches are unbiased with acceptable 
 coverage and SE/SD ratios throughout distributions. Under misspecification, 
 the structural omissions bias the outcome-equation coefficients $b$ and $c'$ 
-for all approaches alike, whereas the mediator-equation coefficients $a_1$ 
+for all approaches alike, apart from $b$ under $c_3$ with opposite-skewness 
+$\chi^2$, whereas the mediator-equation coefficients $a_1$ 
 and $a_2$ stay unbiased under LSAM and, for the system-wide approaches, 
 $a_2$ is biased under $c_2$. Among the measurement omissions, `cl` is the 
 most disruptive, biasing $a_1$ and $c'$ for all approaches and additionally 
 $a_2$ and $b$ for the system-wide approaches, while `rc` leaves all four 
 coefficients within the acceptable range. Where the bias is substantial, it 
-is smaller under LSAM, except for $c'$ under the structural omissions. 
-Coverage follows the bias, dropping most for $b$ under $c_2$, for $c'$ under 
+is smaller under LSAM, except for $c'$ under the structural omissions, 
+where the three approaches are similar. Coverage follows the bias, dropping most for $b$ under $c_2$, for $c'$ under 
 $c_3$, and for $a_1$ under `cl`. The SE/SD ratio stays within the acceptable 
 range, except for $b$ and $c'$ under $c_3$, which are underestimated, most 
 under $t_5$ predictors for $c'$ and under $t_5$ and same-skewness $\chi^2$ 
@@ -938,8 +936,8 @@ measurement misspecifications as well as distributional violations.
 
 Under correct specification with normal predictors, all three recovered the 
 imm and the interaction coefficient without bias and with nominal coverage, 
-differing mainly in the SE/SD ratio and Type I error on one side, and 
-relative RMSE and power on the other. LMS had the lowest relative RMSE and 
+differing mainly in the SE/SD ratio, Type I error, relative RMSE, and 
+power. LMS had the lowest relative RMSE and 
 the highest power but, under nonnormal predictors, showed bias under 
 $\chi^2$ predictors at low reliability together with below-nominal coverage 
 and inflated Type I error. LSAM yielded Type I error closest to nominal, at 
@@ -962,15 +960,13 @@ lowered coverage at low reliability, while under LSAM it affected only $a_1$
 and $c'$ and left the coverage of the interaction coefficient near nominal. 
 The residual covariance (`rc`) had little effect. Where bias was substantial, 
 it was smaller under LSAM, except for $c'$ under the structural omissions, 
-and it increased with the magnitude of the omission and at lower 
+where the three were similar, and it increased with the magnitude of the omission and at lower 
 reliability.
 
 Regarding the imm, the Monte Carlo method delivered standard errors and 
 confidence intervals that behaved like those of the interaction coefficient, 
 with the deviations at low reliability and small samples reflecting the 
-standard errors of the underlying estimates. Under misspecification its 
-coverage dropped with the bias of its constituents rather than with the 
-interval width. The method thus appears an adequate and far cheaper 
+standard errors of the underlying estimates. Under misspecification its coverage dropped with the bias of its constituents despite wider intervals. The method thus appears an adequate and far cheaper 
 alternative to the bootstrap here, although a direct comparison remains to be 
 made.
 
