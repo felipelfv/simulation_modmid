@@ -312,7 +312,7 @@ $c' = 0.15$, with $\mathrm{cor}(X, W) = 0.3$. The interaction coefficient $a_3$
 is a design factor (see below). These coefficients, together with the structural
 disturbance variances, were chosen so that under the baseline condition (normal
 exogenous predictors and a correctly specified model) each dependent latent
-variable has $R^2 = 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
+variable has $R^2 \approx 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
 because $a_3$ contributes to the variance of $M$, the explained variance is 
 naturally higher with a larger $a_3$ and lower when its effect is null. Each 
 latent variable is measured by four congeneric indicators with loadings 
@@ -497,7 +497,7 @@ when any estimate, standard error, or confidence-interval bound of any
 structural coefficient or loading was missing or non-finite, and a replication 
 was removed from all approaches whenever any one of them did not converge. 
 Second, among the remaining replications, we screened for outliers, identified 
-per condition, method, and parameter as point estimates more than three 
+per condition, method, and parameter of interest as point estimates more than three 
 interquartile ranges below the first or above the third quartile, together with replications whose estimated standard error 
 exceeded $10$ on any parameter of interest^[We added the standard error 
 criterion because some replications retained anomalous standard errors despite 
@@ -629,7 +629,7 @@ We interpret values whose absolute relative bias exceeds 0.10 (10%) as biased,
 following previous research [@Brandt2014; @Vieira2026]. Under correct 
 specification with normal predictors, all three approaches 
 recover both the interaction coefficient and imm without bias at every sample 
-size and reliability level, and the same holds under uniform and $t$ 
+size and reliability level, and the same holds under uniform and $t_5$ 
 predictors apart from single LMS cells at $N = 100$ with low reliability 
 (@fig-baseline-bias-imm and @fig-baseline-bias-a3). Moreover, the $\chi^2$ 
 conditions affect all three approaches, but differently. UPI and LSAM are 
@@ -1019,7 +1019,7 @@ the following closed-form calibration, computed once under the normal baseline.
 ### Structural residual variances
 
 The disturbance variances $\psi_M, \psi_Y$ are fixed so that each structural
-equation explains a fraction $R^2 = 0.30$ of its outcome's variance at the
+equation explains a fraction $R^2 \approx 0.30$ of its outcome's variance at the
 central interaction level $a_3 = 0.2$ under the normal baseline. Writing the
 systematic part of $M$ as $S_M = a_1 X + a_2 W + a_3 (X W)$, its variance needs
 only second moments,
@@ -1092,8 +1092,8 @@ misspecification,
 
 $$
 \begin{aligned}
-c_2: \quad & p = W,   && y_0 = b M + c' X + \varepsilon_Y, \\
-c_3: \quad & p = X W, && y_0 = b M + c' X + \varepsilon_Y, \\
+c_2: \quad & p = W,   && y_0 = b M + c' X + \zeta_Y, \\
+c_3: \quad & p = X W, && y_0 = b M + c' X + \zeta_Y, \\
 \texttt{cl}: \quad & p = X,   && y_0 = m_3 = \lambda_3 M + \delta_{m_3}.
 \end{aligned}
 $$
