@@ -651,8 +651,8 @@ attenuates the interaction coefficient only under the system-wide methods.
 Last, `rc` induces an upward bias in the imm at low reliability, most 
 pronounced for LMS under same-skewness $\chi^2$, and leaves the interaction 
 coefficient largely unchanged. For the structural omissions, the bias increases 
-with the magnitude of the omission wherever it is present, and it is generally 
-larger at low reliability (@fig-bias). We therefore also note that the bias of 
+with the omission magnitude wherever present, and it is generally 
+larger at low reliability (@fig-bias). We also note that the bias of 
 the interaction coefficient under $c_3$ is the one result not implied by the 
 omission alone.
 
@@ -661,8 +661,9 @@ omission alone.
 Under correct specification with normal predictors, the relative RMSE of 
 both the interaction coefficient and the imm falls with sample size and 
 reliability for all three approaches, with LMS the most efficient, LSAM 
-intermediate, and UPI the least (@fig-rmse). In general, the same holds for both 
-quantities under the nonnormal predictors. 
+intermediate, and UPI the least (@fig-rmse). In general, the same holds for both quantities under the nonnormal predictors, 
+except under opposite-skewness $\chi^2$ at low reliability, where LSAM is as 
+inefficient as UPI. 
 
 Under misspecification, the structural omissions ($c_2$ and $c_3$) 
 inflate the RMSE of the imm for all three approaches. Under $c_3$ the 
@@ -909,10 +910,9 @@ knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 For the twelve freely estimated factor loadings, all but one are recovered 
 with acceptable performance across every measure and essentially every 
 condition, the exceptions being noisy deviations of the relative bias of the 
-variance estimator at $N = 100$ with low reliability. Hence, we 
-display only the loading of the cross-loaded mediator indicator $m_3$, with 
-its relative bias, coverage, SE/SD ratio, and relative bias of the variance 
-estimator shown together at high reliability and $N = 500$ (@fig-load). For 
+variance estimator concentrated at $N = 100$ with low reliability. We display only the loading of the cross-loaded mediator indicator $m_3$, 
+with its relative bias, coverage, SE/SD ratio, and relative bias of the 
+variance estimator at high reliability and $N = 500$ (@fig-load). For 
 $m_3$, `cl` is the only consequential misspecification. Its relative bias 
 rises sharply under all approaches, less so under LSAM, and its coverage 
 collapses toward zero. The two standard error measures stay within the 
