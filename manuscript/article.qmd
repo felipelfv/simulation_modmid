@@ -1148,8 +1148,9 @@ deviation ($2$) to mean $0$ and variance $1$. In the same-direction condition
 both predictors are right-skewed, whereas in the opposite-direction condition
 $W$ is negated so that $X$ and $W$ are skewed in opposite directions, with the
 sampled correlation sign flipped to restore $\operatorname{Cor}(X, W) = \rho$. In
-every condition, VITA constructed a vine copula to impose the target correlation
-while preserving the marginals, with the $t_5$ and $\chi^2$ draws standardized
+every condition, VITA constructed a vine copula (Gaussian under the normal
+condition, Clayton otherwise) to impose the target correlation while preserving
+the marginals, with the $t_5$ and $\chi^2$ draws standardized
 afterwards as described. 
 
 ### Stage II: Structural model
