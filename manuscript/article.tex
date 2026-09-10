@@ -186,12 +186,13 @@ estimation approaches of a latent moderated mediation model, the local
 structural-after-measurement approach (LSAM) and two system-wide
 methods, across sample size, interaction magnitude, reliability,
 predictor distribution, and nine (mis)specification conditions. Under
-correct specification, all recovered the interaction coefficient and
-index of moderated mediation, differing modestly in bias, root mean
-square error, coverage, standard errors, Type I error, and power. Under
-misspecification, LSAM was most robust, leaving some estimates
-unaffected by omissions that biased the system-wide approaches, although
-most misspecifications degraded performance. }
+correct specification with normal predictors, all recovered the
+interaction coefficient and index of moderated mediation, differing
+modestly in bias, root mean square error, coverage, standard errors,
+Type I error, and power. Under misspecification, LSAM was most robust,
+leaving some estimates unaffected by omissions that biased the
+system-wide approaches, although most misspecifications degraded
+performance. }
 
 \keywords{moderated mediation, structural equation modeling, latent
 interaction, measurement error, model misspecification}
@@ -361,11 +362,11 @@ Ledgerwood \& Shrout, 2011; Wang \& Rhemtulla, 2021).
 Moderated mediation with latent variables is not straightforward in
 terms of statistical estimation. Indeed, a latent interaction\footnote{We
   use interaction and moderation interchangeably, as the focus is on
-  estimation, but we highlight they imply different interpretations and
-  causal assumptions (VanderWeele, 2009). An interaction also need not
-  be a product term, although that is the most common functional form
-  used by researchers (Rimpler et al., 2026).} involves the product of
-two latent variables, which is unobserved and nonnormal even when its
+  estimation, but we highlight that they imply different interpretations
+  and causal assumptions (VanderWeele, 2009). An interaction also need
+  not be a product term, although that is the most common functional
+  form used by researchers (Rimpler et al., 2026).} involves the product
+of two latent variables, which is unobserved and nonnormal even when its
 constituents are normal (Kelava \& Brandt, 2022). Following this, a
 number of methods have been proposed to estimate nonlinear effects among
 latent variables (e.g., Boker et al., 2023; Bollen, 1995; Kenny \& Judd,
@@ -379,7 +380,7 @@ structural-after-measurement (SAM) approaches (Cox \& Kelcey, 2021;
 Holst \& Budtz-Jørgensen, 2020; Ng \& Chan, 2020; Rosseel et al., 2025;
 Wall \& Amemiya, 2000, 2003), in which the measurement model is
 estimated first and the structural model afterward with the measurement
-parameters held fixed. Many of these approaches have so far been rarely
+parameters held fixed. Many of these approaches have so far rarely been
 applied in practice, likely held back by limited software, slow
 estimation, and error-prone implementations. With recent open-source
 implementations (Holst \& Budtz-Jørgensen, 2020; Rosseel et al., 2025;
@@ -418,7 +419,9 @@ follows a single common factor. We fit the model to this matrix
 SAM, and compare the estimated loadings of \(x_2\) and \(x_3\). Without
 the mediator, both approaches recover the true loadings of 1. Once the
 mediator enters, the system-wide loadings drop to 0.41, whereas the SAM
-loadings, estimated before the structural model, remain at 1.
+loadings, estimated before the structural model, remain at 1. The code
+for this illustration is included in the manuscript source in the
+project repository.
 
 Despite this, prior simulation work has examined latent interaction
 estimation mainly under distributional misspecification (Brandt et al.,
@@ -490,19 +493,19 @@ than a free parameter, hence its true value is computed as \(a_3 b\)
 implied by the correctly specified model.
 
 Population values were fixed at \(a_1 = 0.4\), \(a_2 = 0.3\),
-\(b = 0.5\), and \(c' = 0.15\), with \(\mathrm{cor}(X, W) = 0.3\). The
-interaction coefficient \(a_3\) is a design factor (see below). These
-coefficients, together with the structural disturbance variances, were
-chosen so that under the baseline condition (normal exogenous predictors
-and a correctly specified model) each dependent latent variable has
-\(R^2 \approx 0.30\) at the interaction level \(a_3 = 0.20\). Also note
-that, because \(a_3\) contributes to the variance of \(M\), the
-explained variance is naturally higher with a larger \(a_3\) and lower
-when its effect is null. Each latent variable is measured by four
-congeneric indicators with loadings \(1.0\), \(0.8\), \(0.7\), and
-\(0.6\). Figure~\ref{fig-model} shows the population model, where the
-measurement and structural misspecifications studied below are drawn in
-gray.
+\(b = 0.5\), and \(c' = 0.15\), with \(\operatorname{Cor}(X, W) = 0.3\).
+The interaction coefficient \(a_3\) is a design factor (see below).
+These coefficients, together with the structural disturbance variances,
+were chosen so that under the baseline condition (normal exogenous
+predictors and a correctly specified model) each dependent latent
+variable has \(R^2 \approx 0.30\) at the interaction level
+\(a_3 = 0.20\). Also note that, because \(a_3\) contributes to the
+variance of \(M\), the explained variance is naturally higher with a
+larger \(a_3\) and lower when its effect is null. Each latent variable
+is measured by four congeneric indicators with loadings \(1.0\),
+\(0.8\), \(0.7\), and \(0.6\). Figure~\ref{fig-model} shows the
+population model, where the measurement and structural misspecifications
+studied below are drawn in gray.
 
 \begin{figure}[!htbp]
 
@@ -522,7 +525,7 @@ covariance). Gray elements are the misspecifications present in the
 population but omitted from the fitted model: two in the structural
 part, an omitted moderator effect on the outcome (\(c_2\)) and an
 omitted moderated direct effect (\(c_3\)); and two in the measurement
-part, an omitted cross-loading of \(X\) on \(m_3\) (cl) and an omitted
+part, an omitted cross-loading of \(m_3\) on \(X\) (cl) and an omitted
 residual covariance between \(m_3\) and \(y_3\) (rc). Residual variances
 and intercepts are not shown.
 
@@ -673,7 +676,7 @@ Relative RMSE & $\tfrac{1}{|\theta|}\sqrt{\tfrac{1}{K}\sum_{k=1}^{K}(\hat\theta_
 \textit{Standard errors} &  & \\
 Mean SE & $\overline{SE}=\tfrac{1}{K}\sum_{k=1}^{K}\widehat{SE}_k$ & ---\\
 SE/SD ratio & $\overline{SE}/S_{\hat\theta}$ & ---\\
-Relative bias of variance estimator & $\nu=\overline{SE^2}/S_{\hat\theta}^2$ & $\sqrt{\tfrac{K-1}{K}\sum_{j=1}^{K}(\nu_{(j)}-\nu)^2}$\\
+SE$^2$/VAR ratio & $\nu=\overline{SE^2}/S_{\hat\theta}^2$ & $\sqrt{\tfrac{K-1}{K}\sum_{j=1}^{K}(\nu_{(j)}-\nu)^2}$\\
 \textit{Coverage} &  & \\
 Coverage & $c=\tfrac{1}{K}\sum_{k=1}^{K}I(L_k\le\theta\le U_k)$ & $\sqrt{c(1-c)/K}$\\
 \textit{Hypothesis testing} &  & \\
@@ -692,11 +695,10 @@ root mean square error is
 \(\widehat{SE}_k\) is the estimated standard error (SE),
 \(\overline{SE^2} = \tfrac{1}{K}\sum_k \widehat{SE}_k^2\), and
 \(L_k, U_k\) the confidence-interval limits; \(c\) and \(r\) denote
-coverage and rejection rate, and \(\nu\) the relative bias of the
-variance estimator. The subscript \((j)\) marks a leave-one-out
-jackknife replicate. The MCSEs for relative RMSE and the relative bias
-of the variance estimator are computed by jackknife; the others are
-closed-form, and dashes mark MCSEs that are not computed.
+coverage and rejection rate, and \(\nu\) the SE\(^2\)/VAR ratio. The
+subscript \((j)\) marks a leave-one-out jackknife replicate. The MCSEs
+for relative RMSE and the SE\(^2\)/VAR ratio are computed by jackknife;
+the others are closed-form, and dashes mark MCSEs that are not computed.
 
 \end{table}
 
@@ -774,7 +776,7 @@ biased, following previous research (Brandt et al., 2014; Vieira et al.,
 2026). Under correct specification with normal predictors, all three
 approaches recover both the interaction coefficient and imm without bias
 at every sample size and reliability level, and the same holds under
-uniform and \(t_5\) predictors apart from single LMS cells at
+uniform and \(t_5\) predictors apart from isolated LMS cells at
 \(N = 100\) with low reliability (Figure~\ref{fig-baseline-bias-imm} and
 Figure~\ref{fig-baseline-bias-a3}). Moreover, the \(\chi^2\) conditions
 affect all three approaches, but differently. UPI and LSAM are biased
@@ -826,8 +828,8 @@ reliability.
 
 We interpret SE/SD ratios below 0.90 (underestimation) or above 1.10
 (overestimation) as biased (Brandt et al., 2014; Vieira et al., 2026),
-and similarly for the relative bias of the variance estimator. Note that
-the standard errors for the imm are based on the Monte Carlo method
+and similarly for the SE\(^2\)/VAR ratio. Note that the standard errors
+for the imm are based on the Monte Carlo method
 (Figure~\ref{fig-sesd-imm} and Figure~\ref{fig-sesd-a3}). Under correct
 model specification with normal predictors, the SE/SD ratio of both the
 interaction coefficient and the imm is unbiased, except for UPI, which
@@ -842,12 +844,12 @@ reliability.
 
 Moreover, in general, model misspecification barely alters this pattern.
 The same deviations recur throughout all omissions, with some
-fluctuations. With respect to the relative bias of the variance
-estimator, a similar pattern is observed across most conditions.
-Importantly, however, with \(N = 200\) at both reliability levels, UPI
-yielded overestimated values for both \(\chi^2\) conditions, while LSAM
-showed overestimated values for the opposite-skewness \(\chi^2\)
-(figures available in the project repository).
+fluctuations. With respect to the SE\(^2\)/VAR ratio, a similar pattern
+is observed across most conditions. Importantly, however, with
+\(N = 200\) at both reliability levels, UPI yielded overestimated values
+for both \(\chi^2\) conditions, while LSAM showed overestimated values
+for the opposite-skewness \(\chi^2\) (figures available in the project
+repository).
 
 \subsubsection{Coverage}\label{coverage}
 
@@ -1174,17 +1176,16 @@ moderated structural equations; UPI = unconstrained product indicator; n
 For the twelve freely estimated factor loadings, all but one are
 recovered with acceptable performance across every measure and
 essentially every condition, the exceptions being noisy deviations of
-the relative bias of the variance estimator concentrated at \(N = 100\)
-with low reliability. We display only the loading of the cross-loaded
-mediator indicator \(m_3\), with its relative bias, coverage, SE/SD
-ratio, and relative bias of the variance estimator at high reliability
-and \(N = 500\) (Figure~\ref{fig-load}). For \(m_3\), \texttt{cl} is the
-only consequential misspecification. Its relative bias rises sharply
-under all approaches, less so under LSAM, and its coverage collapses
-toward zero. The two standard error measures stay within the acceptable
-range, except for LSAM under the medium \texttt{cl} with \(t_5\) and
-\(\chi^2\) predictors. The remaining omissions leave the loading
-unaffected.
+the SE\(^2\)/VAR ratio concentrated at \(N = 100\) with low reliability.
+We display only the loading of the cross-loaded mediator indicator
+\(m_3\), with its relative bias, coverage, SE/SD ratio, and SE\(^2\)/VAR
+ratio at high reliability and \(N = 500\) (Figure~\ref{fig-load}). For
+\(m_3\), \texttt{cl} is the only consequential misspecification. Its
+relative bias rises sharply under all approaches, less so under LSAM,
+and its coverage collapses toward zero. The two standard error measures
+stay within the acceptable range, except for LSAM under the medium
+\texttt{cl} with \(t_5\) and \(\chi^2\) predictors. The remaining
+omissions leave the loading unaffected.
 
 \begin{figure}[!htbp]
 
