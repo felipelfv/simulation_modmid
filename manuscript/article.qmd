@@ -57,11 +57,11 @@ author-note:
     for the helpful comments and discussions."
 
 abstract: |
-  Moderated mediation is seldom estimated with latent variables, and its
-  estimation methods have rarely been compared under misspecification. In a
-  preregistered simulation we evaluated three estimation approaches for a 
-  latent moderated mediation model, local structural-after-measurement 
-  (LSAM) and two system-wide methods, across sample size, interaction
+  Moderated mediation is seldom estimated with latent variables, and
+  approaches that can estimate it are rarely compared under misspecification.
+  In a preregistered simulation we evaluated three approaches under a latent
+  moderated mediation model, local structural-after-measurement (LSAM) and
+  two system-wide methods, across sample size, interaction
   magnitude, reliability, predictor distribution, and nine (mis)specification
   conditions. Under correct specification with normal predictors, all recovered
   the interaction coefficient and index of moderated mediation, differing modestly in 
