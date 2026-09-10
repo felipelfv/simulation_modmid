@@ -590,7 +590,7 @@ exogenous distributions were examined, each standardized to mean \(0\)
 and variance \(1\). Thus, the conditions differ only in distributional
 shape, not in scale or location. Specifically, the normal condition
 draws \(X, W \sim \mathcal{N}(0, 1)\) through a forced Gaussian copula,
-whereas the remaining four combine nonnormal margins with a non-Gaussian
+whereas the remaining four combine nonnormal margins with the Clayton
 copula: uniform, \(t_5\), and two \(\chi^2(2)\) conditions in which
 \(X\) and \(W\) are skewed in the same or in opposite directions. Then,
 \(M\) and \(Y\) were generated from the structural equations above with
@@ -1897,8 +1897,10 @@ the same-direction condition both predictors are right-skewed, whereas
 in the opposite-direction condition \(W\) is negated so that \(X\) and
 \(W\) are skewed in opposite directions, with the sampled correlation
 sign flipped to restore \(\operatorname{Cor}(X, W) = \rho\). In every
-condition, VITA constructed a vine copula to impose \(\Phi\) while
-preserving the marginals.
+condition, VITA constructed a vine copula (Gaussian under the normal
+condition, Clayton otherwise) to impose the target correlation while
+preserving the marginals, with the \(t_5\) and \(\chi^2\) draws
+standardized afterwards as described.
 
 \subsubsection{Stage II: Structural
 model}\label{stage-ii-structural-model}
