@@ -17,7 +17,7 @@ execute:
 This document explains, in the order things actually happen, what the 
 calibration and the data generation do. It is split into the population model,
 the calibration step (`calibrate.R`, run once), and the data-generation 
-step (`gen_data` inside `sim_mc.R`, run every replication), because the 
+step (`gen_data` inside `helpers_mc.R`, sourced by `sim_mc.R`, run every replication), because the 
 calibration exists only to supply two tables with values that the data 
 generation then uses and needs.
 
@@ -405,7 +405,7 @@ $$
 The output is a single number. For example, at $\omega = 0.7$, $a_3 = 0.4$, $t = 0.5$
 under the normal distribution, $\operatorname{Var}(X) = 1$,
 $\operatorname{Cov}(X, m_3) = 0.343$, and $\operatorname{Var}(m_3) = 0.946$ give
-$\beta_{cl} \approx 0.687$. At simulation time `gen_data` does not re-solve; it looks up
+$\beta_{cl} \approx 0.686$. At simulation time `gen_data` does not re-solve; it looks up
 this number and builds the indicator with the cross-loading baked in,
 $m_3 = \lambda_3 M + \delta_{m_3} + \beta_{cl} X$.
 
@@ -449,7 +449,7 @@ reliability lands.
 
 Therefore, in the code, 
 the output is two nested tables saved together as `list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios)` in
-`results/calibration.rds`. They act at two different layers of the model: `misspec_coefs`
+`calibration/calibration_results.rds`, copied to `results/calibration.rds` before the simulation runs. They act at two different layers of the model: `misspec_coefs`
 supplies the coefficients that *create* the misspecification in the data equations,
 while `vy_ratios` supplies the ratio that only *rescales the $Y$ indicator noise*,
 
