@@ -70,7 +70,7 @@ metric_spec <- list(
   rel_rmse = list(lab = "Relative RMSE", mcse = "rel_rmse_mcse", band = NULL,             ref = 0),
   coverage = list(lab = "Coverage",      mcse = "coverage_mcse", band = c(0.925, 0.975),  ref = 0.95),
   se_sd    = list(lab = "SE/SD",         mcse = NULL,            band = c(0.90, 1.10),    ref = 1),
-  rel_bias_var = list(lab = "Rel. bias of variance", mcse = "rel_bias_var_mcse", band = c(0.90, 1.10), ref = 1),
+  rel_bias_var = list(lab = "SE²/VAR ratio", mcse = "rel_bias_var_mcse", band = c(0.90, 1.10), ref = 1),
   typeI    = list(lab = "Type I error",  mcse = "reject_mcse",   band = c(0.025, 0.075),  ref = 0.05),
   power    = list(lab = "Power",          mcse = "reject_mcse",   band = NULL,             ref = 0.80)
 )
@@ -136,7 +136,7 @@ fig_baseline_bias <- function(param = "imm", a3v = c(0.2, 0.4)) {
     labs(x = "Sample size (N)", y = m$lab, shape = NULL, linetype = NULL)
 }
 
-# rel. bias of variance, imm and a3 together at one reliability level: distribution
+# SE²/VAR ratio, imm and a3 together at one reliability level: distribution
 # (rows) x parameter x N (cols). high reliability goes in the manuscript, low in the
 # appendix (low-reliability cells blow up under heavy tails and swamp the y-axis).
 fig_relvar_both <- function(a3v = 0.2, rel_lvl = "high") {
@@ -273,7 +273,7 @@ fig_param <- function(metric = "coverage", params = c("a1", "a2", "b", "cp"),
 # (cols), x = misspecification, line + point per method, per-measure band + ref.
 fig_loading_measures <- function(loading = "lm3", a3v = 0.2, nval = 500, rel_lvl = "high") {
   meas_lv  <- c("rel_bias", "coverage", "se_sd", "rel_bias_var")
-  meas_lab <- c("Relative bias", "Coverage", "SE/SD", "Rel. bias of variance")
+  meas_lab <- c("Relative bias", "Coverage", "SE/SD", "SE²/VAR ratio")
   d <- summary_tbl |>
     filter(parameter == loading, a3 == a3v, n == nval, rel == rel_lvl) |>
     mutate(misspec   = factor(misspec, levels = mis_lv, labels = mis_lab),
@@ -353,7 +353,7 @@ for (p in c("imm", "a3"))
                  file.path(plot_dir, sprintf("%s_%s_a3-0.2_byrel.png", p, m)),
                  w = 9.5, h = 8)
 
-# rel. bias of variance: imm + a3 in one panel (wide -> rotated); high reliability
+# SE²/VAR ratio: imm + a3 in one panel (wide -> rotated); high reliability
 # in the manuscript, low reliability in the appendix (the low-reliability cells blow
 # up under heavy-tailed predictors and would swamp the shared y-axis)
 for (rl in c("high", "low"))
