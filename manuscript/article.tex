@@ -673,7 +673,7 @@ Relative RMSE & $\tfrac{1}{|\theta|}\sqrt{\tfrac{1}{K}\sum_{k=1}^{K}(\hat\theta_
 \textit{Standard errors} &  & \\
 Mean SE & $\overline{SE}=\tfrac{1}{K}\sum_{k=1}^{K}\widehat{SE}_k$ & ---\\
 SE/SD ratio & $\overline{SE}/S_{\hat\theta}$ & ---\\
-Relative bias of variance estimator & $\rho=\overline{SE^2}/S_{\hat\theta}^2$ & $\sqrt{\tfrac{K-1}{K}\sum_{j=1}^{K}(\rho_{(j)}-\rho)^2}$\\
+Relative bias of variance estimator & $\nu=\overline{SE^2}/S_{\hat\theta}^2$ & $\sqrt{\tfrac{K-1}{K}\sum_{j=1}^{K}(\nu_{(j)}-\nu)^2}$\\
 \textit{Coverage} &  & \\
 Coverage & $c=\tfrac{1}{K}\sum_{k=1}^{K}I(L_k\le\theta\le U_k)$ & $\sqrt{c(1-c)/K}$\\
 \textit{Hypothesis testing} &  & \\
@@ -692,7 +692,7 @@ root mean square error is
 \(\widehat{SE}_k\) is the estimated standard error (SE),
 \(\overline{SE^2} = \tfrac{1}{K}\sum_k \widehat{SE}_k^2\), and
 \(L_k, U_k\) the confidence-interval limits; \(c\) and \(r\) denote
-coverage and rejection rate, and \(\rho\) the relative bias of the
+coverage and rejection rate, and \(\nu\) the relative bias of the
 variance estimator. The subscript \((j)\) marks a leave-one-out
 jackknife replicate. The MCSEs for relative RMSE and the relative bias
 of the variance estimator are computed by jackknife; the others are
@@ -701,18 +701,18 @@ closed-form, and dashes mark MCSEs that are not computed.
 \end{table}
 
 Inference for the imm followed the Monte Carlo method as mentioned
-before: for \(r = 1, \dots, R\) (with \(R = 20{,}000\)) we drew
+before: for \(d = 1, \dots, D\) (with \(D = 20{,}000\)) we drew
 
 \[
-\bigl(a_3^{(r)}, b^{(r)}\bigr) \sim
+\bigl(a_3^{(d)}, b^{(d)}\bigr) \sim
 \mathcal{N}_2\!\bigl((\hat a_3, \hat b),\, \hat\Sigma_{a_3 b}\bigr),
 \qquad
-\mathrm{imm}^{(r)} = a_3^{(r)}\, b^{(r)},
+\mathrm{imm}^{(d)} = a_3^{(d)}\, b^{(d)},
 \]
 
 where \(\hat\Sigma_{a_3 b}\) is the estimated covariance of
 \((\hat a_3, \hat b)\), and took the \(2.5\)th and \(97.5\)th empirical
-percentiles of \(\{\mathrm{imm}^{(r)}\}_{r=1}^{R}\) as the interval. The
+percentiles of \(\{\mathrm{imm}^{(d)}\}_{d=1}^{D}\) as the interval. The
 structural coefficients and loadings use Wald-based intervals from the
 same estimated covariance matrix of the parameter estimates.
 
