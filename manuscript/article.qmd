@@ -586,8 +586,8 @@ All analyses were conducted in R [@RCoreTeam] using the *lavaan* [@Rosseel2012]
 and *modsem* [@Slupphaug2025] packages for estimation, *covsim* [@Gronneberg2022]
 and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
 [@Joshi2025] for performance evaluation. Conditions were run in parallel with 
-the *parallel* package. Reproducible and independent random-number streams 
-across workers were obtained with the L'Ecuyer-CMRG generator. 
+the *parallel* package. Reproducible and independent random-number streams were obtained with the 
+L'Ecuyer-CMRG generator. 
 The computational environment was pinned with Nix [@dolstra_etall_2004] via the 
 *rix* package [@rix] to ensure reproducibility, and the article was 
 written with the *apaquarto* extension [@apaquarto]. For the R version, package 
