@@ -11,6 +11,9 @@
 # normal condition uses a forced Gaussian copula (clean reference); the four
 # non-normal conditions use vita's default (clayton-first) — so they vary the
 # marginals while keeping a consistent non-normal joint dependence.
+# ideally, we should have prespecified the copula family. but after the
+# simulation, i double checked and we always had a clayton, which is the
+# initial family attempted by vita.
 gen_exo <- function(n, distr_exo) {
   if (distr_exo == "normal") {
     # truly bivariate normal baseline: force gaussian copula
