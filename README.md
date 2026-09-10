@@ -20,7 +20,7 @@ for 1,000 replications.
 manuscript, figures, and other non-code content are licensed under a [Creative
 Commons Attribution 4.0 International License (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
 This project and the preregistration for it are archived at
-<https://doi.org/10.5281/zenodo.20703258>.</sub>
+<https://doi.org/10.5281/zenodo.20703257>.</sub>
 
 ## Repository Structure
 

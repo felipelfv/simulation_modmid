@@ -45,7 +45,7 @@ author-note:
   disclosures:
     study-registration: "This study was preregistered."
     data-sharing: "The preregistration, data, code, and materials for this 
-    manuscript can be found at <https://doi.org/10.5281/zenodo.20703258>."
+    manuscript can be found at <https://doi.org/10.5281/zenodo.20703257>."
     conflict-of-interest: "The authors report there are no competing interests 
     to declare. Generative AI (Claude, Anthropic) was used to assist with 
     language editing and for creating the figures. All content was reviewed and 
