@@ -47,8 +47,9 @@ author-note:
     data-sharing: "The preregistration, data, code, and materials for this 
     manuscript can be found at <https://doi.org/10.5281/zenodo.20703257>."
     conflict-of-interest: "The authors report there are no competing interests 
-    to declare. Generative AI (Claude, Anthropic) was used to assist with 
-    language editing and for creating the figures. All content was reviewed and 
+    to declare. Generative AI (Claude Opus 5, Anthropic) was used to assist with 
+    language editing and to write the R code for the figures, to speed up 
+    figure production as an initial code was already available. All content was reviewed and 
     approved by the authors."
     financial-support: "This project was funded by the Special Research Fund
     (BOF) of Ghent University (BOF/24J/2023/144)."
