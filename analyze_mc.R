@@ -6,10 +6,12 @@
 # convergence is judged on all estimated parameters: the structural paths of
 # interest (poi = a1, a2, a3, b, cp, imm) plus the 12 free loadings. two
 # criteria, each reported and each producing its own metrics:
-# soft   : any est/se/ci (any parameter) is NA/NaN/Inf.
+# soft   : the optimizer reported nonconvergence, OR any est/se/ci (any
+# parameter) is NA/NaN/Inf.
 # strict : soft, OR an inadmissible solution flagged at fit time in sim_mc.R
 # (neg_theta = residual variance <= 0; npd_psi = non-PD factor cov).
-# warnings are counted (n_warn_method) but do NOT exclude.
+# warnings are counted (n_warn_method) but do NOT exclude. so are converged fits
+# whose hessian at the solution is not positive definite (n_npd_info).
 
 # exclusion follows the per-method-then-global pattern of Results(1).R:
 # - per-method counts (n_conv_method, n_outlier_method) are kept BEFORE the
@@ -50,7 +52,8 @@ is_bad <- function(x) is.na(x) | is.nan(x) | is.infinite(x)
 conv <- estimates |>
   group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
   summarise(
-    soft_nonconv = any(is_bad(est) | is_bad(se) | is_bad(ci_lo) | is_bad(ci_hi)),
+    soft_nonconv = any(converged %in% FALSE | is_bad(est) | is_bad(se) | is_bad(ci_lo) | is_bad(ci_hi)),
+    npd_info     = !soft_nonconv & any(min_eig_info <= 0, na.rm = TRUE),   # reported, not excluded
     inadmissible = any(neg_theta %in% TRUE) | any(npd_psi %in% TRUE),
     warned       = any(!is.na(warnings)),
     .groups = "drop") |>
@@ -130,6 +133,7 @@ process <- function(criterion) {
     group_by(across(all_of(c(cond_keys, "method")))) |>
     summarise(n_total       = n(),
               n_conv_method  = sum(!.data[[nonconv_col]]),
+              n_npd_info     = sum(npd_info),
               n_warn_method  = sum(warned),
               .groups = "drop") |>
     mutate(conv_rate_method = n_conv_method / n_total)

@@ -175,6 +175,15 @@ safe_admis <- function(expr) {
   res
 }
 
+# convergence diagnostics, separate from admissibility: the optimizer's verdict
+# and the smallest eigenvalue of the hessian at the solution (positive = minimum).
+# both packages return finite estimates even when converged is FALSE.
+conv_diag <- function(converged, ...) {
+  eig <- function(H) tryCatch(min(eigen(H, symmetric = TRUE, only.values = TRUE)$values),
+                              error = function(e) NA_real_)
+  list(converged = isTRUE(converged), min_eig_info = min(vapply(list(...), eig, numeric(1))))
+}
+
 # estimation per method
 # any error bubbles up to try_with_warnings in work_for_condition, where the
 # message is captured into the `warnings` column and an NA row is produced.
@@ -189,7 +198,9 @@ fit_lsam <- function(data) {
   # remove.step1 as FALSE is important for the implausible checks
   pe <- lavaan::parameterEstimates(fit, remove.step1 = FALSE)
   adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y","X:W")))
-  list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
+  # local sam does not minimize the joint objective, so the hessian is the step-2 structural fit's
+  cv <- conv_diag(lavInspect(fit, "converged"), lavInspect(fit@internal$sam.struc.fit.object, "hessian"))
+  c(list(co = co, V = V), adm, cv)
 }
 
 fit_lms <- function(data) {
@@ -199,7 +210,8 @@ fit_lms <- function(data) {
   co <- coef(fit)
   pe <- parameter_estimates(fit)
   adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","M","Y")))
-  list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
+  cv <- conv_diag(fit$convergence, fit$FIM)
+  c(list(co = co, V = V), adm, cv)
 }
 
 fit_dblcent <- function(data) {
@@ -210,7 +222,8 @@ fit_dblcent <- function(data) {
   # dblcent introduces an extra XW latent from product indicators
   pe <- parameter_estimates(fit)
   adm <- safe_admis(admis_from_pe(pe, latents = c("X","W","XW","M","Y")))
-  list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
+  cv <- conv_diag(lavInspect(fit$lavaan, "converged"), lavInspect(fit$lavaan, "hessian"))
+  c(list(co = co, V = V), adm, cv)
 }
 
 # fsr: uncorrected factor score regression with Bartlett scores (the "Bartlett
@@ -239,7 +252,9 @@ fit_fsr <- function(data) {
   V[names(co_cf)[keep], names(co_cf)[keep]] <- vcov(cf)[keep, keep]
   adm <- safe_admis(admis_from_pe(lavaan::parameterEstimates(cf),
                                   latents = c("X", "W", "M", "Y")))
-  list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
+  cv <- conv_diag(lavInspect(cf, "converged") && lavInspect(st, "converged"),
+                  lavInspect(cf, "hessian"), lavInspect(st, "hessian"))
+  c(list(co = co, V = V), adm, cv)
 }
 
 methods <- list(lsam = fit_lsam,
@@ -302,6 +317,7 @@ work_for_condition <- function(i, r) {
                         est = NA_real_, se = NA_real_,
                         ci_lo = NA_real_, ci_hi = NA_real_,
                         neg_theta = NA, npd_psi = NA,
+                        converged = NA, min_eig_info = NA_real_,
                         warnings = warn_stored$warnings,
                         method = m, stringsAsFactors = FALSE))
     }
@@ -315,6 +331,8 @@ work_for_condition <- function(i, r) {
                ci_hi = unname(res$hi),
                neg_theta = fitted$neg_theta,
                npd_psi = fitted$npd_psi,
+               converged = fitted$converged,
+               min_eig_info = fitted$min_eig_info,
                warnings = warn_stored$warnings,
                method = m,
                stringsAsFactors = FALSE)
@@ -331,7 +349,7 @@ work_for_condition <- function(i, r) {
   rows$rep <- r
   rows$true_value <- truth[rows$parameter]
   rows <- rows[, c("condition","n","a3","rel","distr_exo","misspec","rep","method","parameter",
-                   "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi",
+                   "true_value","est","se","ci_lo","ci_hi","neg_theta","npd_psi","converged","min_eig_info",
                    "warnings")]
 
   # dataset-level metrics: one row per (condition, rep)
