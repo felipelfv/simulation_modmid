@@ -101,20 +101,20 @@ The manuscript embeds the figures from `plots/` directly (via
 
 The pipeline runs in three stages, each consuming the previous stage's output.
 Two prerequisites come first and their results are committed. `calibration/copulas.R`
-builds the exogenous populations once: for every distribution and copula family it
-solves the copula parameter so that Cor(X, W) = 0.3 exactly (the correlation is
-computed by numerical integration over the copula, not by simulation), verifies the
-saved object on an independent draw, and stores the vines in `calibration/vines.rds`.
-Every replication of the simulation then draws from these fixed populations, so a
-cell has one population rather than a fresh calibration per replication.
+builds the exogenous populations once with the VITA algorithm (`covsim::vita`,
+Grønneberg & Foldnes, 2017): for every distribution and copula family it runs vita
+with a fixed seed to find the pair-copula parameter that gives Cor(X, W) = 0.3,
+checks that the selected rotation is the expected one, verifies the saved object on
+an independent draw, and stores the vines in `calibration/vines.rds`. Every
+replication of the simulation then draws from these fixed populations, so a cell
+has one population rather than a fresh vita calibration per replication.
 `calibration/calibrate.R` reads the same vines, computes the population moments of
-X and W exactly by the same integration, derives the misspecification coefficients
-and the Y-variance ratios from them in closed form, and writes
-`calibration/calibration_results.rds`, which `sim_mc.R` reads from
-`results_main/calibration.rds`, so copy it there first. Neither prerequisite
-involves random draws, so both are deterministic. If `rho`, the degrees of
-freedom or the margins change, rerun `copulas.R`, then `calibrate.R`, then the
-simulation.
+X and W by numerical integration of the saved pair-copula density, derives the
+misspecification coefficients and the Y-variance ratios from them in closed form,
+and writes `calibration/calibration_results.rds`, which `sim_mc.R` reads from
+`results_main/calibration.rds`, so copy it there first. If `rho`, the degrees of
+freedom, the margins or the vita seed change, rerun `copulas.R`, then
+`calibrate.R`, then the simulation.
 
 ### Step 1: Run the simulation
 

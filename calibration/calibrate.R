@@ -4,13 +4,15 @@
 # uses to hold Y reliability at its baseline under c2 / c3. the derivation of the
 # standardized-size definition is in calibration_explanation.qmd.
 
-# the population moments are computed exactly. the three mixed moments of the
-# standardized exogenous variables, E[X^2 W], E[X W^2] and E[X^2 W^2], are
-# integrals over the unit square of the quantile functions against the copula
-# density (vines.rds, built by copulas.R), evaluated by nested adaptive
-# quadrature. every variance and covariance of M and Y then follows from the
-# structural equations. no simulation is involved, so the result is
-# deterministic. the normal cell has closed forms, which the script checks.
+# the population moments are computed by numerical integration of the saved
+# populations (vines.rds, built once by copulas.R with vita). the three mixed
+# moments of the standardized exogenous variables, E[X^2 W], E[X W^2] and
+# E[X^2 W^2], are integrals over the unit square of the quantile functions
+# against the pair-copula density, evaluated by nested adaptive quadrature.
+# every variance and covariance of M and Y then follows from the structural
+# equations. no simulation is involved here, so for a given vines.rds the
+# result is deterministic. the normal cell has closed forms, which the script
+# checks against the gaussian parameter vita stored in that vine.
 
 library(rvinecopulib)
 
@@ -83,9 +85,11 @@ exo_moments <- function(cell) {
 misspec_coefs <- list(); vy_ratios <- list(); moments <- list()
 for (de in c("normal", "uniform", "t5", "chisq_same", "chisq_diff")) {
   mo <- exo_moments(de)
-  if (de == "normal")   # closed forms under bivariate normality check the integration
-    stopifnot(abs(mo[["xw"]] - rho) < 1e-6, abs(mo[["x2w"]]) < 1e-6,
-              abs(mo[["xw2"]]) < 1e-6, abs(mo[["x2w2"]] - (1 + 2*rho^2)) < 1e-6)
+  if (de == "normal") { # closed forms under bivariate normality check the integration
+    r_vine <- vines$normal$copula$pair_copulas[[1]][[1]]$parameters[1]
+    stopifnot(abs(mo[["xw"]] - r_vine) < 1e-6, abs(mo[["x2w"]]) < 1e-6,
+              abs(mo[["xw2"]]) < 1e-6, abs(mo[["x2w2"]] - (1 + 2*r_vine^2)) < 1e-6)
+  }
   r <- mo[["xw"]]; var_p <- mo[["x2w2"]] - r^2; cov_xp <- mo[["x2w"]]; cov_wp <- mo[["xw2"]]
   moments[[de]] <- c(mo, var_p = var_p)
   cat(sprintf("%-10s E[XW] %.6f  E[X2W] %+.5f  E[XW2] %+.5f  E[X2W2] %.5f\n",
