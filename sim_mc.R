@@ -13,7 +13,7 @@
 # then we should have 1 block for all latent variables
 
 library(modsem); library(lavaan)
-library(covsim); library(rvinecopulib)
+library(rvinecopulib)
 
 master_seed <- 1234L; RNGkind("L'Ecuyer-CMRG"); set.seed(master_seed)
 
@@ -21,7 +21,12 @@ r_per_condition  <- 1000L # (!)
 m_mc <- 20000L # justification for the indirect effect mc (?)
 n_cores <- max(1L, parallel::detectCores(logical = FALSE) - 1L)
 direc <- "."
-results_dir <- file.path(direc, "results")
+
+# copula robustness run (see README). FALSE is the main run. TRUE repeats the four
+# nonnormal exogenous distributions with a gaussian copula instead of the clayton
+# copula and writes to results_robustness/ instead of results_main/.
+copula_robustness <- FALSE
+results_dir <- file.path(direc, if (copula_robustness) "results_robustness" else "results_main")
 dir.create(results_dir, showWarnings = FALSE)
 
 # population and measurement model
@@ -75,12 +80,19 @@ misspec_specs <- list(
   rescov_medium    = list(c2 = 0,    c3 = 0,    cl = 0,    rcov = 0.50)
 )
 
+# fixed exogenous populations built once by calibration/copulas.R. exo_family
+# selects the copula set: "clayton" for the main run, "gaussian" for the
+# copula robustness run. the normal condition is shared.
+vines      <- readRDS(file.path(direc, "calibration", "vines.rds"))$vines
+exo_family <- if (copula_robustness) "gaussian" else "clayton"
+
 # design grid (full factorial)
 design <- expand.grid(
   n = c(100, 200, 300, 500),
   a3 = c(0, 0.20, 0.40),
   rel = c("low", "high"),
-  distr_exo = c("normal", "uniform", "t5", "chisq_same", "chisq_diff"),
+  distr_exo = if (copula_robustness) c("uniform", "t5", "chisq_same", "chisq_diff")
+              else c("normal", "uniform", "t5", "chisq_same", "chisq_diff"),
   misspec = names(misspec_specs),
   stringsAsFactors = FALSE
 )

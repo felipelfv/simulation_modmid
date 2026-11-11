@@ -6,8 +6,8 @@
 library(dplyr); library(ggplot2)
 
 # summary.rds / rejection carry both soft and strict criteria; the paper uses soft.
-summary_tbl <- readRDS(file.path("results", "summary.rds")) |> filter(criterion == "soft")
-rej_tbl     <- readRDS(file.path("results", "rejection_imm_a3.rds")) |> filter(criterion == "soft")
+summary_tbl <- readRDS(file.path("results_main", "summary.rds")) |> filter(criterion == "soft")
+rej_tbl     <- readRDS(file.path("results_main", "rejection_imm_a3.rds")) |> filter(criterion == "soft")
 plot_dir    <- "plots"
 dir.create(plot_dir, showWarnings = FALSE)
 unlink(list.files(plot_dir, pattern = "\\.png$", full.names = TRUE))
@@ -47,12 +47,12 @@ prep_factors <- function(d) {
     distr_exo = factor(distr_exo, levels = dis_lv),
     rel       = factor(rel, levels = c("low", "high"),
                        labels = c("Reliability: low", "Reliability: high")),
-    method    = factor(method, levels = c("lsam", "lms", "dblcent"), labels = c("LSAM", "LMS", "UPI")))
+    method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"), labels = c("LSAM", "LMS", "UPI", "FSR")))
 }
 
-method_shapes <- c(LSAM = 16, LMS = 17, UPI = 15)
-method_lines  <- c(LSAM = "solid", LMS = "dashed", UPI = "dotdash")
-method_fills  <- c(LSAM = "grey25", LMS = "grey55", UPI = "grey85")
+method_shapes <- c(LSAM = 16, LMS = 17, UPI = 15, FSR = 18)
+method_lines  <- c(LSAM = "solid", LMS = "dashed", UPI = "dotdash", FSR = "dotted")
+method_fills  <- c(LSAM = "grey25", LMS = "grey55", UPI = "grey85", FSR = "white")
 
 # shared facet + scale + theme layers; caller may override the facet
 apa_grid <- function(facets = facet_grid(distr_exo ~ rel + n,
@@ -239,7 +239,7 @@ fig_param <- function(metric = "coverage", params = c("a1", "a2", "b", "cp"),
     mutate(misspec   = factor(misspec, levels = mis_lv, labels = mis_lab),
            distr_exo = factor(distr_exo, levels = dis_lv),
            parameter = factor(parameter, levels = params),
-           method    = factor(method, levels = c("lsam", "lms", "dblcent"), labels = c("LSAM", "LMS", "UPI")))
+           method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"), labels = c("LSAM", "LMS", "UPI", "FSR")))
   if (metric == "rel_bias_var") d <- filter(d, rel_bias_var <= 10)
   p <- ggplot(d, aes(misspec, .data[[metric]], shape = method, linetype = method, group = method))
   if (!is.null(m$band))
@@ -278,7 +278,7 @@ fig_loading_measures <- function(loading = "lm3", a3v = 0.2, nval = 500, rel_lvl
     filter(parameter == loading, a3 == a3v, n == nval, rel == rel_lvl) |>
     mutate(misspec   = factor(misspec, levels = mis_lv, labels = mis_lab),
            distr_exo = factor(distr_exo, levels = dis_lv),
-           method    = factor(method, levels = c("lsam", "lms", "dblcent"), labels = c("LSAM", "LMS", "UPI"))) |>
+           method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"), labels = c("LSAM", "LMS", "UPI", "FSR"))) |>
     tidyr::pivot_longer(all_of(meas_lv), names_to = "measure", values_to = "value") |>
     filter(!(measure == "rel_bias_var" & value > 10)) |>
     mutate(measure = factor(measure, levels = meas_lv, labels = meas_lab))

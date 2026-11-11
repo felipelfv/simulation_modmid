@@ -6,9 +6,9 @@
 # convergence is judged on all estimated parameters: the structural paths of
 # interest (poi = a1, a2, a3, b, cp, imm) plus the 12 free loadings. two
 # criteria, each reported and each producing its own metrics:
-#   soft   : any est/se/ci (any parameter) is NA/NaN/Inf.
-#   strict : soft, OR an inadmissible solution flagged at fit time in sim_mc.R
-#            (neg_theta = residual variance <= 0; npd_psi = non-PD factor cov).
+# soft   : any est/se/ci (any parameter) is NA/NaN/Inf.
+# strict : soft, OR an inadmissible solution flagged at fit time in sim_mc.R
+# (neg_theta = residual variance <= 0; npd_psi = non-PD factor cov).
 # warnings are counted (n_warn_method) but do NOT exclude.
 
 # exclusion follows the per-method-then-global pattern of Results(1).R:
@@ -28,12 +28,14 @@
 
 library(dplyr); library(simhelpers)
 
-results_dir <- "results"
+# TRUE summarises the gaussian-copula robustness run instead of the main run.
+copula_robustness <- FALSE
+results_dir <- if (copula_robustness) "results_robustness" else "results_main"
 
 estimates <- readRDS(file.path(results_dir, "estimates_mc.rds"))
 
 cond_keys     <- c("condition", "n", "a3", "rel", "distr_exo", "misspec")
-methods_all   <- c("lsam", "lms", "dblcent")
+methods_all   <- c("lsam", "lms", "dblcent", "fsr")
 n_methods_all <- length(methods_all)
 poi           <- c("a1", "a2", "a3", "b", "cp", "imm")  # structural paths of interest
 
@@ -44,7 +46,7 @@ se_max        <- 10
 
 is_bad <- function(x) is.na(x) | is.nan(x) | is.infinite(x)
 
-# --- per (condition, method, rep) convergence flags ---------------------------
+# per (condition, method, rep) convergence flags 
 conv <- estimates |>
   group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
   summarise(
@@ -71,7 +73,7 @@ rep_conv <- conv |>
     strict_global = all_present & !any(strict_nonconv),
     .groups = "drop")
 
-# --- summary helpers (unchanged) ---------------------------------------------
+# summary helpers (unchanged) 
 # one row per (condition x method x parameter). rel_bias subtracts 1 from
 # simhelpers' ratio (0-centered, MCSE unchanged); relative measures fall back to
 # absolute at true == 0.
@@ -115,7 +117,7 @@ calc_reject <- function(df) {
   tibble(reject = 1 - cov$coverage, reject_mcse = cov$coverage_mcse, n_used = nrow(df))
 }
 
-# --- per-criterion pipeline ---------------------------------------------------
+# per-criterion pipeline 
 # builds, for one criterion: the convergence/outlier report (counts), the metric
 # summary, and the rejection table. exclusion is global; per-method counts are
 # captured before the global step so they stay informative.

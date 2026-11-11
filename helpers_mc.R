@@ -1,75 +1,37 @@
 # machinery for sim_mc.R: data generation, mc/wald inference, admissibility
-# checks, the three estimators, and the per-rep / per-condition workers.
+# checks, the four estimators, and the per-rep / per-condition workers.
 # these functions read config globals (model_lv, pars, design, misspec_specs,
 # misspec_coefs, vy_ratios, r_per_condition, results_dir, ...) at call time,
 # so sim_mc.R must define config and source() this file before running the loop.
 
 # data generation
-# every distr_exo (normal, uniform, t5, chisq) is standardized to
-# mean = 0 and variance = 1, so that differences across branches come from
-# distribution shape, not from scale or location.
-# normal condition uses a forced Gaussian copula (clean reference); the four
-# non-normal conditions use vita's default (clayton-first) — so they vary the
-# marginals while keeping a consistent non-normal joint dependence.
-# ideally, we should have prespecified the copula family. but after the
-# simulation, i double checked and we always had a clayton, which is the
-# initial family attempted by vita.
+# X and W are drawn from the fixed vine distributions built once by
+# calibration/copulas.R and saved in calibration/vines.rds (loaded in sim_mc.R
+# as `vines`). each vine fixes the margins, the copula family, its rotation and
+# its parameter, calibrated so that Cor(X, W) = rho. every replication in a cell
+# therefore samples the same population.
+# exo_family ("clayton" in the main run, "gaussian" in the copula robustness
+# run) selects the set. the normal condition is the bivariate normal in both.
+# every distr_exo is standardized to mean 0 and variance 1 afterwards, so that
+# differences across branches come from distribution shape, not scale or location.
 gen_exo <- function(n, distr_exo) {
-  if (distr_exo == "normal") {
-    # truly bivariate normal baseline: force gaussian copula
-    sigma <- matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "norm", mean = 0, sd = 1)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
-                       family_set = "gauss", cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd)
-    return(list(x = e[, 1], w = e[, 2]))
-  }
-  if (distr_exo == "uniform") {
-    sigma <- matrix(c(1, rho, rho, 1), 2, 2)
-    # note: var(U(a,b)) = (b-a)^2 / 12. we have a symmetry constrain: a = -b
-    # this for the mean 0, var 1
-    # thus U{-sqrt(3),sqrt(3)} has var = 1
-    margin <- list(distr = "unif", min = -sqrt(3), max = sqrt(3)) # bounded -+ sqrt(3)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
-                       cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd)
-    return(list(x = e[, 1], w = e[, 2]))
-  }
+  vd <- if (distr_exo == "normal") vines$normal else vines[[exo_family]][[distr_exo]]
+  e  <- rvinecopulib::rvine(n, vine = vd)
+  x <- e[, 1]; w <- e[, 2]
   if (distr_exo == "t5") {
-    # t is symmetric so mean = 0 is free, but var(t) = t_df / (t_df - 2)
-    # for t5 that is 5/3, not 1
-    # strategy:
-    # target the covariance at the native scale
-    # (diag = nat_var, off-diag = nat_var * rho,
-    # so the implied correlation is still rho), then divide by
-    # sqrt(nat_var) at the end. correlation is scale-invariant so cor stays at
-    # rho, and the heavy tails are preserved
-    nat_var <- t_df / (t_df - 2)
-    sigma <- nat_var * matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "t", df = t_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
-                       cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd)
-    return(list(x = e[, 1] / sqrt(nat_var), w = e[, 2] / sqrt(nat_var)))
+    # var(t) = df / (df - 2), so divide by that sd. correlation is scale-invariant
+    nat_sd <- sqrt(t_df / (t_df - 2))
+    x <- x / nat_sd; w <- w / nat_sd
   }
   if (distr_exo %in% c("chisq_same", "chisq_diff")) {
-    # chisq has mean = chi_df and var = 2*chi_df (= nat_var), so unlike unif and t
-    # we need both centering and scaling
-    # strategy: sample at native scale, then subtract chi_df (mean) and divide
-    # by sqrt(nat_var) (sd) to standardize
-    rho_in <- if (distr_exo == "chisq_same") rho else -rho
-    nat_var <- 2 * chi_df
-    sigma <- nat_var * matrix(c(1, rho_in, rho_in, 1), 2, 2)
-    margin <- list(distr = "chisq", df = chi_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, Nmax = 10^6,
-                       cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd)
-    x <- (e[, 1] - chi_df) / sqrt(nat_var)
-    w <- (e[, 2] - chi_df) / sqrt(nat_var)
+    # chisq has mean = df and var = 2 df, so center and scale
+    x <- (x - chi_df) / sqrt(2 * chi_df)
+    w <- (w - chi_df) / sqrt(2 * chi_df)
+    # the chisq_diff vine has Cor(X, W) = -rho. negating W gives +rho with W
+    # skewed in the opposite direction
     if (distr_exo == "chisq_diff") w <- -w
-    return(list(x = x, w = w))
   }
-  stop("not specified: ", distr_exo)
+  list(x = x, w = w)
 }
 
 gen_data <- function(n, a3_true, rel_key, distr_exo, misspec_key = "none") {
@@ -251,9 +213,39 @@ fit_dblcent <- function(data) {
   list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
 }
 
+# fsr: uncorrected factor score regression with Bartlett scores (the "Bartlett
+# FSR" of Devlieger, Mayer & Rosseel, 2016; "BAR" in Ng & Chan, 2020).
+# step 1: one CFA of the full measurement model, factors freely correlated. 
+# step 2: Bartlett factor scores for X, W, M, Y, the
+# product of the X and W scores as the interaction, then the two structural
+# equations as a path model on the scores. SEs are the step-2 (ML) SEs, i.e.
+# step-1 uncertainty is ignored. loadings (and their SEs) come from the step-1
+# CFA so that the same 18 parameters are returned as for the other methods.
+# note: the bias-avoiding variant of Skrondal & Laake (2001), and used in 
+# Ng & Chan, 2020 for interactions is not applicable here because 
+# M is both an outcome and a predictor (Devlieger et al., 2016).
+fit_fsr <- function(data) {
+  mm_syntax <- paste(grep("=~", strsplit(model_lv, "\n")[[1]], value = TRUE),
+                     collapse = "\n")
+  cf <- lavaan::cfa(mm_syntax, data = data)
+  fs <- as.data.frame(lavaan::lavPredict(cf, method = "Bartlett"))
+  fs$XW <- fs$X * fs$W
+  st <- lavaan::sem("M ~ a1*X + a2*W + a3*XW \n Y ~ b*M + cp*X", data = fs)
+  sp <- c("a1", "a2", "a3", "b", "cp")
+  co_cf <- coef(cf); keep <- names(co_cf) %in% load_names
+  co <- c(coef(st)[sp], co_cf[keep])
+  V  <- matrix(0, length(co), length(co), dimnames = list(names(co), names(co)))
+  V[sp, sp] <- vcov(st)[sp, sp]
+  V[names(co_cf)[keep], names(co_cf)[keep]] <- vcov(cf)[keep, keep]
+  adm <- safe_admis(admis_from_pe(lavaan::parameterEstimates(cf),
+                                  latents = c("X", "W", "M", "Y")))
+  list(co = co, V = V, neg_theta = adm$neg_theta, npd_psi = adm$npd_psi)
+}
+
 methods <- list(lsam = fit_lsam,
                 lms = fit_lms,
-                dblcent = fit_dblcent)
+                dblcent = fit_dblcent,
+                fsr = fit_fsr)
 
 # wrapper per replication
 true_value_for <- function(a3v) setNames(c(a1, a2, a3v, b, cp, b * a3v, load_true), pars)
@@ -279,7 +271,7 @@ work_for_condition <- function(i, r) {
                     else NA_character_)
   }
 
-  # gen_data with up to 5 retries. vita can fail on rare rng states
+  # gen_data with up to 5 retries, kept as a guard against rare data failures
   dat <- NULL
   for (attempt in seq_len(5)) {
     attempt_stream <- paste(get(".Random.seed", envir = .GlobalEnv), collapse = ":")

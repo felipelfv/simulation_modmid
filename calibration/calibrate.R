@@ -1,134 +1,117 @@
-library(covsim); library(rvinecopulib)
+# calibration of the misspecification sizes: for every (distribution x a3) cell,
+# the raw coefficient that gives each omitted path a standardized size of 0.25
+# ("small") or 0.50 ("medium"), plus the var(Y) inflation ratios that gen_data()
+# uses to hold Y reliability at its baseline under c2 / c3. the derivation of the
+# standardized-size definition is in calibration_explanation.qmd.
 
-set.seed(20240501L) # clarification to myself: seed does L internally
-n_cal <- 1e6L
+# the population moments are computed exactly. the three mixed moments of the
+# standardized exogenous variables, E[X^2 W], E[X W^2] and E[X^2 W^2], are
+# integrals over the unit square of the quantile functions against the copula
+# density (vines.rds, built by copulas.R), evaluated by nested adaptive
+# quadrature. every variance and covariance of M and Y then follows from the
+# structural equations. no simulation is involved, so the result is
+# deterministic. the normal cell has closed forms, which the script checks.
 
-a1 <- 0.4; a2 <- 0.3; b <- 0.5; cp <- 0.15 
+library(rvinecopulib)
+
+# copula robustness run (see README). FALSE calibrates the main run (clayton
+# populations), TRUE the gaussian-copula populations, each to its own output file.
+copula_robustness <- FALSE
+vines      <- readRDS("vines.rds")$vines
+exo_family <- if (copula_robustness) "gaussian" else "clayton"
+out_file   <- if (copula_robustness) "calibration_results_robustness.rds" else "calibration_results.rds"
+
+a1 <- 0.4; a2 <- 0.3; b <- 0.5; cp <- 0.15
 rho <- 0.3
-loadings <- c(1, 0.8, 0.7, 0.6)
-rel_levels <- list(low = 0.5, high = 0.7)
+lambda3 <- 0.7                     # loading of m3, the indicator that carries the cross-loading
+rel_levels <- c(low = 0.5, high = 0.7)
+res_m_var <- 0.8531                # disturbance psi_M
+res_y_var <- 0.9350                # disturbance psi_Y
+chi_df <- 2L; t_df <- 5L
+sizes <- c(0.25, 0.50)             # standardized misspecification sizes, small and medium
+quad_tol <- 1e-9                   # relative tolerance of each one-dimensional integration
 
-res_m_var <- 0.8531 # disturbance psi_M
-res_y_var <- 0.9350 # disturbance psi_Y
+# error variance of m3 as gen_data() sets it: from the normal-theory var(M),
+# calibrated under normality and held fixed across distributions. the
+# cross-loading calibration must use the same value.
+var_m_normal <- function(a3) a1^2 + a2^2 + 2*a1*a2*rho + a3^2*(1 + rho^2) + res_m_var
+theta3_for   <- function(rel, a3) lambda3^2 * var_m_normal(a3) * (1 - rel) / rel
 
-# var_m_at(a3v) is literally var(S_M) + psi_M
-# the signal variance var(S_M) = a1^2 + a2^2 + 2*a1*a2*rho + a3v^2*(1+rho^2) 
-# R^2_M is 0.30 only at that reference (0.2) and is allowed to drift as a_3
-# and the distribution change
-var_m_at <- function(a3v) { # a3v to avoid clashing with a3 (0,0.2,0.4)
-  a1^2 + a2^2 + 2*a1*a2*rho + a3v^2*(1 + rho^2) + res_m_var
-}
-
-# reliability of indicator j:
-# w_j = signal / (signal + noise) = lambda_j^2·V / (lambda_j^2·V + theta_j)
-# var_eta = 1 as default but not always (!): 
-# mediator M and outcome Y are not standardized
-err_sd_for <- function(target_rel, var_eta = 1) { 
-  loadings * sqrt(var_eta * (1 - target_rel) / target_rel)
-}
-
-# detailed explained behind this function/formula is given in the file:
-# calibration_explanation.qmd
-targets <- c(0.25, 0.50)
-
-# nutshell explanation:
-# we want to add an omitted predictor p to a baseline outcome y_o with some 
-# raw coefficient beta, producing y_o + beta_p. But we dont want to specify beta 
-# directly, we want to specify how big the omission is in standardized terms:
-# t = beta·sd(p) / sd(y_o + beta_p)  
-# thus,  t is what's interpretable across cells ("small" 0.25 or "medium" 0.50), 
-# beta is not. the same beta means wildly different things depending on the variances.
-# So we fix t and solve for the beta that produces it. 
-# That inversion is solve_std
-solve_std <- function(t, m) if (t == 0) 0 else {
-  A <- m$Vp*(1-t^2); B <- -2*t^2*m$C; D <- -t^2*m$V0
+# nutshell explanation (details in calibration_explanation.qmd):
+# we add an omitted predictor p to a baseline outcome y0 with a raw coefficient
+# beta, producing y0 + beta p. we do not specify beta directly, we specify how big
+# the omission is in standardized terms,
+# t = beta·sd(p) / sd(y0 + beta p),
+# because t is what is interpretable across cells ("small" 0.25 or "medium" 0.50)
+# and beta is not. so we fix t and solve for the beta that produces it.
+# mom = list(Vp = Var(p), C = Cov(p, y0), V0 = Var(y0)) describes the clean
+# baseline, before the misspecification term is added.
+solve_std <- function(t, mom) {
+  A <- mom$Vp*(1-t^2); B <- -2*t^2*mom$C; D <- -t^2*mom$V0
   (-B + sqrt(B^2 - 4*A*D)) / (2*A)
 }
+solve_sizes <- function(mom) setNames(sapply(sizes, solve_std, mom = mom), as.character(sizes))
 
-# mom is a named list of three moments describing one misspecification in one cell:
-# mom = list(Vp = <Var(p)>, C = <Cov(p, y0)>, V0 = <Var(y0)>)
-# hence, the mom values are computed on the clean baseline, before the 
-# misspecification term is added
-solve_targets <- function(mom) { 
-  setNames(sapply(targets, solve_std, m = mom), as.character(targets)) 
-} # note to myself: as.character drops the 0 in 0.50 (i.e., 0.5)
+# exact moments of the standardized exogenous variables
+# X = qx(U), W = qw(V) with (U, V) from the cell's copula. the quantile functions
+# are standardized, so E[X] = E[W] = 0 and E[X^2] = E[W^2] = 1. the chisq_diff
+# cell negates W, exactly as gen_exo() does.
+qstd <- list(
+  normal  = function(u) qnorm(u),
+  uniform = function(u) qunif(u, -sqrt(3), sqrt(3)),
+  t5      = function(u) qt(u, t_df) / sqrt(t_df / (t_df - 2)),
+  chisq   = function(u) (qchisq(u, chi_df) - chi_df) / sqrt(2 * chi_df))
 
-chi_df <- 2L; t_df <- 5L
-
-# data generation choices (at the code level) are explained in the main document 
-# see sim_mc.R for more information
-gen_exo <- function(n, distr_exo) {
-  if (distr_exo == "normal") {
-    sigma <- matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "norm", mean = 0, sd = 1)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, 
-                       Nmax = 10^6, family_set = "gauss", cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd, cores = 1)
-    return(list(x = e[, 1], w = e[, 2]))
-  }
-  if (distr_exo == "uniform") {
-    sigma <- matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "unif", min = -sqrt(3), max = sqrt(3))
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, 
-                       Nmax = 10^6, cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd, cores = 1)
-    return(list(x = e[, 1], w = e[, 2]))
-  }
-  if (distr_exo == "t5") {
-    nat_var <- t_df / (t_df - 2)
-    sigma <- nat_var * matrix(c(1, rho, rho, 1), 2, 2)
-    margin <- list(distr = "t", df = t_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, 
-                       Nmax = 10^6, cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd, cores = 1)
-    return(list(x = e[, 1] / sqrt(nat_var), w = e[, 2] / sqrt(nat_var)))
-  }
-  if (distr_exo %in% c("chisq_same", "chisq_diff")) {
-    rho_in <- if (distr_exo == "chisq_same") rho else -rho
-    nat_var <- 2 * chi_df
-    sigma <- nat_var * matrix(c(1, rho_in, rho_in, 1), 2, 2)
-    margin <- list(distr = "chisq", df = chi_df)
-    vd <- covsim::vita(list(margin, margin), sigma, verbose = FALSE, 
-                       Nmax = 10^6, cores = 1)
-    e <- rvinecopulib::rvine(n, vine = vd, cores = 1)
-    x <- (e[, 1] - chi_df) / sqrt(nat_var)
-    w <- (e[, 2] - chi_df) / sqrt(nat_var)
-    if (distr_exo == "chisq_diff") w <- -w
-    return(list(x = x, w = w))
-  }
-  stop("not specified: ", distr_exo)
+moment <- function(bc, qx, qw, px, pw) {
+  inner <- function(u) vapply(u, function(ui) integrate(function(v)
+      qx(ui)^px * qw(v)^pw * dbicop(cbind(rep(ui, length(v)), v), bc),
+      0, 1, rel.tol = quad_tol, subdivisions = 2000L, stop.on.error = FALSE)$value, numeric(1))
+  integrate(inner, 0, 1, rel.tol = quad_tol, subdivisions = 2000L, stop.on.error = FALSE)$value
 }
 
-# might change to a data.frame or something similar as currently things are 
-# arguably disorganized (05/06/26)
-misspec_coefs <- list(); vy_ratios <- list()
+exo_moments <- function(cell) {
+  vd <- if (cell == "normal") vines$normal else vines[[exo_family]][[cell]]
+  bc <- vd$copula$pair_copulas[[1]][[1]]
+  qx <- qstd[[sub("chisq_.*", "chisq", cell)]]
+  qw <- if (cell == "chisq_diff") function(u) -qx(u) else qx
+  c(xw = moment(bc, qx, qw, 1, 1), x2w = moment(bc, qx, qw, 2, 1),
+    xw2 = moment(bc, qx, qw, 1, 2), x2w2 = moment(bc, qx, qw, 2, 2))
+}
+
+# calibration per cell 
+# with P = XW:  M = a1 X + a2 W + a3 P + zeta_M,  Y0 = b M + cp X + eps_Y
+misspec_coefs <- list(); vy_ratios <- list(); moments <- list()
 for (de in c("normal", "uniform", "t5", "chisq_same", "chisq_diff")) {
+  mo <- exo_moments(de)
+  if (de == "normal")   # closed forms under bivariate normality check the integration
+    stopifnot(abs(mo[["xw"]] - rho) < 1e-6, abs(mo[["x2w"]]) < 1e-6,
+              abs(mo[["xw2"]]) < 1e-6, abs(mo[["x2w2"]] - (1 + 2*rho^2)) < 1e-6)
+  r <- mo[["xw"]]; var_p <- mo[["x2w2"]] - r^2; cov_xp <- mo[["x2w"]]; cov_wp <- mo[["xw2"]]
+  moments[[de]] <- c(mo, var_p = var_p)
+  cat(sprintf("%-10s E[XW] %.6f  E[X2W] %+.5f  E[XW2] %+.5f  E[X2W2] %.5f\n",
+              de, r, cov_xp, cov_wp, mo[["x2w2"]]))
   for (a3 in c(0, 0.20, 0.40)) {
-    e <- gen_exo(n_cal, de); x <- e$x; w <- e$w; xw <- x * w
-    m  <- a1*x + a2*w + a3*xw + rnorm(n_cal, sd = sqrt(res_m_var))
-    y0 <- b*m + cp*x+ rnorm(n_cal, sd = sqrt(res_y_var))
-    rc2 <- solve_targets(list(Vp = var(w),  C = cov(w,  y0), V0 = var(y0)))
-    rc3 <- solve_targets(list(Vp = var(xw), C = cov(xw, y0), V0 = var(y0)))
-    # For each beta in rc2, compute k = Var(y0 + βW)/Var(y0). this is the factor by which
-    # adding the omitted path inflates Y's variance. Likewise for rc3 with XW.
+    var_m  <- a1^2 + a2^2 + a3^2*var_p + 2*a1*a2*r + 2*a1*a3*cov_xp + 2*a2*a3*cov_wp + res_m_var
+    cov_xm <- a1 + a2*r + a3*cov_xp
+    cov_wm <- a1*r + a2 + a3*cov_wp
+    cov_pm <- a1*cov_xp + a2*cov_wp + a3*var_p
+    var_y0 <- b^2*var_m + cp^2 + 2*b*cp*cov_xm + res_y_var
+    cov_wy <- b*cov_wm + cp*r
+    cov_py <- b*cov_pm + cp*cov_xp
+    c2 <- solve_sizes(list(Vp = 1,     C = cov_wy, V0 = var_y0))
+    c3 <- solve_sizes(list(Vp = var_p, C = cov_py, V0 = var_y0))
+    # var(Y0 + beta p) / var(Y0): the inflation that gen_data() cancels in the
+    # Y indicator error variance so Y reliability stays at its `none` value
     vy_ratios[[de]][[as.character(a3)]] <- list(
-      c2 = sapply(rc2, function(rc) var(y0 + rc * w)  / var(y0)),
-      c3 = sapply(rc3, function(rc) var(y0 + rc * xw) / var(y0)))
-    # adding c2/c3 raises Var(Y), which would raise Y's indicator reliability 
-    # as a side effect. The simulation multiplies the Y indicator noise 
-    # by k to cancel that, holding Y reliability at its no-misspecification value.
-    # (k is reliability-independent, so it's stored once per cell; like the comment
-    # says)
-    
-    # cl is the only rel-dependent coefficient, so it is the only one keyed by
-    # reliability level; c2/c3 (rel-independent) are stored once, like vy_ratios.
-    rcl <- lapply(rel_levels, function(rel) {
-      m3 <- loadings[3]*m + rnorm(n_cal, sd = err_sd_for(rel, var_m_at(a3))[3])
-      solve_targets(list(Vp = var(x), C = cov(x, m3), V0 = var(m3)))
-    })
-    misspec_coefs[[de]][[as.character(a3)]] <- list(c2 = rc2, c3 = rc3, cl = rcl)
+      c2 = sapply(c2, function(beta) (var_y0 + 2*beta*cov_wy + beta^2) / var_y0),
+      c3 = sapply(c3, function(beta) (var_y0 + 2*beta*cov_py + beta^2*var_p) / var_y0))
+    # cross-loading of m3 on X: m3 = lambda3 M + delta3. the only coefficient
+    # keyed by reliability level, through theta3.
+    cl <- lapply(rel_levels, function(rel)
+      solve_sizes(list(Vp = 1, C = lambda3*cov_xm, V0 = lambda3^2*var_m + theta3_for(rel, a3))))
+    misspec_coefs[[de]][[as.character(a3)]] <- list(c2 = c2, c3 = c3, cl = cl)
   }
 }
 
-saveRDS(list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios),
-        "calibration_results.rds")
+saveRDS(list(misspec_coefs = misspec_coefs, vy_ratios = vy_ratios,
+             moments = moments, exo_family = exo_family), out_file)
