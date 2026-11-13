@@ -1,32 +1,37 @@
 # post-processing for the moderated-mediation MC sim: builds the result tables.
 # figures are made separately by figures.R.
 # in : results/estimates_mc.rds
-# out: results/{summary,rejection_imm_a3,convergence_report}.rds
+# out: results/{summary,rejection_imm_a3,convergence_report,se_extremes}.rds
 
 # convergence is judged on all estimated parameters: the structural paths of
-# interest (poi = a1, a2, a3, b, cp, imm) plus the 12 free loadings. two
-# criteria, each reported and each producing its own metrics:
+# interest (poi = a1, a2, a3, b, cp, imm) plus the 12 free loadings. three
+# passes, each reported and each producing its own tables:
 # soft   : the optimizer reported nonconvergence, OR any est/se/ci (any
 # parameter) is NA/NaN/Inf.
 # strict : soft, OR an inadmissible solution flagged at fit time in sim_mc.R
-# (neg_theta = residual variance <= 0; npd_psi = non-PD factor cov).
+# (neg_theta = residual variance <= 0, npd_psi = non-PD factor cov).
+# unscreened : soft convergence with NO outlier removal. a sensitivity check for
+# the supplement, which reports the largest change in each measure when the
+# screened replications are retained.
 # warnings are counted (n_warn_method) but do NOT exclude. so are converged fits
 # whose hessian at the solution is not positive definite (n_npd_info).
 
-# exclusion follows the per-method-then-global pattern of Results(1).R:
+# exclusion is per-method, then global:
 # - per-method counts (n_conv_method, n_outlier_method) are kept BEFORE the
 # global step, so we can see e.g. lms converging more than lsam in a cell.
 # - global step: a rep is dropped from ALL methods unless every method passed.
 # so after global convergence + global outlier removal every method in a
 # condition runs on the identical rep set (n_final is shared).
 # outliers: IQR +- 3 fences on poi est per (condition, method, parameter), plus
-# (if screen_se) a degenerate SE (> se_max) on any poi parameter; a rep flagged
-# on any method/parameter is dropped condition-wide.
+# a degenerate SE (> se_max) on any poi parameter. a rep flagged on any
+# method/parameter is dropped condition-wide.
 # metrics carry jackknife MCSEs (*_mcse) from simhelpers, per (condition, method,
 # parameter): rel_bias = mean(est)/true - 1, rel_rmse = rmse/|true|,
 # coverage = P(lo <= true <= hi). rel_bias_var = E[se^2]/var(est) and
 # rel_rmse_var = relative RMSE of se^2 about var(est). relative measures fall
 # back to absolute at true == 0.
+# se_extremes: sensitivity of the SE/SD ratio of a3 and the imm to extreme
+# standard errors, those more than 3 IQR above the upper quartile of their cell.
 
 library(dplyr); library(simhelpers)
 
@@ -36,19 +41,14 @@ results_dir <- if (copula_robustness) "results_robustness" else "results_main"
 
 estimates <- readRDS(file.path(results_dir, "estimates_mc.rds"))
 
-cond_keys     <- c("condition", "n", "a3", "rel", "distr_exo", "misspec")
-methods_all   <- c("lsam", "lms", "dblcent", "fsr")
-n_methods_all <- length(methods_all)
-poi           <- c("a1", "a2", "a3", "b", "cp", "imm")  # structural paths of interest
+cond_keys   <- c("condition", "n", "a3", "rel", "distr_exo", "misspec")
+methods_all <- c("lsam", "lms", "dblcent", "fsr")
+poi         <- c("a1", "a2", "a3", "b", "cp", "imm")  # structural paths of interest
+se_max      <- 10  # a larger SE on any poi parameter is a degenerate fit
 
-# when TRUE, a rep with a degenerate SE (> se_max) on any poi parameter is also
-# flagged as an outlier, dropped under the same global rule as estimate outliers.
-screen_se     <- TRUE
-se_max        <- 10
+is_bad <- function(x) is.na(x) | is.infinite(x)
 
-is_bad <- function(x) is.na(x) | is.nan(x) | is.infinite(x)
-
-# per (condition, method, rep) convergence flags 
+# per (condition, method, rep) convergence flags
 conv <- estimates |>
   group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
   summarise(
@@ -71,12 +71,12 @@ rm(estimates); gc()
 rep_conv <- conv |>
   group_by(across(all_of(c(cond_keys, "rep")))) |>
   summarise(
-    all_present   = n_distinct(method) == n_methods_all,
+    all_present   = n_distinct(method) == length(methods_all),
     soft_global   = all_present & !any(soft_nonconv),
     strict_global = all_present & !any(strict_nonconv),
     .groups = "drop")
 
-# summary helpers (unchanged) 
+# summary helpers
 # one row per (condition x method x parameter). rel_bias subtracts 1 from
 # simhelpers' ratio (0-centered, MCSE unchanged); relative measures fall back to
 # absolute at true == 0.
@@ -120,11 +120,11 @@ calc_reject <- function(df) {
   tibble(reject = 1 - cov$coverage, reject_mcse = cov$coverage_mcse, n_used = nrow(df))
 }
 
-# per-criterion pipeline 
+# per-criterion pipeline
 # builds, for one criterion: the convergence/outlier report (counts), the metric
 # summary, and the rejection table. exclusion is global; per-method counts are
 # captured before the global step so they stay informative.
-process <- function(criterion) {
+process <- function(criterion, screen_outliers = TRUE, label = criterion) {
   nonconv_col <- paste0(criterion, "_nonconv")
   global_col  <- paste0(criterion, "_global")
 
@@ -158,21 +158,18 @@ process <- function(criterion) {
     select(all_of(c(cond_keys, "method", "parameter", "rep")), est, se) |>
     filter(parameter %in% poi) |>
     group_by(across(all_of(c(cond_keys, "method", "parameter")))) |>
-    mutate(q1 = quantile(est, 0.25, na.rm = TRUE),
-           q3 = quantile(est, 0.75, na.rm = TRUE),
-           iqr = q3 - q1,
-           is_out = est < q1 - 3 * iqr | est > q3 + 3 * iqr |
-                    (screen_se & se > se_max)) |>
+    mutate(q1 = quantile(est, 0.25), q3 = quantile(est, 0.75), iqr = q3 - q1,
+           is_out = screen_outliers &
+                    (est < q1 - 3 * iqr | est > q3 + 3 * iqr | se > se_max)) |>
     group_by(across(all_of(c(cond_keys, "method", "rep")))) |>
-    summarise(method_out = any(is_out, na.rm = TRUE), .groups = "drop")
+    summarise(method_out = any(is_out), .groups = "drop")
 
   # per-method outlier counts (pre-global)
   out_counts_method <- rep_out |>
     group_by(across(all_of(c(cond_keys, "method")))) |>
-    summarise(n_eval_outlier   = n(),
-              n_outlier_method = sum(method_out),
-              .groups = "drop") |>
-    mutate(outlier_rate_method = n_outlier_method / n_eval_outlier)
+    summarise(n_outlier_method    = sum(method_out),
+              outlier_rate_method = mean(method_out),
+              .groups = "drop")
 
   # a rep flagged on any method is dropped condition-wide
   rep_out_global <- rep_out |>
@@ -181,15 +178,28 @@ process <- function(criterion) {
 
   out_counts_global <- rep_out_global |>
     group_by(across(all_of(cond_keys))) |>
-    summarise(n_eval_global = n(),
-              n_final        = sum(!rep_out),
-              .groups = "drop") |>
-    mutate(global_outlier_rate = (n_eval_global - n_final) / n_eval_global) |>
-    select(all_of(cond_keys), n_final, global_outlier_rate)
+    summarise(n_final             = sum(!rep_out),
+              global_outlier_rate = mean(rep_out),
+              .groups = "drop")
 
   final_reps <- rep_out_global |> filter(!rep_out) |>
     select(all_of(c(cond_keys, "rep")))
   clean <- est_slim |> semi_join(final_reps, by = c(cond_keys, "rep"))
+
+  # extreme standard errors and the SE/SD ratio, for a3 and the imm. pct_ext is
+  # the share of reps whose SE lies above the fence, se_sd the ratio as in the
+  # summary, and se_sd_trim the ratio with those reps dropped from the mean SE
+  # only. the SD of the estimates keeps every rep, since it is the quantity the
+  # SEs are meant to track.
+  se_ext_tbl <- clean |>
+    filter(parameter %in% c("a3", "imm")) |>
+    group_by(across(all_of(c(cond_keys, "method", "parameter")))) |>
+    mutate(ext = se > quantile(se, 0.75) + 3 * IQR(se)) |>
+    summarise(pct_ext    = 100 * mean(ext),
+              se_sd      = mean(se) / sd(est),
+              se_sd_trim = mean(se[!ext]) / sd(est),
+              .groups = "drop") |>
+    mutate(criterion = label)
 
   # report: one row per (condition x method)
   report <- conv_counts |>
@@ -199,14 +209,14 @@ process <- function(criterion) {
     left_join(out_counts_global, by = cond_keys) |>
     mutate(n_outlier_method = coalesce(n_outlier_method, 0L),
            n_final          = coalesce(n_final, 0L),
-           criterion        = criterion)
+           criterion        = label)
 
   # metrics on the globally-clean set (all parameters, incl. loadings)
   summary_tbl <- clean |>
     group_by(across(all_of(c(cond_keys, "method", "parameter")))) |>
     group_modify(~ calc_one(.x)) |>
     ungroup() |>
-    mutate(criterion = criterion)
+    mutate(criterion = label)
 
   rejection_tbl <- clean |>
     filter(parameter %in% c("imm", "a3"), a3 %in% c(0, 0.2)) |>
@@ -214,19 +224,24 @@ process <- function(criterion) {
     group_modify(~ calc_reject(.x)) |>
     ungroup() |>
     mutate(quantity  = if_else(a3 == 0, "Type I error", "Power"),
-           criterion = criterion)
+           criterion = label)
 
-  list(summary = summary_tbl, rejection = rejection_tbl, report = report)
+  list(summary = summary_tbl, rejection = rejection_tbl, report = report,
+       se_ext = se_ext_tbl)
 }
 
 soft   <- process("soft")
 gc()
 strict <- process("strict")
+gc()
+unscreened <- process("soft", screen_outliers = FALSE, label = "unscreened")
 
-summary_tbl   <- bind_rows(soft$summary,   strict$summary)
-rejection_tbl <- bind_rows(soft$rejection, strict$rejection)
-conv_report   <- bind_rows(soft$report,    strict$report)
+summary_tbl   <- bind_rows(soft$summary,   strict$summary,   unscreened$summary)
+rejection_tbl <- bind_rows(soft$rejection, strict$rejection, unscreened$rejection)
+conv_report   <- bind_rows(soft$report,    strict$report,    unscreened$report)
+se_extremes   <- bind_rows(soft$se_ext,    strict$se_ext,    unscreened$se_ext)
 
 saveRDS(summary_tbl, file.path(results_dir, "summary.rds"))
 saveRDS(rejection_tbl, file.path(results_dir, "rejection_imm_a3.rds"))
 saveRDS(conv_report, file.path(results_dir, "convergence_report.rds"))
+saveRDS(se_extremes, file.path(results_dir, "se_extremes.rds"))
