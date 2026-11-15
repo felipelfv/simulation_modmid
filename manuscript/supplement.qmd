@@ -213,7 +213,7 @@ tbl(tab, c("Reliability", "$N$", "Estimator", "Nonconverged", "Inadmissible",
 
 # Sensitivity to Outlier Screening
 
-The main text reports performance measures after removing, condition-wide, every replication flagged as an outlier on any estimation approach, that is, an estimate beyond three interquartile ranges from the quartiles or a standard error above 10 on any structural parameter. As a sensitivity check, all measures were recomputed with the screening switched off, retaining every converged replication. @tbl-outliers reports, for each sample size, reliability level, and estimation approach, the proportion of replications removed and the largest absolute difference in each performance measure between the reported value and the value with the removed replications retained, taken over all estimands, predictor distributions, interaction magnitudes, and (mis)specification conditions.
+The main text reports performance measures after removing, condition-wide, every replication flagged as an outlier on any estimation approach, that is, an estimate beyond three interquartile ranges from the quartiles or a standard error above 10 on any structural parameter. As a sensitivity analysis, all measures were recomputed with the screening switched off, retaining every converged replication. @tbl-outliers reports, for each sample size, reliability level, and estimation approach, the proportion of replications removed and the largest absolute difference in each performance measure between the reported value and the value with the removed replications retained, taken over all estimands, predictor distributions, interaction magnitudes, and (mis)specification conditions.
 
 ```{r}
 #| label: tbl-outliers
