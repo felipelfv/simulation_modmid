@@ -292,7 +292,7 @@ measures used to evaluate performance, following the preregistration and some
 recent recommendations for the conduct and reporting of simulation studies 
 [@Siepe2024; @Pawel2026].
 
-### Population Model and Estimands
+### Population Models and Estimands
 
 We study a moderated mediation model among four latent variables: an
 exogenous predictor $X$, a moderator $W$, a mediator $M$, and an outcome $Y$.
@@ -303,7 +303,13 @@ M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
 Y = b\,M + c'\,X + \zeta_Y.
 $$
 
-The primary estimands are the interaction coefficient ($a_3$) and the imm 
+This is the population model in the correctly specified condition, and it is
+the model fitted in every condition. In the misspecified conditions the
+population departs from it by one additional element, which the fitted model
+omits. @fig-model shows the population model, where the measurement and
+structural misspecifications studied below are drawn in gray.
+
+The primary estimands are the interaction coefficient ($a_3$) and the imm
 (i.e., $a_3 b$). The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) 
 and the twelve freely estimated factor loadings serve as secondary estimands. 
 Note the imm is a derived quantity rather than a free parameter, hence its 
@@ -316,11 +322,10 @@ disturbance variances, were chosen so that under the baseline condition (normal
 exogenous predictors and a correctly specified model) each dependent latent
 variable has $R^2 \approx 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
 because $a_3$ contributes to the variance of $M$, the explained variance is 
-naturally higher with a larger $a_3$ and lower when its effect is null. Each 
-latent variable is measured by four congeneric indicators with loadings 
-$1.0$, $0.8$, $0.7$, and $0.6$. @fig-model shows the population model, where 
-the measurement and structural misspecifications studied below are drawn in 
-gray.
+naturally higher with a larger $a_3$ and lower when its effect is null. The
+realized values in every condition are reported in the supplementary
+materials. Each latent variable is measured by four congeneric indicators with
+loadings $1.0$, $0.8$, $0.7$, and $0.6$.
 
 ```{tikz}
 %| label: fig-model
