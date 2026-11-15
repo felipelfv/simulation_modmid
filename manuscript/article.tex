@@ -604,14 +604,18 @@ and \(W\) were drawn from a bivariate distribution with
 \(\operatorname{Cor}(X, W) = \rho = 0.3\), constructed with the
 vine-to-anything (VITA) algorithm (Grønneberg et al., 2022). Five
 exogenous distributions were examined, each standardized to mean \(0\)
-and variance \(1\). Thus, the conditions differ only in distributional
-shape, not in scale or location. Specifically, the normal condition
-draws \(X, W \sim \mathcal{N}(0, 1)\) through a forced Gaussian copula,
-whereas the remaining four combine nonnormal margins with the Clayton
-copula: uniform, \(t_5\), and two \(\chi^2(2)\) conditions in which
-\(X\) and \(W\) are skewed in the same or in opposite directions. Then,
-\(M\) and \(Y\) were generated from the structural equations above with
-independent Gaussian disturbances
+and variance \(1\). The normal condition draws
+\(X, W \sim \mathcal{N}(0, 1)\) through a Gaussian copula, whereas the
+remaining four combine nonnormal margins with the Clayton copula:
+uniform, \(t_5\), and two \(\chi^2(2)\) conditions in which \(X\) and
+\(W\) are skewed in the same or in opposite directions. The nonnormal
+conditions therefore differ from the normal condition in the dependence
+between the predictors as well as in their margins. As a sensitivity
+analysis, they were repeated with a Gaussian copula to separate the two
+(see the supplementary materials). For each distribution, the bivariate
+population was constructed once and every replication was sampled from
+it. Then, \(M\) and \(Y\) were generated from the structural equations
+above with independent Gaussian disturbances
 \(\zeta_M \sim \mathcal{N}(0, \psi_M)\) and
 \(\zeta_Y \sim \mathcal{N}(0, \psi_Y)\), and the four indicators
 (\(j = 1, \dots, 4\)) of each latent variable
@@ -619,16 +623,17 @@ independent Gaussian disturbances
 \(z_{\eta j} = \lambda_j \eta + \delta_{\eta j}\), with loadings
 \(\lambda = (1, 0.8, 0.7, 0.6)\) and Gaussian errors
 \(\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})\) whose variances
-\(\theta_{\eta j}\) were scaled to the target reliability
-\(\omega \in \{0.5, 0.7\}\).
+\(\theta_{\eta j}\) were set to give the target reliability
+\(\omega \in \{0.5, 0.7\}\) under normal predictors and held fixed
+across distributions.
 
 The nine (mis)specification conditions comprise one correctly specified
-condition and four types of misspecification, each at two empirically
-calibrated magnitudes (standardized \(0.25\) and \(0.50\), detailed in
+condition and four types of misspecification, each at two calibrated
+magnitudes (standardized \(0.25\) and \(0.50\), detailed in
 \hyperref[apx-calibration]{Appendix}), similar to Brandt et al. (2020).
-Two are structural: an omitted direct effect of the moderator on the
-outcome (\(c_2\)) and an omitted moderated direct effect (\(c_3\)). The
-others are in the measurement model: a cross-loading of a mediator
+The two structural ones are an omitted direct effect of the moderator on
+the outcome (\(c_2\)) and an omitted moderated direct effect (\(c_3\)).
+The two in the measurement model are a cross-loading of a mediator
 indicator on \(X\) (\texttt{cl}) and a residual covariance between a
 mediator and an outcome indicator (\texttt{rc}). In every case the
 effect is present in the population but omitted from the estimated
