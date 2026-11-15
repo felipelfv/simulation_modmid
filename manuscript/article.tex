@@ -583,6 +583,19 @@ double mean centering (Kelava \& Brandt, 2009; Lin et al., 2010; Marsh
 et al., 2004), estimated with robust ML, that is, with Huber--White
 sandwich standard errors.
 
+As a baseline, we also used factor score regression (FSR)\footnote{We
+  note that the approach of Skrondal and Laake (2001), used for latent
+  interactions by Ng and Chan (2020), would be a more principled choice,
+  in which regression (Thurstone) factor scores are used for the
+  explanatory variables and Bartlett factor scores for the response
+  variables. However, as noted previously (Devlieger et al., 2016), this
+  does not work in models where a variable is both explanatory and a
+  response, as the mediator is here.}. Specifically, Bartlett factor
+scores were computed from a confirmatory factor model of the four latent
+variables estimated by ML, and the structural model was estimated on the
+scores by ML, which gives the ordinary least squares estimates, with
+standard errors from this second step.
+
 \subsubsection{Data Generation}\label{data-generation}
 
 \hyperref[apx-calibration]{Appendix} describes the complete
@@ -1388,6 +1401,12 @@ DeShon, R. P. (1998). A cautionary note on measurement error corrections
 in structural equation models. \emph{Psychological Methods},
 \emph{3}(4), 412--423. \url{https://doi.org/10.1037/1082-989X.3.4.412}
 
+\bibitem[\citeproctext]{ref-Devlieger2016}
+Devlieger, I., Mayer, A., \& Rosseel, Y. (2016). Hypothesis testing
+using factor score regression: A comparison of four methods.
+\emph{Educational and Psychological Measurement}, \emph{76}(5),
+741--770. \url{https://doi.org/10.1177/0013164415607618}
+
 \bibitem[\citeproctext]{ref-dolstra_etall_2004}
 Dolstra, E., De Jonge, M., \& Visser, E. (2004). {Nix}: A safe and
 policy-free system for software deployment. \emph{18th Large
@@ -1665,6 +1684,11 @@ Siepe, B. S., Bartoš, F., Morris, T. P., Boulesteix, A.-L., Heck, D. W.,
 psychology: A standardized template for planning, preregistration, and
 reporting. \emph{Psychological Methods}.
 \url{https://doi.org/10.1037/met0000695}
+
+\bibitem[\citeproctext]{ref-SkrondalLaake2001}
+Skrondal, A., \& Laake, P. (2001). Regression among factor scores.
+\emph{Psychometrika}, \emph{66}(4), 563--575.
+\url{https://doi.org/10.1007/BF02296196}
 
 \bibitem[\citeproctext]{ref-Slupphaug2025}
 Slupphaug, K. S., Mehmetoglu, M., \& Mittner, M. (2025). {modsem}: An
