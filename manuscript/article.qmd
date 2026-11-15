@@ -491,25 +491,22 @@ in the population but omitted from the estimated model.
 ### Convergence, Outliers, and Inadmissible Solutions
 
 Following previous research [@Lonati2025; @Vieira2026], replications were 
-screened before analysis in two sequential steps. In both, a replication 
-that failed the screening for any one estimator was removed for all three, so 
-that every estimator is compared on an identical set of replications. 
-First, we checked convergence. A solution was treated as nonconverged
-when any estimate, standard error, or confidence-interval bound of any 
-structural coefficient or loading was missing or non-finite, and a replication 
-was removed from all approaches whenever any one of them did not converge. 
-Second, among the remaining replications, we screened for outliers, identified 
-per condition, method, and parameter of interest as point estimates more than three 
-interquartile ranges below the first or above the third quartile, together with replications whose estimated standard error 
-exceeded $10$ on any parameter of interest^[We added the standard error 
-criterion because some replications retained anomalous standard errors despite 
-acceptable point estimates. It additionally removed 125 replications 
-(about $0.01\%$ of the globally converged ones), predominantly for UPI at the 
-smallest sample size with low reliability and skewed $\chi^2$ predictors.]. 
-Again, a replication identified as an outlier for any estimation approach was 
-removed from all of them. We also identified inadmissible solutions, where any 
-residual (unique) variance was nonpositive or the covariance matrix of the 
-exogenous latent variables and latent disturbances was not positive definite. 
+screened in two sequential steps, and a replication that failed either step 
+for any estimation approach was removed for all of them, so that every 
+approach is compared on the same replications. First, a solution was treated 
+as nonconverged when the optimizer reported nonconvergence or when any 
+estimate, standard error, or confidence interval bound was missing or 
+non-finite. Second, among the remaining replications, outliers were 
+identified per condition and approach as estimates of the imm or a structural 
+coefficient more than three interquartile ranges beyond the quartiles, or 
+with a standard error above $10$^[The standard error criterion additionally 
+removed 113 replications (about $0.01\%$), almost all for UPI at the smallest 
+sample size with low reliability.]. We also recorded, without removing them, 
+inadmissible solutions, in which a residual variance was nonpositive or the 
+covariance matrix of the latent variables and disturbances was not positive 
+definite. The same was done for converged solutions whose information matrix 
+was not positive definite. Their frequencies and the sensitivity of the 
+results to the outlier screening are reported in the supplementary materials.
 
 ### Performance Measures
 
