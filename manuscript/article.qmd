@@ -455,6 +455,18 @@ approach with
 double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], estimated with 
 robust ML, that is, with Huber–White sandwich standard errors.
 
+As a baseline, we also used factor score regression (FSR)^[We note that the 
+approach of @SkrondalLaake2001, used for latent interactions by @NgChan2020, 
+would be a more principled choice, in which regression (Thurstone) factor 
+scores are used for the explanatory variables and Bartlett factor scores for 
+the response variables. However, as noted previously [@Devlieger2016], this 
+does not work in models where a variable is both explanatory and a response, 
+as the mediator is here.]. Specifically, Bartlett factor scores were computed 
+from a confirmatory factor model of the four latent variables estimated by 
+ML, and the structural model was estimated on the scores by ML, which gives 
+the ordinary least squares estimates, with standard errors from this second 
+step.
+
 ### Data Generation
 
 @apx-calibration describes the complete data-generating mechanism in detail. 
