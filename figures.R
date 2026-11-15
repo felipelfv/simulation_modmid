@@ -312,3 +312,85 @@ for (m in c("rel_bias", "coverage", "se_sd"))
 # the misspecifications move (the other eleven are flat across every measure)
 ggsave(file.path(plot_dir, "load_lm3_allmeasures_a3-0.2_n500_high.png"),
        fig_loading_measures("lm3", 0.2, 500, "high"), width = 9, height = 8, dpi = 150)
+
+# copula robustness: each measure under the gaussian copula (robustness run)
+# against its value under the clayton copula (main run), one point per
+# condition. points on the identity line are unaffected by the copula.
+# estimators are columns, measures are rows, point shape is the distribution.
+# the two runs number their conditions differently, so cells are matched on the
+# design factors.
+cop_keys   <- c("n", "a3", "rel", "distr_exo", "misspec", "method", "parameter")
+cop_read   <- function(dir, f) readRDS(file.path(dir, f)) |>
+  filter(criterion == "soft", parameter %in% c("imm", "a3"))
+cop_pair   <- function(f) inner_join(cop_read("results_robustness", f), cop_read("results_main", f),
+                                     by = cop_keys, suffix = c("_g", "_c"))
+cop_sum    <- cop_pair("summary.rds")
+cop_rej    <- cop_pair("rejection_imm_a3.rds")
+cop_shapes <- c(Uniform = 1, `t(5)` = 2, `Chi-square (s)` = 0, `Chi-square (d)` = 5)
+cop_fmt    <- function(v) sub("^(-?)0\\.", "\\1.", format(v, drop0trailing = TRUE, trim = TRUE))
+
+# one row of panels for one measure. the axes share one range so that the
+# identity line is the diagonal, and the acceptable band is shaded on both.
+cop_row <- function(d, value, lab, band = NULL, strips = FALSE, legend = FALSE) {
+  d <- d |> mutate(
+    x = .data[[paste0(value, "_c")]], y = .data[[paste0(value, "_g")]],
+    method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"),
+                       labels = c("LSAM", "LMS", "UPI", "FSR")),
+    distr_exo = factor(distr_exo, levels = c("uniform", "t5", "chisq_same", "chisq_diff"),
+                       labels = names(cop_shapes)))
+  lim <- range(d$x, d$y); lim <- lim + c(-1, 1) * 0.04 * diff(lim)
+  p <- ggplot(d, aes(x, y, shape = distr_exo))
+  if (!is.null(band))
+    p <- p +
+      annotate("rect", xmin = band[1], xmax = band[2], ymin = -Inf, ymax = Inf,
+               fill = "grey60", alpha = 0.2) +
+      annotate("rect", xmin = -Inf, xmax = Inf, ymin = band[1], ymax = band[2],
+               fill = "grey60", alpha = 0.2)
+  p + geom_abline(linewidth = .3) +
+    geom_point(size = .9, stroke = .3, alpha = .7) +
+    facet_grid(. ~ method) +
+    scale_shape_manual(values = cop_shapes) +
+    scale_x_continuous(labels = cop_fmt, n.breaks = 4) +
+    scale_y_continuous(labels = cop_fmt, n.breaks = 4) +
+    coord_fixed(xlim = lim, ylim = lim, expand = FALSE) +
+    labs(x = if (legend) "Clayton copula (main design)" else NULL,
+         y = paste0(lab, "\nGaussian copula"), shape = NULL) +
+    guides(shape = guide_legend(override.aes = list(size = 2.2, alpha = 1))) +
+    theme_bw(base_size = 9) +
+    # the reduced top and bottom margins leave each row enough height for its
+    # square panels to reach full width, which keeps the rows aligned
+    theme(panel.grid.minor = element_blank(), strip.text = element_text(face = "bold"),
+          legend.position = if (legend) "bottom" else "none",
+          plot.margin = margin(2, 6, 2, 6)) +
+    if (!strips) theme(strip.text = element_blank(), strip.background = element_blank())
+}
+
+# the five rows are separate plots because each measure needs its own axis
+# range. they are stacked with grid and given a common left margin so that the
+# panels line up.
+save_copula <- function(param, file) {
+  s  <- filter(cop_sum, parameter == param)
+  s1 <- filter(s, a3 != 0)
+  r  <- filter(cop_rej, parameter == param, a3 == 0)
+  rows <- list(
+    cop_row(s1, "rel_bias", "Relative bias", c(-.10, .10), strips = TRUE),
+    cop_row(s1, "rel_rmse", "Relative RMSE"),
+    cop_row(s, "coverage", "Coverage", c(.925, .975)),
+    cop_row(s, "se_sd", "SE/SD", c(.90, 1.10)),
+    cop_row(r, "reject", "Type I error", c(.025, .075), legend = TRUE))
+  h  <- c(1.93, 1.68, 1.68, 1.68, 2.43)
+  png(file, width = 6.5, height = sum(h), units = "in", res = 300)
+  gs <- lapply(rows, ggplotGrob)
+  w  <- do.call(grid::unit.pmax, lapply(gs, function(g) g$widths))
+  grid::grid.newpage()
+  grid::pushViewport(grid::viewport(layout = grid::grid.layout(5, 1, heights = grid::unit(h, "in"))))
+  for (i in seq_along(gs)) {
+    gs[[i]]$widths <- w
+    grid::pushViewport(grid::viewport(layout.pos.row = i, layout.pos.col = 1))
+    grid::grid.draw(gs[[i]])
+    grid::popViewport()
+  }
+  invisible(dev.off())
+}
+for (p in c("imm", "a3"))
+  save_copula(p, file.path(plot_dir, sprintf("copula_agreement_%s.png", p)))

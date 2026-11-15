@@ -172,6 +172,45 @@ tbl(tab, c("Distribution", "$a_3$", "$R^2_M$", "$R^2_Y$ none", "$R^2_Y$ $c_2$.s"
 \FloatBarrier
 \newpage
 
+# Convergence, Inadmissible Solutions, and Outliers
+
+@tbl-convergence reports, for each reliability level, sample size, and estimation approach, how often a replication did not converge, gave an inadmissible solution, had an information matrix that was not positive definite at the solution, or was flagged as an outlier. A solution was counted as nonconverged when the optimizer reported nonconvergence or when any estimate, standard error, or confidence-interval bound was missing or non-finite. An inadmissible solution is a converged solution in which a residual variance was nonpositive or the covariance matrix of the exogenous latent variables and latent disturbances was not positive definite. Inadmissible solutions and converged solutions with an information matrix that was not positive definite were counted but not removed. Outliers are defined as in the main text.
+
+\renewcommand{\tabfont}{\footnotesize}
+
+```{r}
+#| label: tbl-convergence
+#| tbl-cap: "Nonconvergence, Inadmissible Solutions, Non-Positive-Definite Information Matrices, and Outliers by Reliability Level, Sample Size, and Estimation Approach"
+#| apa-note: "Entries are percentages of replications, given as the mean and, in parentheses, the maximum over the predictor distributions, interaction magnitudes, and (mis)specification conditions at that reliability level and sample size. Nonconverged, Inadmissible, and NPD information are percentages of all replications. Outlier is the percentage of the replications in which every estimation approach converged. Retained is the percentage of replications kept for the analysis after the condition-wide removal of nonconverged replications and outliers, given as the mean and, in parentheses, the minimum. It is the same for all estimation approaches, so it is shown once per block. NPD = not positive definite; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+by <- c(keys, "method")
+# the strict criterion adds inadmissible solutions to the soft one, so the
+# difference in converged counts is the number of inadmissible solutions
+strict <- main$report |>
+  filter(criterion == "strict") |>
+  select(all_of(by), n_conv_strict = n_conv_method)
+pct <- function(v, f = max) sprintf("%.1f (%.1f)", mean(v), f(v))
+tab <- main$report |>
+  filter(criterion == "soft") |>
+  inner_join(strict, by = by) |>
+  group_by(rel = factor(rel, names(rel_lab), rel_lab), n,
+           method = factor(method, names(method_lab), method_lab)) |>
+  summarise(nonconv  = pct(100 * (n_total - n_conv_method) / n_total),
+            inadm    = pct(100 * (n_conv_method - n_conv_strict) / n_total),
+            npd      = pct(100 * n_npd_info / n_total),
+            outlier  = pct(100 * n_outlier_method / n_global_conv),
+            retained = pct(100 * n_final / n_reps, min),
+            .groups = "drop") |>
+  mutate(retained = blank(retained, paste(rel, n)),
+         n = blank(n, paste(rel, n)), rel = blank(rel, rel))
+tbl(tab, c("Reliability", "$N$", "Estimator", "Nonconverged", "Inadmissible",
+           "NPD information", "Outlier", "Retained"), align = c(rep("l", 3), rep("r", 5)))
+```
+
+\renewcommand{\tabfont}{}
+
+\FloatBarrier
+\newpage
+
 # Sensitivity to Outlier Screening
 
 The main text reports performance measures after removing, condition-wide, every replication flagged as an outlier on any estimation approach, that is, an estimate beyond three interquartile ranges from the quartiles or a standard error above 10 on any structural parameter. As a sensitivity check, all measures were recomputed with the screening switched off, retaining every converged replication. @tbl-outliers reports, for each sample size, reliability level, and estimation approach, the proportion of replications removed and the largest absolute difference in each performance measure between the reported value and the value with the removed replications retained, taken over all estimands, predictor distributions, interaction magnitudes, and (mis)specification conditions.
@@ -237,30 +276,145 @@ tbl(tab, c("Estimand", "Estimator", "Reliability", "$N$", "Distribution",
 
 # Robustness to the Copula
 
-In the main design, the normal condition draws the latent predictors through a Gaussian copula, whereas the four nonnormal conditions combine nonnormal margins with a Clayton copula. The nonnormal conditions therefore differ from the normal condition in the dependence structure as well as in the margins. To separate the two, the four nonnormal conditions were regenerated with a Gaussian copula, so that only the margins differ from the normal condition, with every other aspect of the design, including the calibrated misspecification magnitudes, held fixed. @tbl-copula reports, for each sample size, reliability level, and nonnormal distribution, the largest absolute difference in each performance measure between the Clayton and the Gaussian copula results.
+In the main design, the normal condition draws the latent predictors through a Gaussian copula, whereas the four nonnormal conditions combine nonnormal margins with a Clayton copula. The nonnormal conditions therefore differ from the normal condition in the dependence structure as well as in the margins. To separate the two, the four nonnormal conditions were regenerated with a Gaussian copula, so that only the margins differ from the normal condition, with every other aspect of the design, including the calibrated misspecification magnitudes, held fixed. @fig-copula-imm and @fig-copula-a3 plot, for every condition, the value of each measure under the Gaussian copula against its value under the Clayton copula, and @tbl-copula reports, for the interaction coefficient and the imm, how often the two copulas lead to the same verdict on each performance measure. @tbl-copula-bias to @tbl-copula-typei report the mean difference in each measure by distribution and (mis)specification.
+
+```{r}
+#| label: fig-copula-imm
+#| fig-cap: "Performance Measures of the imm ($a_3 b$) Under the Gaussian Copula Against the Clayton Copula"
+#| apa-note: "Each point is one condition, over all sample sizes, reliability levels, interaction magnitudes, and (mis)specification conditions, and its shape marks the predictor distribution. Points on the diagonal have the same value under both copulas. The gray bands mark the acceptable region for the measure on both axes, and no acceptable region is defined for the relative RMSE. Relative bias and relative RMSE exclude $a_3 = 0$ and the Type I error uses $a_3 = 0$ only. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+#| out-height: "7.4in"
+knitr::include_graphics("../plots/copula_agreement_imm.png")
+```
+
+```{r}
+#| label: fig-copula-a3
+#| fig-cap: "Performance Measures of the Interaction Coefficient ($a_3$) Under the Gaussian Copula Against the Clayton Copula"
+#| apa-note: "Each point is one condition, over all sample sizes, reliability levels, interaction magnitudes, and (mis)specification conditions, and its shape marks the predictor distribution. Points on the diagonal have the same value under both copulas. The gray bands mark the acceptable region for the measure on both axes, and no acceptable region is defined for the relative RMSE. Relative bias and relative RMSE exclude $a_3 = 0$ and the Type I error uses $a_3 = 0$ only. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+#| out-height: "7.4in"
+knitr::include_graphics("../plots/copula_agreement_a3.png")
+```
+
+\FloatBarrier
+
+```{r}
+#| label: copula-setup
+rob <- read_res(res_rob)
+# the two runs number their conditions differently, because the robustness
+# design drops the normal distribution. cells are therefore matched on the
+# design factors, not on the condition label.
+cell_keys <- c(setdiff(keys, "condition"), "method", "parameter")
+pair <- function(clayton, gaussian) inner_join(
+  filter(clayton,  criterion == "soft", parameter %in% c("a3", "imm")),
+  filter(gaussian, criterion == "soft", parameter %in% c("a3", "imm")),
+  by = cell_keys, suffix = c("_c", "_g"))
+cop_s <- pair(main$summary, rob$summary)
+cop_r <- pair(main$reject,  rob$reject) |> filter(a3 == 0)
+# one row per cell for one measure: the gaussian minus clayton difference, the
+# standard error of that difference (the two runs are independent, so their
+# squared MCSEs add) and whether the verdict changes, that is, whether one
+# value lies inside the acceptable band and the other outside.
+cop_cell <- function(d, label, value, band) {
+  g <- d[[paste0(value, "_g")]]; cl <- d[[paste0(value, "_c")]]
+  tibble(parameter = d$parameter, method = d$method, measure = label,
+         diff = g - cl,
+         se   = sqrt(d[[paste0(value, "_mcse_g")]]^2 + d[[paste0(value, "_mcse_c")]]^2),
+         flip = between(g, band[1], band[2]) != between(cl, band[1], band[2]))
+}
+# both estimands are zero at a3 = 0, where the summary reports absolute and not
+# relative bias, so those cells are left out of the relative bias rows
+cop <- bind_rows(
+  cop_cell(filter(cop_s, a3 != 0), "Rel. bias", "rel_bias", c(-0.10, 0.10)),
+  cop_cell(cop_s, "Coverage", "coverage", c(0.925, 0.975)),
+  cop_cell(cop_r, "Type I error", "reject", c(0.025, 0.075))) |>
+  mutate(measure   = factor(measure, unique(measure)),
+         parameter = factor(parameter, c("a3", "imm"), c("$a_3$", "imm")),
+         method    = factor(method, names(method_lab), method_lab))
+```
+
+\renewcommand{\tabfont}{\footnotesize}
 
 ```{r}
 #| label: tbl-copula
-#| tbl-cap: "Largest Change in Each Performance Measure Under a Gaussian Instead of a Clayton Copula"
-#| apa-note: "Each entry is the largest absolute difference between the measure under the Clayton copula (main design) and under the Gaussian copula, over all estimation approaches, estimands, interaction magnitudes, and (mis)specification conditions at that sample size, reliability level, and distribution. Rel. = relative. Rejection is the Type I error at $a_3 = 0$ and the power at $a_3 = 0.2$ for the imm and $a_3$."
-if (!file.exists(file.path(res_rob, "summary.rds"))) {
-  cat("Pending. Run the robustness simulation (copula_robustness = TRUE) and analyze_mc.R.")
-} else {
-  rob <- read_res(res_rob)
-  by  <- c("distr_exo", "n", "rel")
-  nonnormal <- c("uniform", "t5", "chisq_same", "chisq_diff")
-  ref_s <- filter(main$summary, criterion == "soft", distr_exo %in% nonnormal)
-  alt_s <- filter(rob$summary,  criterion == "soft", distr_exo %in% nonnormal)
-  ref_r <- filter(main$reject,  criterion == "soft", distr_exo %in% nonnormal)
-  alt_r <- filter(rob$reject,   criterion == "soft", distr_exo %in% nonnormal)
-  tab <- max_diff(ref_s, alt_s, ref_r, alt_r, by) |>
-    mutate(distr_exo = factor(distr_exo, nonnormal, dist_lab[nonnormal]),
-           rel = factor(rel, names(rel_lab), rel_lab)) |>
-    arrange(distr_exo, rel, n) |>
-    select(distr_exo, rel, n, all_of(names(measures)))
-  tbl(tab, c("Distribution", "Reliability", "$N$", unname(measures)))
+#| tbl-cap: "Agreement of the Performance Verdicts Under the Clayton and the Gaussian Copula"
+#| apa-note: "A verdict is whether the measure lies inside its acceptable region, $\\pm 0.10$ for relative bias, .925 to .975 for coverage, and .025 to .075 for the Type I error. Conditions is the number of matched conditions, over all sample sizes, reliability levels, nonnormal distributions, interaction magnitudes, and (mis)specification conditions. Relative bias excludes $a_3 = 0$ and the Type I error uses $a_3 = 0$ only. Same is the percentage of conditions with the same verdict under both copulas. Changed is the percentage with a different verdict, split by whether the difference between the two values is below (within MCSE) or at least (beyond MCSE) twice its Monte Carlo standard error, the square root of the sum of the two squared MCSEs. Largest is the largest absolute difference between the two values. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+tab <- cop |>
+  group_by(parameter, measure, method) |>
+  summarise(K = n(),
+            same    = sprintf("%.1f", 100 * mean(!flip)),
+            within  = sprintf("%.1f", 100 * mean(flip & abs(diff) <  2 * se)),
+            beyond  = sprintf("%.1f", 100 * mean(flip & abs(diff) >= 2 * se)),
+            largest = sprintf("%.3f", max(abs(diff))),
+            .groups = "drop") |>
+  mutate(K = blank(K, paste(parameter, measure)),
+         measure = blank(measure, paste(parameter, measure)),
+         parameter = blank(parameter, parameter))
+tbl(tab, c("Estimand", "Measure", "Estimator", "Conditions", "Same (\\%)",
+           "Changed, within MCSE (\\%)", "Changed, beyond MCSE (\\%)", "Largest"),
+    align = c(rep("l", 3), rep("r", 5)))
+```
+
+```{r}
+#| label: copula-diff-setup
+nonnormal <- c("uniform", "t5", "chisq_same", "chisq_diff")
+mis_type  <- c(none = "none", c2 = "c2", c3 = "c3", crossload = "cl", rescov = "rc")
+# signed, three decimals, set in math so the minus sign is typeset. a difference
+# that rounds to zero is shown without a sign.
+signed <- function(x) paste0("$", if_else(round(x, 3) == 0, "0.000", sprintf("%+.3f", x)), "$")
+# mean gaussian minus clayton difference in one measure, by estimand, estimator
+# and distribution, with one column per (mis)specification type
+cop_diff_tbl <- function(d, value) {
+  tab <- d |>
+    mutate(diff = .data[[paste0(value, "_g")]] - .data[[paste0(value, "_c")]],
+           mis = factor(mis_type[sub("_.*", "", misspec)], mis_type),
+           parameter = factor(parameter, c("a3", "imm"), c("$a_3$", "imm")),
+           method    = factor(method, names(method_lab), method_lab),
+           distr_exo = factor(distr_exo, nonnormal, dist_lab[nonnormal])) |>
+    group_by(parameter, method, distr_exo, mis) |>
+    summarise(diff = signed(mean(diff)), .groups = "drop") |>
+    tidyr::pivot_wider(names_from = mis, values_from = diff) |>
+    mutate(method = blank(method, paste(parameter, method)),
+           parameter = blank(parameter, parameter))
+  tbl(tab, c("Estimand", "Estimator", "Distribution", "None", "$c_2$", "$c_3$", "cl", "rc"),
+      align = c(rep("l", 3), rep("r", 5)))
 }
 ```
+
+```{r}
+#| label: tbl-copula-bias
+#| tbl-cap: "Mean Difference in Relative Bias Between the Gaussian and the Clayton Copula by Distribution and (Mis)specification"
+#| apa-note: "Each entry is the relative bias under the Gaussian copula minus the relative bias under the Clayton copula (main design), averaged over sample sizes, reliability levels, the two nonzero interaction magnitudes, and, for the (mis)specifications, the small and medium magnitude. None = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+cop_diff_tbl(filter(cop_s, a3 != 0), "rel_bias")
+```
+
+```{r}
+#| label: tbl-copula-rmse
+#| tbl-cap: "Mean Difference in Relative RMSE Between the Gaussian and the Clayton Copula by Distribution and (Mis)specification"
+#| apa-note: "Each entry is the relative RMSE under the Gaussian copula minus the relative RMSE under the Clayton copula (main design), averaged over sample sizes, reliability levels, the two nonzero interaction magnitudes, and, for the (mis)specifications, the small and medium magnitude. None = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+cop_diff_tbl(filter(cop_s, a3 != 0), "rel_rmse")
+```
+
+```{r}
+#| label: tbl-copula-coverage
+#| tbl-cap: "Mean Difference in Coverage Between the Gaussian and the Clayton Copula by Distribution and (Mis)specification"
+#| apa-note: "Each entry is the coverage under the Gaussian copula minus the coverage under the Clayton copula (main design), averaged over sample sizes, reliability levels, interaction magnitudes, and, for the (mis)specifications, the small and medium magnitude. None = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+cop_diff_tbl(cop_s, "coverage")
+```
+
+```{r}
+#| label: tbl-copula-sesd
+#| tbl-cap: "Mean Difference in the SE/SD Ratio Between the Gaussian and the Clayton Copula by Distribution and (Mis)specification"
+#| apa-note: "Each entry is the SE/SD ratio under the Gaussian copula minus the SE/SD ratio under the Clayton copula (main design), averaged over sample sizes, reliability levels, interaction magnitudes, and, for the (mis)specifications, the small and medium magnitude. None = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+cop_diff_tbl(cop_s, "se_sd")
+```
+
+```{r}
+#| label: tbl-copula-typei
+#| tbl-cap: "Mean Difference in Type I Error Between the Gaussian and the Clayton Copula by Distribution and (Mis)specification"
+#| apa-note: "Each entry is the Type I error under the Gaussian copula minus the Type I error under the Clayton copula (main design) at $a_3 = 0$, averaged over sample sizes, reliability levels, and, for the (mis)specifications, the small and medium magnitude. None = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression; (s) = same skewness; (d) = opposite skewness."
+cop_diff_tbl(cop_r, "reject")
+```
+
+\renewcommand{\tabfont}{}
 
 \FloatBarrier
 \newpage
