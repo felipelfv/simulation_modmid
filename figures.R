@@ -118,6 +118,16 @@ fig_baseline_reject <- function(metric, a3v) {
   fig_lines(d, metric, x = "n") + facet_grid(distr_exo ~ rel)
 }
 
+# one measure against the misspecification at the sample sizes in `ns`:
+# distribution (rows) by the two variables in `cols` (columns). d is the table
+# that holds the measure.
+fig_misspec <- function(d, params, a3v, metric, cols, ns) {
+  d <- d |> filter(parameter %in% params, a3 == a3v, n %in% ns) |>
+    prep_factors() |> mutate(parameter = factor(parameter, levels = params))
+  fig_lines(d, metric) + theme(axis.text.x = element_text(size = 6.5)) +
+    facet_grid(reformulate(cols, "distr_exo"), labeller = strip_labels)
+}
+
 # one measure of one parameter at one interaction value and one reliability
 # level: distribution (rows) by sample size (columns)
 fig_slice <- function(param, a3v, metric, rel_lvl)
@@ -204,6 +214,17 @@ for (i in 1:2)
 grid::pushViewport(grid::viewport(layout.pos.row = 2))
 grid::grid.draw(legend)
 dev.off()
+
+# the imm and a3 under misspecification. the bias induced by an omission barely
+# changes with the sample size, so relative bias shows both parameters at
+# N = 500. SE/SD and the type I error depend on the sample size, so they show the
+# imm at the smallest and the largest one.
+save_fig(fig_misspec(summary_tbl, c("a3", "imm"), 0.2, "rel_bias", c("parameter", "rel"), 500),
+         "misspec_rel_bias", 10, 9)
+save_fig(fig_misspec(summary_tbl, "imm", 0.2, "se_sd", c("rel", "n"), c(100, 500)),
+         "misspec_se_sd_imm", 10, 9)
+save_fig(fig_misspec(rej_tbl, "imm", 0, "typeI", c("rel", "n"), c(100, 500)),
+         "misspec_typeI_imm", 10, 9)
 
 # the imm and a3 in every condition, one figure per reliability level and
 # interaction value. relative bias, coverage and SE/SD are lines with one figure
