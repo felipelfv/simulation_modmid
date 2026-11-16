@@ -787,8 +787,8 @@ biased, following previous research (Brandt et al., 2014; Vieira et al.,
 approaches recover both the interaction coefficient and imm without bias
 at every sample size and reliability level, and the same holds under
 uniform and \(t_5\) predictors apart from isolated LMS cells at
-\(N = 100\) with low reliability (Figure~\ref{fig-baseline-bias-imm} and
-Figure~\ref{fig-baseline-bias-a3}). Moreover, the \(\chi^2\) conditions
+\(N = 100\) with low reliability (\textbf{?@fig-baseline-bias-imm} and
+\textbf{?@fig-baseline-bias-a3}). Moreover, the \(\chi^2\) conditions
 affect all three approaches, but differently. UPI and LSAM are biased
 only at \(N = 100\) with low reliability, where UPI shows the largest
 deviation, whereas LMS remains biased across all sample sizes at low
@@ -810,16 +810,16 @@ induces an upward bias in the imm at low reliability, most pronounced
 for LMS under same-skewness \(\chi^2\), and leaves the interaction
 coefficient largely unchanged. For the structural omissions, the bias
 increases with the omission magnitude wherever present, and it is
-generally larger at low reliability (Figure~\ref{fig-bias}). We also
-note that the bias of the interaction coefficient under \(c_3\) is the
-one result not implied by the omission alone.
+generally larger at low reliability (\textbf{?@fig-bias}). We also note
+that the bias of the interaction coefficient under \(c_3\) is the one
+result not implied by the omission alone.
 
 \subsubsection{Relative RMSE}\label{relative-rmse}
 
 Under correct specification with normal predictors, the relative RMSE of
 both the interaction coefficient and the imm falls with sample size and
 reliability for all three approaches, with LMS the most efficient, LSAM
-intermediate, and UPI the least (Figure~\ref{fig-rmse}). In general, the
+intermediate, and UPI the least (\textbf{?@fig-rmse}). In general, the
 same holds for both quantities under the nonnormal predictors, except
 under opposite-skewness \(\chi^2\) at low reliability, where LSAM is as
 inefficient as UPI.
@@ -839,16 +839,16 @@ reliability.
 We interpret SE/SD ratios below 0.90 (underestimation) or above 1.10
 (overestimation) as biased (Brandt et al., 2014; Vieira et al., 2026),
 and similarly for the SE\(^2\)/VAR ratio. Note that the standard errors
-for the imm are based on the Monte Carlo method
-(Figure~\ref{fig-sesd-imm} and Figure~\ref{fig-sesd-a3}). Under correct
-model specification with normal predictors, the SE/SD ratio of both the
-interaction coefficient and the imm is unbiased, except for UPI, which
-overestimates at \(N = 200\) with low reliability. Still at \(N = 200\)
-with low reliability, that overestimation extends to the \(t_5\) and
-\(\chi^2\) conditions for UPI and, under opposite-skewness \(\chi^2\),
-to LSAM. Note that with \(N = 500\), only UPI under opposite-skewness
-\(\chi^2\) remains overestimated, whereas the interaction coefficient is
-slightly underestimated for all three approaches under \(t_5\) at high
+for the imm are based on the Monte Carlo method (\textbf{?@fig-sesd-imm}
+and \textbf{?@fig-sesd-a3}). Under correct model specification with
+normal predictors, the SE/SD ratio of both the interaction coefficient
+and the imm is unbiased, except for UPI, which overestimates at
+\(N = 200\) with low reliability. Still at \(N = 200\) with low
+reliability, that overestimation extends to the \(t_5\) and \(\chi^2\)
+conditions for UPI and, under opposite-skewness \(\chi^2\), to LSAM.
+Note that with \(N = 500\), only UPI under opposite-skewness \(\chi^2\)
+remains overestimated, whereas the interaction coefficient is slightly
+underestimated for all three approaches under \(t_5\) at high
 reliability and for LSAM under same-skewness \(\chi^2\) at low
 reliability.
 
@@ -864,7 +864,7 @@ repository).
 \subsubsection{Coverage}\label{coverage}
 
 Coverage between 92.5\% and 97.5\% was considered acceptable
-(Figure~\ref{fig-coverage-imm} and Figure~\ref{fig-coverage-a3}). Under
+(\textbf{?@fig-coverage-imm} and \textbf{?@fig-coverage-a3}). Under
 correct model specification with normal predictors, coverage is around
 the nominal level with all three approaches for the interaction
 coefficient and imm. Still with a correct specification, it slightly
@@ -892,7 +892,7 @@ approaches at \(N = 500\), most for LMS at low reliability, whereas
 Power)}\label{hypothesis-testing-type-i-error-and-power}
 
 Type I error rates between 2.5\% and 7.5\% were considered acceptable
-(Figure~\ref{fig-typei}). Under correct model specification with normal
+(\textbf{?@fig-typei}). Under correct model specification with normal
 predictors and \(a_3 = 0\), the interaction coefficient and imm hold
 their nominal level reasonably well for all three approaches, with some
 negligible conservativeness for UPI at \(N = 200\) with low reliability.
@@ -915,7 +915,7 @@ mostly within the acceptable range, with inflation confined largely to
 
 At \(a_3 = 0.2\) the imm is detected with power that rises with sample
 size and reliability under normal predictors, with LMS the most powerful
-(Figure~\ref{fig-power}). Under the nonnormal predictors, LMS keeps the
+(\textbf{?@fig-power}). Under the nonnormal predictors, LMS keeps the
 highest power under \(\chi^2\), whereas under \(t_5\) and uniform
 predictors LSAM matches it, and power falls substantially under
 opposite-skewness \(\chi^2\) predictors, most for UPI and LSAM. Under
@@ -930,9 +930,9 @@ Estimates}\label{additional-structural-estimates}
 
 For the remaining structural coefficients (\(a_1\), \(a_2\), \(b\), and
 \(c'\)), at high reliability and \(N = 500\), we report their relative
-bias (Figure~\ref{fig-param-bias}), coverage
-(Figure~\ref{fig-param-coverage}), and SE/SD ratio
-(Figure~\ref{fig-param-sesd}) across all misspecification conditions and
+bias (\textbf{?@fig-param-bias}), coverage
+(\textbf{?@fig-param-coverage}), and SE/SD ratio
+(\textbf{?@fig-param-sesd}) across all misspecification conditions and
 distributions. Under correct specification, all approaches are unbiased
 with acceptable coverage and SE/SD ratios throughout distributions.
 Under misspecification, the structural omissions bias the
@@ -953,234 +953,6 @@ The SE/SD ratio stays within the acceptable range, except for \(b\) and
 predictors for \(c'\) and under \(t_5\) and same-skewness \(\chi^2\) for
 \(b\).
 
-\begin{figure}[!htbp]
-
-{\caption{{Relative Bias of the imm (\(a_3 b\)) Under the Correctly
-Specified Condition Across Sample Sizes, Reliability, Interaction
-Values, and Distributions}{\label{fig-baseline-bias-imm}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/baseline_rel_bias_imm.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). imm = index of moderated mediation; LSAM = local
-structural-after-measurement; LMS = latent moderated structural
-equations; UPI = unconstrained product indicator.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Relative Bias of the Interaction Coefficient (\(a_3\)) Under
-the Correctly Specified Condition Across Sample Sizes, Reliability,
-Interaction Values, and Distributions}{\label{fig-baseline-bias-a3}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/baseline_rel_bias_a3.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Relative Bias of the imm (\(a_3 b\)) and the Interaction
-Coefficient (\(a_3\)) Across Distributions, Reliability, and
-(Mis)specifications for \(N = 200\) and \(500\) at
-\(a_3 = 0.2\)}{\label{fig-bias}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/combo_rel_bias_a3-0.2.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for
-relative bias. Monte Carlo standard errors (MCSEs) are not shown. imm =
-index of moderated mediation; LSAM = local structural-after-measurement;
-LMS = latent moderated structural equations; UPI = unconstrained product
-indicator; n = no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Relative RMSE of the imm (\(a_3 b\)) and the Interaction
-Coefficient (\(a_3\)) Across Distributions, Reliability, and
-(Mis)specifications for \(N = 200\) and \(500\) at
-\(a_3 = 0.2\)}{\label{fig-rmse}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/both_rel_rmse_a3-0.2.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~error bars represent the Monte Carlo standard
-error (MCSE). No acceptable region is defined for this measure. imm =
-index of moderated mediation; LSAM = local structural-after-measurement;
-LMS = latent moderated structural equations; UPI = unconstrained product
-indicator; n = no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{SE/SD of the imm (\(a_3 b\)) Across Distributions,
-Reliability, and (Mis)specifications for \(N = 200\) and \(500\) at
-\(a_3 = 0.2\)}{\label{fig-sesd-imm}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/imm_se_sd_a3-0.2_byrel.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure. The Monte Carlo standard error (MCSE) is not computed for the
-SE/SD ratio. imm = index of moderated mediation; LSAM = local
-structural-after-measurement; LMS = latent moderated structural
-equations; UPI = unconstrained product indicator; n = no
-misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{SE/SD of the Interaction Coefficient (\(a_3\)) Across
-Distributions, Reliability, and (Mis)specifications for \(N = 200\) and
-\(500\) at \(a_3 = 0.2\)}{\label{fig-sesd-a3}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/a3_se_sd_a3-0.2_byrel.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure. The Monte Carlo standard error (MCSE) is not computed for the
-SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator; n
-= no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Coverage of the imm (\(a_3 b\)) Across Distributions,
-Reliability, and (Mis)specifications for \(N = 200\) and \(500\) at
-\(a_3 = 0.2\)}{\label{fig-coverage-imm}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/imm_coverage_a3-0.2_byrel.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). imm = index of moderated mediation; LSAM = local
-structural-after-measurement; LMS = latent moderated structural
-equations; UPI = unconstrained product indicator; n = no
-misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Coverage of the Interaction Coefficient (\(a_3\)) Across
-Distributions, Reliability, and (Mis)specifications for \(N = 200\) and
-\(500\) at \(a_3 = 0.2\)}{\label{fig-coverage-a3}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/a3_coverage_a3-0.2_byrel.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator; n
-= no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Type I Error of the imm (\(a_3 b\)) and the Interaction
-Coefficient (\(a_3\)) Across Distributions, Reliability, and
-(Mis)specifications for \(N = 200\) and \(500\) at
-\(a_3 = 0\)}{\label{fig-typei}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/both_typeI_a3-0.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). imm = index of moderated mediation; LSAM = local
-structural-after-measurement; LMS = latent moderated structural
-equations; UPI = unconstrained product indicator; n = no
-misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Power for the imm (\(a_3 b\)) and the Interaction Coefficient
-(\(a_3\)) Across Distributions, Reliability, and (Mis)specifications for
-\(N = 200\) and \(500\) at \(a_3 = 0.2\)}{\label{fig-power}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/both_power_a3-0.2.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~error bars represent the Monte Carlo standard
-error (MCSE). No acceptable region is defined for this measure. imm =
-index of moderated mediation; LSAM = local structural-after-measurement;
-LMS = latent moderated structural equations; UPI = unconstrained product
-indicator; n = no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Relative Bias of the Structural Coefficients (\(a_1\),
-\(a_2\), \(b\), \(c'\)) Across Distributions and (Mis)specifications at
-High Reliability, \(N = 500\), and
-\(a_3 = 0.2\)}{\label{fig-param-bias}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/param_rel_bias_a3-0.2_n500_high.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator; n
-= no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{Coverage of the Structural Coefficients (\(a_1\), \(a_2\),
-\(b\), \(c'\)) Across Distributions and (Mis)specifications at High
-Reliability, \(N = 500\), and
-\(a_3 = 0.2\)}{\label{fig-param-coverage}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/param_coverage_a3-0.2_n500_high.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure, and the error bars represent the Monte Carlo standard error
-(MCSE). LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator; n
-= no misspecification.
-
-\end{figure}
-
-\begin{figure}[!htbp]
-
-{\caption{{SE/SD of the Structural Coefficients (\(a_1\), \(a_2\),
-\(b\), \(c'\)) Across Distributions and (Mis)specifications at High
-Reliability, \(N = 500\), and \(a_3 = 0.2\)}{\label{fig-param-sesd}}}}
-
-\includegraphics[width=6.3in,height=\textheight,keepaspectratio]{../plots/param_se_sd_a3-0.2_n500_high.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band marks the acceptable region for the
-measure. The Monte Carlo standard error (MCSE) is not computed for the
-SE/SD ratio. LSAM = local structural-after-measurement; LMS = latent
-moderated structural equations; UPI = unconstrained product indicator; n
-= no misspecification.
-
-\end{figure}
-
 \subsection{Measurement Loadings}\label{measurement-loadings}
 
 For the twelve freely estimated factor loadings, all but one are
@@ -1189,29 +961,13 @@ essentially every condition, the exceptions being noisy deviations of
 the SE\(^2\)/VAR ratio concentrated at \(N = 100\) with low reliability.
 We display only the loading of the cross-loaded mediator indicator
 \(m_3\), with its relative bias, coverage, SE/SD ratio, and SE\(^2\)/VAR
-ratio at high reliability and \(N = 500\) (Figure~\ref{fig-load}). For
+ratio at high reliability and \(N = 500\) (\textbf{?@fig-load}). For
 \(m_3\), \texttt{cl} is the only consequential misspecification. Its
 relative bias rises sharply under all approaches, less so under LSAM,
 and its coverage collapses toward zero. The two standard error measures
 stay within the acceptable range, except for LSAM under the medium
 \texttt{cl} with \(t_5\) and \(\chi^2\) predictors. The remaining
 omissions leave the loading unaffected.
-
-\begin{figure}[!htbp]
-
-{\caption{{Performance of the Cross-Loaded Mediator Indicator Loading
-(\(m_3\)) Across All Measures, Distributions, and (Mis)specifications at
-High Reliability, \(N = 500\), and \(a_3 = 0.2\)}{\label{fig-load}}}}
-
-\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/load_lm3_allmeasures_a3-0.2_n500_high.png}
-
-\vspace{-20pt}
-\noindent \emph{Note.} The~gray band in each panel marks the acceptable
-region for that measure. LSAM = local structural-after-measurement; LMS
-= latent moderated structural equations; UPI = unconstrained product
-indicator; n = no misspecification.
-
-\end{figure}
 
 \section{Discussion}\label{discussion}
 
