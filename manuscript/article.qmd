@@ -853,42 +853,41 @@ knitr::include_graphics("../plots/load_lm3_a3-0.2_n500_low.png")
 
 # Discussion
 
-We evaluated three estimation approaches in the context of a latent variable 
-moderated mediation model, the two-step LSAM and the system-wide LMS and UPI, 
-under correct specification and under a large number of structural and 
-measurement misspecifications as well as distributional violations. 
+We evaluated four estimation approaches in a latent variable moderated
+mediation model, the two-step LSAM, the system-wide LMS and UPI, and FSR as a
+baseline, under correct specification and under structural and measurement
+misspecifications as well as distributional violations.
 
-Under correct specification with normal predictors, all three recovered the 
-imm and the interaction coefficient with low bias and with coverage close to 
-nominal, 
-differing mainly in the SE/SD ratio, Type I error, relative RMSE, and 
-power. LMS had the lowest relative RMSE and 
-the highest power but, under nonnormal predictors, showed bias under 
-$\chi^2$ predictors at low reliability together with below-nominal coverage 
-and inflated Type I error. LSAM yielded Type I error closest to nominal, at 
-the cost of a higher relative RMSE and lower power in some cases, while UPI 
-fell in between, with low bias except at the smallest sample size with low 
-reliability, where it was also the least stable. Both standard error 
-measures stayed near one except in small samples, most at low reliability, 
-where UPI overestimated standard errors, and UPI and LSAM struggled most 
-under opposite-skewness $\chi^2$ predictors.
+Under correct specification with normal predictors, LSAM, LMS, and UPI
+recovered the imm and the interaction coefficient with low bias and with
+coverage close to nominal, whereas FSR attenuated the imm by about a quarter
+at high and about half at low reliability. LMS had the lowest relative RMSE
+and the highest power, but it was biased with $\chi^2$ predictors and its Type
+I error was inflated with $t_5$ and $\chi^2$ predictors, as expected given its
+assumption of normal latent predictors. Among the three, LSAM yielded Type I
+error closest to nominal, at some cost in relative RMSE and power, while UPI
+fell in between, with low bias except at the smallest sample size with low
+reliability, where it was also the least stable. Its standard errors were
+overestimated in small samples at low reliability, largely because of a few
+extreme values, and UPI and LSAM struggled most under opposite-skewness
+$\chi^2$ predictors.
 
-Under misspecification, LSAM was the more robust approach. The structural 
-omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side 
-coefficients for all approaches but left the mediator equation, and hence 
-the interaction coefficient, unaffected under LSAM, whereas the system-wide 
-approaches also carried them into the mediator equation, biasing $a_2$ under 
-$c_2$ and the interaction coefficient under $c_3$. The cross-loading (`cl`) 
-was the most damaging throughout. Under the system-wide approaches it biased 
-the interaction coefficient and most structural coefficients and sharply 
-lowered coverage at low reliability, while under LSAM it affected only $a_1$ 
-and $c'$ and left the coverage of the interaction coefficient near nominal, 
-although its standard errors for the affected loading were underestimated 
-under nonnormal predictors. 
-The residual covariance (`rc`) had little effect. Where bias was substantial, 
-it was smaller under LSAM, except for $c'$ under the structural omissions, 
-where the three were similar, and it increased with the magnitude of the omission and at lower 
-reliability.
+Under misspecification, LSAM was the more robust approach. The structural
+omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side
+coefficients, and thereby the imm, for all approaches but left the mediator
+equation, and hence the interaction coefficient, unaffected under LSAM,
+whereas the system-wide approaches also carried them into the mediator
+equation, biasing $a_2$ under $c_2$ and the interaction coefficient under
+$c_3$. The cross-loading (`cl`) was the most damaging for the structural
+coefficients. Under the system-wide approaches it biased most of them,
+including the interaction coefficient, while under LSAM it affected mainly
+$a_1$ and $c'$. The imm was little affected, but for the system-wide
+approaches only because opposite biases in the interaction coefficient and $b$
+offset each other. The residual covariance (`rc`) had little effect. The Type
+I error of LSAM was unchanged by the omissions, whereas that of LMS rose to
+0.33. Where bias was substantial, it was smaller under LSAM, except for $c'$
+under the structural omissions, and it increased with the magnitude of the
+omission.
 
 Regarding the imm, the Monte Carlo method delivered standard errors and 
 confidence intervals that behaved like those of the interaction coefficient, 
@@ -917,7 +916,7 @@ assumptions [@Imai2010; @Rohrer2022]. Good statistical performance in certain
 conditions is therefore not, on its own, a justification for a causal claim, 
 and we direct interested readers to the developing literature on the causal 
 interpretation of mediation [@Morelli2026; @Imai2010]. Moreover, 
-misspecification had strong consequences across all three approaches, and 
+misspecification had strong consequences across all approaches, and 
 many of the omissions studied may be highly plausible in applied contexts.
 
 {{< pagebreak >}}
