@@ -557,18 +557,14 @@ versions, code, manuscript, and materials, see the project repository.
 
 # Results
 
-We present the results in three sections. First, the results for the 
-interaction coefficient and the imm are reported. We then turn to the 
-remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), 
-and we close with the estimated factor loadings, focusing mainly on that of 
-the cross-loaded indicator ($m_3$). Due to the large number of conditions, we focus on a subset. In most figures we fix the 
-interaction coefficient at 0.2 and show $N = 200$ and $500$ for the 
-interaction coefficient and imm, and solely $N = 500$ for the structural 
-coefficients and loadings. 
-For the latter two, we further restrict to high reliability, whereas the 
-interaction coefficient and imm are shown at both reliability levels. 
-All results and detailed convergence and outlier information are available 
-in the repository.
+We present the results in four parts. After the convergence results, we report
+the interaction coefficient and the imm, first under correct structural and
+measurement specification and then under misspecification. We then turn to the
+remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), and we
+close with the estimated factor loadings, focusing mainly on that of the
+cross-loaded indicator ($m_3$). Due to the large number of conditions, the
+figures in the main text show a subset. Complete results for every condition, and detailed convergence and 
+outlier information, are available in the supplementary materials.
 
 ## Convergence, Outliers, and Inadmissible Solutions
 
@@ -583,22 +579,124 @@ skewed ($\chi^2$) predictors. The results reported below did not exclude inadmis
 arose almost exclusively for UPI; excluding them leads to negligible changes, 
 confined to the smallest sample size, low reliability, $\chi^2$ conditions.
 
-## Main Structural Estimates
+## Correct Structural and Measurement Specification
+
+We show the imm for every measure, and the interaction coefficient alongside 
+it where the two differ, that is, for the standard errors and coverage. 
+Relative bias is shown at both nonzero interaction magnitudes ($a_3 = 0.2$ and 
+$0.4$), the standard errors, coverage, and power at the smaller one, and the 
+Type I error under no interaction ($a_3 = 0$). 
 
 ### Relative Bias
 
-We interpret values whose absolute relative bias exceeds 0.10 (10%) as biased, 
-following previous research [@Brandt2014; @Vieira2026]. Under correct 
-specification with normal predictors, all three approaches 
-recover both the interaction coefficient and imm without bias at every sample 
-size and reliability level, and the same holds under uniform and $t_5$ 
-predictors apart from isolated LMS cells at $N = 100$ with low reliability 
-(@fig-baseline-bias-imm and @fig-baseline-bias-a3). Moreover, the $\chi^2$ 
-conditions affect all three approaches, but differently. UPI and LSAM are 
-biased only at $N = 100$ with low reliability, where UPI shows the largest 
-deviation, whereas LMS remains biased across all sample sizes at low 
-reliability, negatively under opposite skewness at the larger interaction and 
-positively under same skewness at the smaller one.
+An absolute relative bias of at most 0.10 (10%) was considered acceptable, 
+following previous research [@Brandt2014; @Vieira2026]. With normal, uniform, 
+and $t_5$ predictors, LSAM, LMS, and UPI recover the imm with low bias, within 
+the acceptable range at every sample size and reliability level and for both interaction magnitudes, the only
+exception being LMS with $t_5$ predictors at $N = 100$ and low reliability
+(@fig-baseline-bias-imm). With $\chi^2$ predictors, the bias of LSAM and UPI 
+exceeds this range only at $N = 100$ with low reliability, whereas that of LMS 
+persists at every sample size and depends on the 
+interaction magnitude. It is positive under same skewness at $a_3 = 0.2$ with 
+low reliability (0.11 at $N = 100$ and 0.15 otherwise)
+and negative under opposite skewness at $a_3 = 0.4$ at both reliability levels
+(about $-0.10$). FSR underestimates the imm in every condition, by 21% to 35%
+at high reliability and by 41% to 56% at low reliability, irrespective of
+sample size. The interaction coefficient shows the same pattern, with a smaller 
+underestimation by FSR (12% to 27% at high and 27% to 44% at low reliability; 
+see the supplementary materials).
+
+```{r}
+#| label: fig-baseline-bias-imm
+#| fig-cap: "Relative Bias of the imm ($a_3 b$) Under Correct Structural and Measurement Specification"
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
+```
+
+### Standard Errors
+
+SE/SD ratios between 0.90 and 1.10 were considered acceptable [@Brandt2014; 
+@Vieira2026]. For the imm, whose standard error is based on the Monte Carlo
+method, the ratio is within this range for LSAM and LMS in every condition
+(@fig-sesd). UPI overestimates the standard error at low reliability, in every
+distribution up to $N = 200$ and with $\chi^2$ predictors up to $N = 300$,
+with ratios as high as 1.64, and in one condition at high reliability. Much of this overestimation is due to a small number of extreme standard 
+errors, without which the ratio is within the range in 9 of these 13 
+conditions (see the supplementary materials). For the
+interaction coefficient the ratios are slightly lower than for the imm, so
+that LSAM and LMS fall just below 0.90 in a few conditions with $t_5$ and
+same-skewness $\chi^2$ predictors. For FSR the ratio is within or slightly
+below the acceptable range.
+
+```{r}
+#| label: fig-sesd
+#| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$) and the imm ($a_3 b$) Under Correct Structural and Measurement Specification at $a_3 = 0.2$"
+#| apa-note: "The gray band marks the acceptable region for the measure. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/baseline_se_sd.png")
+```
+
+### Coverage
+
+Coverage between 92.5% and 97.5% was considered acceptable. With normal,
+uniform, and opposite-skewness $\chi^2$ predictors, the coverage of the imm is
+within this range for LSAM, LMS, and UPI, apart from a single condition for
+LMS (@fig-coverage). With $t_5$ and same-skewness $\chi^2$ predictors it falls
+slightly below the range in several conditions, to about 0.90 at the lowest.
+With these two distributions, the coverage of the interaction coefficient is
+on average 0.01 lower than that of the imm and falls below the range more
+often. For FSR, coverage decreases with sample size, because the interval
+narrows around a biased estimate, and it is lower for the imm than for the
+interaction coefficient. At $N = 500$ with low reliability it lies between
+0.16 and 0.38 for the imm.
+
+```{r}
+#| label: fig-coverage
+#| fig-cap: "Coverage of the Interaction Coefficient ($a_3$) and the imm ($a_3 b$) Under Correct Structural and Measurement Specification at $a_3 = 0.2$"
+#| apa-note: "The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). The vertical axis is truncated at 0.60, and lower values for FSR are not shown. imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/baseline_coverage.png")
+```
+
+### Hypothesis Testing (Type I Error and Power)
+
+Type I error rates between 2.5% and 7.5% were considered acceptable. At
+$a_3 = 0$, LMS is liberal in many conditions with $t_5$ and $\chi^2$ 
+predictors, with rates up to 0.10 that increase with sample size at low 
+reliability, and with $t_5$ predictors at high 
+reliability LSAM and UPI are slightly liberal as well at most sample sizes 
+(@fig-test). UPI is 
+conservative at low reliability, mainly up to $N = 200$, and with 
+opposite-skewness $\chi^2$ predictors at every sample size, which are largely 
+the conditions in which its standard errors are overestimated. Otherwise the 
+rates are within the acceptable range, apart from two conditions at 
+$N = 100$. At $a_3 = 0.2$, power increases with sample size and reliability. LSAM and LMS have similar power with normal, uniform, and $t_5$ predictors, 
+LMS has higher power than LSAM and UPI with $\chi^2$ predictors, and UPI has 
+the lowest power at low reliability. The difference is largest with 
+opposite-skewness $\chi^2$ predictors at low reliability, where at $N = 500$ 
+power is 0.80 for LMS, 0.46 for LSAM, and 0.31 for UPI. This reflects the 
+precision of the estimates more than the liberal Type I error of LMS. With 
+these predictors the standard deviation of the LSAM and UPI estimates is 1.3 
+to 1.9 times that of LMS, whereas with the other distributions that of LSAM 
+is at most 1.15 times. FSR keeps the
+Type I error within the acceptable range in all but one condition and has
+power close to that of LMS, because its estimates and their standard errors 
+are attenuated by about the same factor. The interaction coefficient gives 
+nearly identical results (see the 
+supplementary materials).
+
+```{r}
+#| label: fig-test
+#| fig-cap: "Type I Error ($a_3 = 0$) and Power ($a_3 = 0.2$) of the imm ($a_3 b$) Under Correct Structural and Measurement Specification"
+#| apa-note: "The gray band marks the acceptable region for the Type I error, the dotted line in the power panels marks 0.80, and the error bars represent the Monte Carlo standard error (MCSE). imm = index of moderated mediation; LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/baseline_reject_imm.png")
+```
+
+## Structural and Measurement Misspecification
+
+### Relative Bias
 
 Under misspecification, $c_2$ biases the imm for all three estimation 
 approaches across distributions, and so does $c_3$ in most conditions, as 
@@ -614,18 +712,11 @@ Last, `rc` induces an upward bias in the imm at low reliability, most
 pronounced for LMS under same-skewness $\chi^2$, and leaves the interaction 
 coefficient largely unchanged. For the structural omissions, the bias increases 
 with the omission magnitude wherever present, and it is generally 
-larger at low reliability (@fig-bias). We also note that the bias of 
+larger at low reliability (see the supplementary materials). We also note that the bias of 
 the interaction coefficient under $c_3$ is the one result not implied by the 
 omission alone.
 
 ### Relative RMSE
-
-Under correct specification with normal predictors, the relative RMSE of 
-both the interaction coefficient and the imm falls with sample size and 
-reliability for all three approaches, with LMS the most efficient, LSAM 
-intermediate, and UPI the least (@fig-rmse). In general, the same holds for both quantities under the nonnormal predictors, 
-except under opposite-skewness $\chi^2$ at low reliability, where LSAM is as 
-inefficient as UPI. 
 
 Under misspecification, the structural omissions ($c_2$ and $c_3$) 
 inflate the RMSE of the imm for all three approaches. Under $c_3$ the 
@@ -638,20 +729,6 @@ LMS under the medium `cl` at low reliability.
 
 ### Standard Errors
 
-We interpret SE/SD ratios below 0.90 (underestimation) or above 1.10
-(overestimation) as biased [@Brandt2014; @Vieira2026], and similarly for 
-the SE$^2$/VAR ratio. Note that the standard errors 
-for the imm are based on the Monte Carlo method (@fig-sesd-imm and 
-@fig-sesd-a3). Under correct model specification with normal predictors, the 
-SE/SD ratio of both the interaction coefficient and the imm is unbiased, except 
-for UPI, which overestimates at $N = 200$ with low reliability. Still at 
-$N = 200$ with low reliability, that overestimation 
-extends to the $t_5$ and $\chi^2$ conditions for UPI and, under 
-opposite-skewness $\chi^2$, to LSAM. Note that with $N = 500$, only UPI under 
-opposite-skewness $\chi^2$ remains overestimated, whereas the interaction 
-coefficient is slightly underestimated for all three approaches under $t_5$ at 
-high reliability and for LSAM under same-skewness $\chi^2$ at low reliability. 
-
 Moreover, in general, model misspecification barely alters this 
 pattern. The same deviations recur throughout all omissions, with some 
 fluctuations. With respect to the SE$^2$/VAR ratio, a 
@@ -661,15 +738,6 @@ for both $\chi^2$ conditions, while LSAM showed overestimated values
 for the opposite-skewness $\chi^2$ (figures available in the project repository). 
 
 ### Coverage
-
-Coverage between 92.5% and 97.5% was considered acceptable 
-(@fig-coverage-imm and @fig-coverage-a3). Under correct model specification 
-with normal predictors, coverage is around the nominal level with all three 
-approaches for the interaction coefficient and imm. Still with a correct 
-specification, it slightly drops below the acceptable range under the $t_5$ 
-condition for all approaches across reliability levels and sample sizes, as well
-as under same-skewness $\chi^2$ but in this case mainly at $N = 500$ and low 
-reliability.
 
 Under model misspecification, $c_2$ and $c_3$ reduce the imm coverage, 
 since its interval is then centered on a biased estimate, with the largest 
@@ -687,16 +755,6 @@ $c_2$ and `rc` leave coverage close to nominal.
 
 ### Hypothesis Testing (Type I Error and Power)
 
-Type I error rates between 2.5% and 7.5% were considered acceptable 
-(@fig-typei). Under correct model specification with normal predictors and 
-$a_3 = 0$, the interaction coefficient and imm hold their nominal level 
-reasonably well for all three approaches, with some negligible conservativeness 
-for UPI at $N = 200$ with low reliability. Under the nonnormal predictors, LMS shows slightly inflated 
-Type I error under $t_5$ at both reliability levels and under both $\chi^2$ 
-conditions at low reliability, LSAM under $t_5$ at high reliability, whereas 
-UPI is conservative under opposite-skewness $\chi^2$ and uniform predictors at 
-low reliability. 
-
 Under misspecification, this pattern largely persists throughout 
 distributions. LMS shows inflated Type I error in most cells under $t_5$ 
 and both $\chi^2$ conditions, most severely under the structural omissions 
@@ -707,12 +765,7 @@ but also inflated under $t_5$ at high reliability for several omissions,
 whereas LSAM stays mostly within the acceptable range, with inflation 
 confined largely to $t_5$ predictors.
 
-At $a_3 = 0.2$ the imm is detected with power that rises with sample size and
-reliability under normal predictors, with LMS the most powerful 
-(@fig-power). Under the nonnormal predictors, LMS keeps the highest power 
-under $\chi^2$, whereas under $t_5$ and uniform predictors LSAM matches it, 
-and power falls substantially under opposite-skewness $\chi^2$ predictors, most 
-for UPI and LSAM. Under misspecification, power barely changes for LSAM, 
+Under misspecification, power barely changes for LSAM, 
 whereas for the system-wide approaches it rises under $c_3$ and falls under 
 the cross-loading, except for LMS under opposite-skewness $\chi^2$, where its 
 inflated Type I error lifts it. We note, however, that interpreting power in the case of 
@@ -721,9 +774,9 @@ bias and inflated Type I error should be avoided.
 ## Additional Structural Estimates
 
 For the remaining structural coefficients ($a_1$, $a_2$, $b$, and $c'$), at 
-high reliability and $N = 500$, we report their relative bias 
-(@fig-param-bias), coverage (@fig-param-coverage), and SE/SD ratio 
-(@fig-param-sesd) across all misspecification conditions and distributions. 
+high reliability and $N = 500$, we report their relative bias, coverage, and SE/SD ratio across all 
+misspecification conditions and distributions (see the supplementary 
+materials). 
 Under correct specification, all approaches are unbiased with acceptable 
 coverage and SE/SD ratios throughout distributions. Under misspecification, 
 the structural omissions bias the outcome-equation coefficients $b$ and $c'$ 
@@ -748,7 +801,7 @@ with acceptable performance across every measure and essentially every
 condition, the exceptions being noisy deviations of the SE$^2$/VAR ratio 
 concentrated at $N = 100$ with low reliability. We display only the loading of the cross-loaded mediator indicator $m_3$, 
 with its relative bias, coverage, SE/SD ratio, and SE$^2$/VAR ratio at high 
-reliability and $N = 500$ (@fig-load). For 
+reliability and $N = 500$ (see the supplementary materials). For 
 $m_3$, `cl` is the only consequential misspecification. Its relative bias 
 rises sharply under all approaches, less so under LSAM, and its coverage 
 collapses toward zero. The two standard error measures stay within the 

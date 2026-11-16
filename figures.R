@@ -100,13 +100,22 @@ fig_lines <- function(d, metric, x = "misspec") {
          y = metric_spec[[metric]]$lab, shape = NULL, linetype = NULL)
 }
 
-# relative bias of one parameter under the correctly specified model against the
-# sample size: distribution (rows) by reliability and nonzero interaction value
-# (columns)
-fig_baseline_bias <- function(param) {
-  d <- summary_tbl |> filter(parameter == param, misspec == "none", a3 != 0) |>
+# one measure under the correctly specified model against the sample size:
+# distribution (rows) by the two variables in `cols` (columns). ylim cuts the
+# axis where one method would otherwise flatten the others.
+fig_baseline <- function(params, a3v, metric, cols, ylim = NULL) {
+  d <- summary_tbl |> filter(parameter %in% params, misspec == "none", a3 %in% a3v) |>
+    prep_factors() |> mutate(n = factor(n), parameter = factor(parameter, levels = params))
+  fig_lines(d, metric, x = "n") + coord_cartesian(ylim = ylim) +
+    facet_grid(reformulate(cols, "distr_exo"), labeller = strip_labels)
+}
+
+# type I error or power of the imm under the correctly specified model against
+# the sample size: distribution (rows) by reliability (columns)
+fig_baseline_reject <- function(metric, a3v) {
+  d <- rej_tbl |> filter(parameter == "imm", misspec == "none", a3 == a3v) |>
     prep_factors() |> mutate(n = factor(n))
-  fig_lines(d, "rel_bias", x = "n") + facet_grid(distr_exo ~ rel + a3, labeller = strip_labels)
+  fig_lines(d, metric, x = "n") + facet_grid(distr_exo ~ rel)
 }
 
 # one measure of one parameter at one interaction value and one reliability
@@ -165,9 +174,36 @@ save_bars <- function(d, metric, a3v, rel_lvl)
   save_fig(fig_bars(d, metric, a3v, rel_lvl),
            sprintf("both_%s_a3-%s_%s", metric, a3v, rel_lvl), 10, 12)
 
-# the imm and a3 under the correctly specified model
+# the imm and a3 under the correctly specified model. relative bias has one
+# figure per parameter with both nonzero interaction values. SE/SD and coverage
+# show the two parameters side by side at a3 = 0.2, and the coverage axis stops
+# at 0.6 because the coverage of FSR falls far below that of the other methods.
 for (p in c("imm", "a3"))
-  save_fig(fig_baseline_bias(p), paste0("baseline_rel_bias_", p), 10, 9)
+  save_fig(fig_baseline(p, c(0.2, 0.4), "rel_bias", c("rel", "a3")),
+           paste0("baseline_rel_bias_", p), 10, 9)
+save_fig(fig_baseline(c("a3", "imm"), 0.2, "se_sd", c("parameter", "rel")),
+         "baseline_se_sd", 10, 9)
+save_fig(fig_baseline(c("a3", "imm"), 0.2, "coverage", c("parameter", "rel"), ylim = c(0.6, 1)),
+         "baseline_coverage", 10, 9)
+
+# type I error (a3 = 0) and power (a3 = 0.2) of the imm as two blocks, which are
+# separate plots because the two rates need different axes. they are drawn side
+# by side above one shared legend, with the device opened first because the
+# grobs are sized for the open device.
+blocks <- list(
+  fig_baseline_reject("typeI", 0) +
+    theme(strip.text.y = element_blank(), strip.background.y = element_blank()),
+  fig_baseline_reject("power", 0.2) + coord_cartesian(ylim = c(0, 1)))
+png(file.path(plot_dir, "baseline_reject_imm.png"), width = 10, height = 9, units = "in", res = 150)
+legend <- ggplotGrob(blocks[[1]])
+legend <- legend$grobs[[which(legend$layout$name == "guide-box-bottom")]]
+grid::pushViewport(grid::viewport(layout = grid::grid.layout(2, 2, heights = grid::unit(c(8.6, 0.4), "in"))))
+for (i in 1:2)
+  print(blocks[[i]] + theme(legend.position = "none"),
+        vp = grid::viewport(layout.pos.row = 1, layout.pos.col = i))
+grid::pushViewport(grid::viewport(layout.pos.row = 2))
+grid::grid.draw(legend)
+dev.off()
 
 # the imm and a3 in every condition, one figure per reliability level and
 # interaction value. relative bias, coverage and SE/SD are lines with one figure
