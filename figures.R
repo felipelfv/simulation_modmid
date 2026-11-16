@@ -58,6 +58,8 @@ method_fills <- scale_fill_manual(values = c(LSAM = "grey25", LMS = "grey55", UP
 apa <- list(theme_bw(base_size = 10),
             theme(legend.position = "bottom", panel.grid.minor = element_blank(),
                   strip.text = element_text(face = "bold")))
+# smaller axis text for figures with nine misspecification labels per panel
+small_x <- theme(axis.text.x = element_text(size = 6.5))
 
 # per measure: axis label, MCSE column (NULL if none), acceptable band (NULL if
 # none) and reference line
@@ -124,7 +126,7 @@ fig_baseline_reject <- function(metric, a3v) {
 fig_misspec <- function(d, params, a3v, metric, cols, ns) {
   d <- d |> filter(parameter %in% params, a3 == a3v, n %in% ns) |>
     prep_factors() |> mutate(parameter = factor(parameter, levels = params))
-  fig_lines(d, metric) + theme(axis.text.x = element_text(size = 6.5)) +
+  fig_lines(d, metric) + small_x +
     facet_grid(reformulate(cols, "distr_exo"), labeller = strip_labels)
 }
 
@@ -160,11 +162,36 @@ fig_relvar <- function(rel_lvl) {
   fig_lines(d, "rel_bias_var") + facet_grid(distr_exo ~ parameter + n, labeller = strip_labels)
 }
 
-# one measure of the remaining structural coefficients at a3 = 0.2, high
-# reliability and N = 500: parameter (rows) by distribution (columns)
-fig_param <- function(metric) {
-  d <- cell(summary_tbl, c("a1", "a2", "b", "cp"), 0.2, "high") |> filter(n == 500)
-  fig_lines(d, metric) + facet_grid(parameter ~ distr_exo, labeller = strip_labels)
+# one measure of the remaining structural coefficients at a3 = 0.2, N = 500 and
+# one reliability level: parameter (rows) by distribution (columns). scales =
+# "free_y" gives each parameter its own axis.
+fig_param <- function(metric, rel_lvl, scales = "fixed") {
+  d <- cell(summary_tbl, c("a1", "a2", "b", "cp"), 0.2, rel_lvl) |> filter(n == 500)
+  fig_lines(d, metric) +
+    facet_grid(parameter ~ distr_exo, labeller = strip_labels, scales = scales)
+}
+
+# the measures in `meas` of the loading of the cross-loaded indicator m3, the
+# only loading that the misspecifications move, at a3 = 0.2, N = 500 and one
+# reliability level: measure (rows, each with its own axis, band and reference
+# line) by distribution (columns). SE²/VAR ratios above 10 are left out.
+fig_load <- function(rel_lvl, meas) {
+  lab <- sapply(metric_spec[meas], `[[`, "lab")
+  d   <- cell(summary_tbl, "lm3", 0.2, rel_lvl) |> filter(n == 500) |>
+    tidyr::pivot_longer(all_of(meas), names_to = "measure") |>
+    filter(!(measure == "rel_bias_var" & value > 10)) |>
+    mutate(measure = factor(measure, levels = meas, labels = lab))
+  ref <- data.frame(measure = factor(lab, levels = lab),
+                    ref = sapply(metric_spec[meas], `[[`, "ref"),
+                    t(sapply(metric_spec[meas], `[[`, "band")))
+  ggplot(d, aes(misspec, value, shape = method, linetype = method, group = method)) +
+    geom_rect(data = ref, inherit.aes = FALSE, xmin = -Inf, xmax = Inf,
+              aes(ymin = X1, ymax = X2), fill = "grey60", alpha = 0.25) +
+    geom_hline(data = ref, aes(yintercept = ref), linetype = "dotted") +
+    geom_line(position = position_dodge(.5), linewidth = .5) +
+    geom_point(position = position_dodge(.5), size = 1.4) +
+    facet_grid(measure ~ distr_exo, scales = "free_y") + x_misspec + method_marks + apa +
+    labs(x = "Misspecification", y = NULL, shape = NULL, linetype = NULL)
 }
 
 # saves a figure to plots/ at 150 dpi, w by h inches. rotate = TRUE draws a
@@ -242,33 +269,19 @@ for (rl in c("low", "high")) {
   save_fig(fig_relvar(rl), paste0("rel_bias_var_a3-0.2_", rl), 9.5, 8, rotate = TRUE)
 }
 
+# the remaining structural coefficients and the m3 loading. the figures at high
+# reliability go to the supplement. those at low reliability, where the
+# approaches differ most, go to the article: the relative bias of the
+# coefficients, each on its own axis because that of c' is far larger, and the
+# loading without the SE²/VAR ratio.
 for (m in c("rel_bias", "coverage", "se_sd"))
-  save_fig(fig_param(m), sprintf("param_%s_a3-0.2_n500_high", m), 12, 10, rotate = TRUE)
-
-# the loading of the cross-loaded indicator m3, the only loading that the
-# misspecifications move, at a3 = 0.2, high reliability and N = 500: measure
-# (rows, each with its own axis, band and reference line) by distribution
-# (columns)
-load_meas <- c("rel_bias", "coverage", "se_sd", "rel_bias_var")
-load_lab  <- sapply(metric_spec[load_meas], `[[`, "lab")
-load_d    <- cell(summary_tbl, "lm3", 0.2, "high") |> filter(n == 500) |>
-  tidyr::pivot_longer(all_of(load_meas), names_to = "measure") |>
-  filter(!(measure == "rel_bias_var" & value > 10)) |>
-  mutate(measure = factor(measure, levels = load_meas, labels = load_lab))
-load_ref  <- data.frame(measure = factor(load_lab, levels = load_lab),
-                        ref = sapply(metric_spec[load_meas], `[[`, "ref"),
-                        t(sapply(metric_spec[load_meas], `[[`, "band")))
-save_fig(
-  ggplot(load_d, aes(misspec, value, shape = method, linetype = method, group = method)) +
-    geom_rect(data = load_ref, inherit.aes = FALSE, xmin = -Inf, xmax = Inf,
-              aes(ymin = X1, ymax = X2), fill = "grey60", alpha = 0.25) +
-    geom_hline(data = load_ref, aes(yintercept = ref), linetype = "dotted") +
-    geom_line(position = position_dodge(.5), linewidth = .5) +
-    geom_point(position = position_dodge(.5), size = 1.4) +
-    facet_grid(measure ~ distr_exo, scales = "free_y") + x_misspec + method_marks + apa +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6)) +
-    labs(x = "Misspecification", y = NULL, shape = NULL, linetype = NULL),
-  "load_lm3_allmeasures_a3-0.2_n500_high", 9, 8)
+  save_fig(fig_param(m, "high"), sprintf("param_%s_a3-0.2_n500_high", m), 12, 10, rotate = TRUE)
+save_fig(fig_param("rel_bias", "low", "free_y") + small_x, "param_rel_bias_a3-0.2_n500_low", 10, 9)
+save_fig(fig_load("high", c("rel_bias", "coverage", "se_sd", "rel_bias_var")) +
+           theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6)),
+         "load_lm3_allmeasures_a3-0.2_n500_high", 9, 8)
+save_fig(fig_load("low", c("rel_bias", "coverage", "se_sd")) + small_x,
+         "load_lm3_a3-0.2_n500_low", 10, 8)
 
 # copula robustness: each measure of the imm or a3 under the gaussian copula
 # (robustness run) against its value under the clayton copula (main run), one

@@ -798,40 +798,58 @@ knitr::include_graphics("../plots/misspec_typeI_imm.png")
 
 ## Additional Structural Estimates
 
-For the remaining structural coefficients ($a_1$, $a_2$, $b$, and $c'$), at 
-high reliability and $N = 500$, we report their relative bias, coverage, and SE/SD ratio across all 
-misspecification conditions and distributions (see the supplementary 
-materials). 
-Under correct specification, all approaches are unbiased with acceptable 
-coverage and SE/SD ratios throughout distributions. Under misspecification, 
-the structural omissions bias the outcome-equation coefficients $b$ and $c'$ 
-for all approaches alike, apart from $b$ under $c_3$ with opposite-skewness 
-$\chi^2$, whereas the mediator-equation coefficients $a_1$ 
-and $a_2$ stay unbiased under LSAM and, for the system-wide approaches, 
-$a_2$ is biased under $c_2$. Among the measurement omissions, `cl` is the 
-most disruptive, biasing $a_1$ and $c'$ for all approaches and additionally 
-$a_2$ and $b$ for the system-wide approaches, while `rc` leaves all four 
-coefficients within the acceptable range. Where the bias is substantial, it 
-is smaller under LSAM, except for $c'$ under the structural omissions, 
-where the three approaches are similar. Coverage follows the bias, dropping most for $b$ under $c_2$, for $c'$ under 
-$c_3$, and for $a_1$ under `cl`. The SE/SD ratio stays within the acceptable 
-range, except for $b$ and $c'$ under $c_3$, which are underestimated, most 
-under $t_5$ predictors for $c'$ and under $t_5$ and same-skewness $\chi^2$ 
-for $b$.
+For the remaining structural coefficients ($a_1$, $a_2$, $b$, and $c'$), we
+show the relative bias at $N = 500$ with low reliability and $a_3 = 0.2$
+(@fig-param-bias). The bias changes little with sample size, and for LMS and
+UPI it is generally smaller at high reliability (see the supplementary
+materials). Under correct specification, LSAM, LMS, and UPI estimate all four
+coefficients with low bias in every condition, whereas FSR attenuates $a_1$,
+$a_2$, and $b$ (on average by 0.16 to 0.20 at low reliability). The structural
+omissions bias the outcome-equation coefficients $b$ and $c'$ for LSAM, LMS,
+and UPI, apart from $b$ under $c_3$ with opposite-skewness $\chi^2$
+predictors, with a smaller bias in $b$ for LSAM (on average 0.39 under the
+medium $c_2$ at low reliability, against 0.54 for LMS and UPI). In the
+mediator equation, LSAM estimates $a_1$ and $a_2$ with low bias under both
+omissions, whereas $c_2$ biases $a_2$ for LMS and UPI (on average 0.21 and
+0.24 at the medium magnitude). Under $c_3$, the bias of $c'$ changes sign with
+the predictor distribution, from negative with normal, uniform, and $t_5$
+predictors to positive with $\chi^2$ predictors. The cross-loading biases
+$a_1$ and $c'$ for every approach and $a_2$ and $b$ mainly for LMS and UPI (at
+the medium magnitude about $-0.27$ and 0.41, against $-0.08$ and 0.14 for
+LSAM). The relative bias of $c'$ is large throughout because its population
+value is small (0.15). The SE/SD ratio is within the acceptable range for
+LSAM, LMS, and UPI in nearly all conditions, whereas FSR underestimates the
+standard errors of $a_1$, $a_2$, and $b$ in many conditions and those of $c'$
+under $c_3$.
+
+```{r}
+#| label: fig-param-bias
+#| fig-cap: "Relative Bias of the Remaining Structural Coefficients Under Structural and Measurement Misspecification at Low Reliability, $N = 500$, and $a_3 = 0.2$"
+#| apa-note: "Each coefficient has its own vertical axis. The gray band marks the acceptable region for the measure, and the error bars represent the Monte Carlo standard error (MCSE). On the horizontal axis, n = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance; .s and .m = small and medium magnitude. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/param_rel_bias_a3-0.2_n500_low.png")
+```
 
 ## Measurement Loadings
 
-For the twelve freely estimated factor loadings, all but one are recovered 
-with acceptable performance across every measure and essentially every 
-condition, the exceptions being noisy deviations of the SE$^2$/VAR ratio 
-concentrated at $N = 100$ with low reliability. We display only the loading of the cross-loaded mediator indicator $m_3$, 
-with its relative bias, coverage, SE/SD ratio, and SE$^2$/VAR ratio at high 
-reliability and $N = 500$ (see the supplementary materials). For 
-$m_3$, `cl` is the only consequential misspecification. Its relative bias 
-rises sharply under all approaches, less so under LSAM, and its coverage 
-collapses toward zero. The two standard error measures stay within the 
-acceptable range, except for LSAM under the medium `cl` with $t_5$ and 
-$\chi^2$ predictors. The remaining omissions leave the loading unaffected.
+Eleven of the twelve freely estimated loadings are recovered with low bias by
+all approaches (at most 0.06 in absolute value). The exception is the loading
+of the cross-loaded mediator indicator $m_3$, shown at $N = 500$ with low
+reliability (@fig-load). Only the cross-loading moves it beyond the acceptable
+range. At the medium magnitude its relative bias is 0.81 to 0.98 for LMS, UPI,
+and FSR, against 0.38 to 0.52 for LSAM, and coverage accordingly falls to
+nearly zero for every approach. The standard errors remain within the
+acceptable range for LMS and UPI and at or just below its lower limit for LSAM
+with $\chi^2$ predictors, whereas those of FSR are underestimated, with SE/SD
+ratios of 0.56 to 0.70.
+
+```{r}
+#| label: fig-load
+#| fig-cap: "Relative Bias, Coverage, and SE/SD of the Loading of the Cross-Loaded Mediator Indicator ($m_3$) at Low Reliability, $N = 500$, and $a_3 = 0.2$"
+#| apa-note: "The gray bands mark the acceptable region for each measure. On the horizontal axis, n = correctly specified model; $c_2$ and $c_3$ = omitted paths; cl = omitted cross-loading; rc = omitted residual covariance; .s and .m = small and medium magnitude. LSAM = local structural-after-measurement; LMS = latent moderated structural equations; UPI = unconstrained product indicator; FSR = factor score regression."
+#| out-width: "100%"
+knitr::include_graphics("../plots/load_lm3_a3-0.2_n500_low.png")
+```
 
 # Discussion
 
