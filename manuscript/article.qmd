@@ -58,16 +58,17 @@ author-note:
     for the helpful comments and discussions."
 
 abstract: |
-  Moderated mediation is seldom estimated with latent variables, and
+  Moderated mediation is often not estimated with latent variables, and
   approaches that can estimate it are rarely compared under misspecification.
-  In a preregistered simulation we evaluated three approaches under a latent
-  moderated mediation model, local structural-after-measurement (LSAM) and
-  two system-wide methods, across sample size, interaction
-  magnitude, reliability, predictor distribution, and nine (mis)specification
-  conditions. Under correct specification with normal predictors, all recovered
-  the interaction coefficient and index of moderated mediation, differing modestly in 
-  bias, root mean square error, coverage, standard errors, Type I error, and 
-  power. 
+  In a preregistered simulation we evaluated four approaches under a latent
+  moderated mediation model, local structural-after-measurement (LSAM),
+  two system-wide methods, and factor score regression as a baseline, across 
+  sample size, interaction magnitude, reliability, predictor distribution, and 
+  nine (mis)specification conditions. Under correct specification with normal 
+  predictors, the first three recovered the interaction coefficient and index 
+  of moderated mediation, differing modestly in bias, root mean square error, 
+  coverage, standard errors, Type I error, and power, whereas factor score 
+  regression underestimated both. 
   Under misspecification, LSAM was most robust, leaving some estimates 
   unaffected by omissions that biased system-wide approaches, although most 
   misspecifications degraded performance.
@@ -105,7 +106,7 @@ sciences [@Hayes2018; @Preacher2007; @Pieters2017; @Charlton2021]. In its
 basic and standard form, the effect of an independent variable on an outcome is 
 decomposed into a direct effect and an indirect effect transmitted through a 
 mediator, with all variables observed. This single mediator model has
-since been extended in a number of directions, most relevant here being the
+been extended in a number of directions, most relevant here being the
 case in which the indirect effect is allowed to depend on a moderator
 [@Hayes2015; @Edwards2007; @Preacher2007; @Montoya2024; 
 @MacKinnonFairchild2007].
@@ -147,11 +148,11 @@ latent variables [e.g., @Boker2023; @Bollen1995; @KennyJudd1984;
 Most adopt a joint ("system-wide") estimation strategy, in which the 
 measurement and structural parameters are estimated simultaneously. This is 
 the case of the two best-known methods, latent moderated structural equations 
-(LMS) and the unconstrained product indicator (UPI) approach. Opposed to these are 
-structural-after-measurement (SAM) approaches [@CoxKelcey2021; 
-@HolstBudtz2020; @NgChan2020; @Rosseel2025; 
-@WallAmemiya2000; @WallAmemiya2003], in which the measurement model is 
-estimated first and the structural model afterward with the measurement 
+(LMS) and the unconstrained product indicator (UPI) approach. In contrast,
+structural-after-measurement (SAM) approaches [@CoxKelcey2021;
+@HolstBudtz2020; @NgChan2020; @Rosseel2025;
+@WallAmemiya2000; @WallAmemiya2003] estimate the measurement model
+first and the structural model afterward, with the measurement
 parameters held fixed. Many of these approaches have so far rarely 
 been applied in practice, likely held back by limited software, slow 
 estimation, and error-prone implementations. With recent open-source 
@@ -177,82 +178,21 @@ that the estimated latent variables and their meaning do not depend on the
 structural model that follows, although this does not imply that the structure 
 is correct [@VanderWeeleVansteelandt2022].
 
-```{r}
-#| label: interp-confounding
-#| include: false
-library(lavaan)
-
-model.pop <- '
-  X =~ 1*x1 + 1*x2 + 1*x3
-  Y =~ 1*y1 + 1*y2 + 1*y3
-  M =~ 1*m1 + 1*m2 + 1*m3
-  X ~~ 4*X
-  M ~~ 3.0*M
-  Y ~~ 2.76*Y
-  M ~ 0.5*X
-  Y ~ 0.1*X + 0.5*M
-'
-Sigma <- lavInspect(sem(model.pop), "implied")$cov
-
-Sigma2 <- Sigma
-Sigma2[c("m1", "m2", "m3"), "x1"] <- 3
-Sigma2[c("m1", "m2", "m3"), "x2"] <- 1
-Sigma2[c("m1", "m2", "m3"), "x3"] <- 1
-Sigma2["x1", c("m1", "m2", "m3")] <- 3
-Sigma2["x2", c("m1", "m2", "m3")] <- 1
-Sigma2["x3", c("m1", "m2", "m3")] <- 1
-
-model_nomed <- '
-  X =~ x1 + x2 + x3
-  Y =~ y1 + y2 + y3
-  Y ~ X
-'
-model_med <- '
-  X =~ x1 + x2 + x3
-  Y =~ y1 + y2 + y3
-  M =~ m1 + m2 + m3
-  M ~ X
-  Y ~ M + X
-'
-fit_it <- function(estimator, model) {
-  estimator(model, sample.cov = Sigma2, sample.cov.rescale = FALSE,
-            sample.nobs = 200L)
-}
-xload <- function(fit) lavInspect(fit, "est")$lambda[c("x1", "x2", "x3"), "X"]
-
-lam_sem_nomed <- xload(fit_it(sem, model_nomed))
-lam_sem_med   <- xload(fit_it(sem, model_med))
-lam_sam_nomed <- xload(fit_it(sam, model_nomed))
-lam_sam_med   <- xload(fit_it(sam, model_med))
-```
-
-To illustrate interpretational confounding, we specify a population mediation 
-model with three latent variables, X, M, and Y, each with three indicators and 
-all loadings equal to 1, and derive its model-implied covariance matrix. We 
-then set the covariances of the M indicators with $x_1$, $x_2$, and $x_3$ to 
-3, 1, and 1, rather than the implied value of 2, so their association with M 
-no longer follows a single common factor. We fit the model to this matrix 
-($N = 200$) with and without the mediator, by system-wide SEM and by SAM, 
-and compare the estimated loadings of $x_2$ and $x_3$. Without the 
-mediator, both approaches recover the true loadings of 1. Once the mediator 
-enters, the system-wide loadings drop to 
-`r sprintf("%.2f", lam_sem_med["x2"])`, whereas the SAM loadings, estimated 
-before the structural model, remain at 1. The code for this illustration is 
-included in the manuscript source in the project repository.
-
-Despite this, prior simulation work has examined latent interaction estimation 
-mainly under distributional misspecification [e.g., @Cham2012; @Vieira2026; 
+Despite the relevance of misspecification, prior simulation work has examined
+latent interaction estimation mainly under distributional misspecification
+[e.g., @Cham2012; @Vieira2026;
 @Lonati2025; @Brandt2014], and in only two cases under misspecification at the 
-measurement level [@Brandt2020; @NavarroSchermelleh2025], which between them 
-considered only the UPI and LMS among the approaches studied here in limited 
+measurement level [@Brandt2020; @NavarroSchermelleh2025]. Among the
+approaches studied here, these considered only UPI and LMS, and in limited
 settings. Moreover, when it comes to (moderated) mediation, despite its 
 popularity in applied research, only a few studies have investigated it with 
 latent variables, and those assumed a correctly specified (and saturated) model 
 [@CheungLau2017; @FalkBiesanz2015; @Feng2020]. In this article, we therefore 
-evaluate three estimation approaches for a latent variable moderated mediation 
-model: local SAM [LSAM\; @Rosseel2025], LMS [@KleinMoosbrugger2000; 
-@Kelava2011], and UPI [@KelavaBrandt2009; @Marsh2004]. 
-These approaches have been explained extensively in previous 
+evaluate four estimation approaches for a latent variable moderated mediation
+model: local SAM [LSAM\; @Rosseel2025], LMS [@KleinMoosbrugger2000;
+@Kelava2011], UPI [@KelavaBrandt2009; @Marsh2004], and, as a baseline,
+factor score regression (FSR).
+The first three have been explained extensively in previous
 research and we refer readers to it [e.g., @Brandt2020; @Vieira2026; 
 @Lonati2025; @Rosseel2025; @Kelava2011; @Lin2010; @Slupphaug2025].
 
@@ -268,14 +208,15 @@ mainly for structural misspecifications in non-saturated structural models
 [@Robitzsch2022], a case not yet tested for models with nonlinear effects. 
 Second, we obtain inference for the index of moderated mediation 
 [imm\; @Hayes2015], a nonlinear function of the structural parameters, with 
-the Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012] rather 
-than the bootstrap used in the latent variable studies above 
-[@CheungLau2017; @Feng2020]. Bootstrapping is computationally expensive, and 
-its variants differ modestly in performance and rank differently depending 
-on the criterion [@FalkBiesanz2015; @Tibbe2022], whereas the Monte Carlo 
-method needs only the estimates and their covariance matrix. Whether it 
-performs adequately for the imm in the context under investigation, which has 
-not been examined, is a question we address here.
+the Monte Carlo method [@MacKinnonLockwood2004; @PreacherSelig2012].
+The latent variable studies above used the bootstrap
+[@CheungLau2017; @Feng2020]. Bootstrapping is computationally expensive, and
+its variants differ modestly in performance and rank differently depending
+on the criterion [@FalkBiesanz2015; @Tibbe2022], whereas the Monte Carlo
+method needs only the estimates and their covariance matrix. Whether it
+meets the usual criteria for coverage and standard error accuracy for the
+imm in the context under investigation has not been examined, and is the
+question we address here. We do not compare it with the bootstrap.
 
 ```{r}
 #| include: false
@@ -460,7 +401,7 @@ approach with
 double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], estimated with 
 robust ML, that is, with Huber–White sandwich standard errors.
 
-As a baseline, we also used factor score regression (FSR)^[We note that the 
+As a baseline, we also used FSR^[We note that the 
 approach of @SkrondalLaake2001, used for latent interactions by @NgChan2020, 
 would be a more principled choice, in which regression (Thurstone) factor 
 scores are used for the explanatory variables and Bartlett factor scores for 
