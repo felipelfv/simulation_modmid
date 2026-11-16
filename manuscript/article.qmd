@@ -568,16 +568,17 @@ outlier information, are available in the supplementary materials.
 
 ## Convergence, Outliers, and Inadmissible Solutions
 
-Convergence was high throughout. LSAM converged in every replication across
-all conditions, and LMS in at least $99.9\%$.
-UPI was the least stable, with its convergence rate falling to about $92\%$
-in the worst condition (the smallest sample size, low reliability, and
-skewed $\chi^2$ predictors). At high reliability, however, UPI converged in
-at least $99\%$ of replications regardless of sample size, distribution, or
-misspecification. Outliers were likewise rare, staying below $1\%$ in most conditions and reaching up to roughly $11\%$ for UPI and $8\%$ for LSAM, only at $N = 100$ with low reliability and
-skewed ($\chi^2$) predictors. The results reported below did not exclude inadmissible solutions, which 
-arose almost exclusively for UPI; excluding them leads to negligible changes, 
-confined to the smallest sample size, low reliability, $\chi^2$ conditions.
+LSAM and FSR converged in every replication of every condition. UPI converged 
+in at least 99% of replications at high reliability and in at least 93% at low 
+reliability, with the lowest rates at $N = 100$ with $\chi^2$ predictors. LMS 
+converged in at least 98% of replications with normal and uniform predictors, 
+but with $t_5$ predictors at high reliability its rate decreased with sample 
+size, to 89% at $N = 500$. Outliers were below 1% in most conditions and 
+exceeded 4% only for UPI, reaching 11% at $N = 100$ with low reliability and 
+$\chi^2$ predictors. Inadmissible solutions arose almost exclusively for UPI 
+at $N = 100$ with low reliability. They were retained, and excluding them 
+changes the results only for UPI in these conditions. Details are in the 
+supplementary materials.
 
 ## Correct Structural and Measurement Specification
 
