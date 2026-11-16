@@ -575,8 +575,8 @@ converged in at least 98% of replications with normal and uniform predictors,
 but with $t_5$ predictors at high reliability its rate decreased with sample 
 size, to 89% at $N = 500$. Outliers were below 1% in most conditions and 
 exceeded 4% only for UPI, reaching 11% at $N = 100$ with low reliability and 
-$\chi^2$ predictors. Inadmissible solutions arose almost exclusively for UPI 
-at $N = 100$ with low reliability. They were retained, and excluding them 
+$\chi^2$ predictors. Inadmissible solutions arose almost exclusively for UPI,
+mainly at $N = 100$ with low reliability. They were retained, and excluding them 
 changes the results only for UPI in these conditions. Details are in the 
 supplementary materials.
 
@@ -650,7 +650,11 @@ on average 0.01 lower than that of the imm and falls below the range more
 often. For FSR, coverage decreases with sample size, because the interval
 narrows around a biased estimate, and it is lower for the imm than for the
 interaction coefficient. At $N = 500$ with low reliability it lies between
-0.16 and 0.38 for the imm.
+0.16 and 0.38 for the imm. At the larger magnitude ($a_3 = 0.4$), the
+coverage of the imm falls below the range more often for UPI, in 17 of 40
+conditions with $t_5$ and $\chi^2$ predictors, and for LMS with
+opposite-skewness $\chi^2$ predictors, at every sample size and reliability
+level (see the supplementary materials).
 
 ```{r}
 #| label: fig-coverage
@@ -683,7 +687,7 @@ to 1.9 times that of LMS, whereas with the other distributions that of LSAM
 is at most 1.15 times. FSR keeps the
 Type I error within the acceptable range in all but one condition and has
 power close to that of LMS, because its estimates and their standard errors 
-are attenuated by about the same factor. The interaction coefficient gives 
+are attenuated by similar factors. The interaction coefficient gives 
 nearly identical results (see the 
 supplementary materials).
 
