@@ -421,7 +421,7 @@ cop_diff_tbl(cop_r, "reject")
 
 # Complete Figures
 
-The figures below show the complete results from which the figures in the main text were drawn. In each, LSAM = local structural-after-measurement, LMS = latent moderated structural equations, UPI = unconstrained product indicator, FSR = factor score regression, imm = index of moderated mediation, and n = no misspecification. Where shown, the gray band marks the acceptable region for the measure and the error bars represent the Monte Carlo standard error (MCSE).
+The figures below show the complete results for the imm and the interaction coefficient in every condition of the design. They are ordered by performance measure, then by estimand, interaction magnitude, and reliability level, and each shows all sample sizes, distributions, and (mis)specifications. Power is shown at $a_3 = 0.2$. In each, LSAM = local structural-after-measurement, LMS = latent moderated structural equations, UPI = unconstrained product indicator, FSR = factor score regression, imm = index of moderated mediation, and n = no misspecification. Where shown, the gray band marks the acceptable region for the measure and the error bars represent the Monte Carlo standard error (MCSE).
 
 ```{r}
 #| label: fig-s-baseline-bias-imm
@@ -438,66 +438,33 @@ knitr::include_graphics("../plots/baseline_rel_bias_a3.png")
 ```
 
 ```{r}
-#| label: fig-s-bias-imm
-#| fig-cap: "Relative Bias of the imm ($a_3 b$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/imm_rel_bias_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-bias-a3
-#| fig-cap: "Relative Bias of the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/a3_rel_bias_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-rmse
-#| fig-cap: "Relative RMSE of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "100%"
-knitr::include_graphics("../plots/both_rel_rmse_a3-0.2.png")
-```
-
-```{r}
-#| label: fig-s-sesd-imm
-#| fig-cap: "SE/SD of the imm ($a_3 b$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/imm_se_sd_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-sesd-a3
-#| fig-cap: "SE/SD of the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/a3_se_sd_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-coverage-imm
-#| fig-cap: "Coverage of the imm ($a_3 b$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/imm_coverage_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-coverage-a3
-#| fig-cap: "Coverage of the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "6.3in"
-knitr::include_graphics("../plots/a3_coverage_a3-0.2_byrel.png")
-```
-
-```{r}
-#| label: fig-s-typei
-#| fig-cap: "Type I Error of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0$"
-#| out-width: "100%"
-knitr::include_graphics("../plots/both_typeI_a3-0.png")
-```
-
-```{r}
-#| label: fig-s-power
-#| fig-cap: "Power for the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Across Distributions, Reliability, and (Mis)specifications for $N = 200$ and $500$ at $a_3 = 0.2$"
-#| out-width: "100%"
-knitr::include_graphics("../plots/both_power_a3-0.2.png")
+#| label: complete-figures
+#| output: asis
+# one figure per measure, estimand, interaction magnitude and reliability level,
+# in the order given in the text. the file names are those written by figures.R.
+# relative bias, SE/SD and coverage have one figure per estimand, the other
+# measures show both estimands in one figure.
+measure_lab  <- c(rel_bias = "Relative Bias of", rel_rmse = "Relative RMSE of",
+                  se_sd = "SE/SD of", coverage = "Coverage of",
+                  typeI = "Type I Error of", power = "Power for")
+estimand_lab <- c(imm = "the imm ($a_3 b$)", a3 = "the Interaction Coefficient ($a_3$)",
+                  both = "the imm ($a_3 b$) and the Interaction Coefficient ($a_3$)")
+fig_rows <- function(measure, estimand, a3)
+  expand.grid(rel = c("low", "high"), a3 = a3, estimand = estimand, measure = measure,
+              stringsAsFactors = FALSE)
+figs <- rbind(fig_rows("rel_bias", c("imm", "a3"), c(0.2, 0.4)),
+              fig_rows("rel_rmse", "both", c(0.2, 0.4)),
+              fig_rows("se_sd", c("imm", "a3"), c(0.2, 0.4)),
+              fig_rows("coverage", c("imm", "a3"), c(0.2, 0.4)),
+              fig_rows("typeI", "both", 0),
+              fig_rows("power", "both", 0.2))
+chunks <- with(figs, sprintf(
+  '```{r}\n#| label: fig-s-%s-%s-%s-%s\n#| fig-cap: "%s %s Across Distributions, Sample Sizes, and (Mis)specifications at %s Reliability and $a_3 = %s$"\n#| out-width: "%s"\nknitr::include_graphics("../plots/%s_%s_a3-%s_%s.png")\n```',
+  tolower(sub("_", "-", measure)), estimand, sub(".", "", a3, fixed = TRUE), rel,
+  measure_lab[measure], estimand_lab[estimand], tools::toTitleCase(rel), a3,
+  ifelse(estimand == "both", "100%", "6.3in"),
+  estimand, measure, a3, rel))
+cat(knitr::knit_child(text = chunks, quiet = TRUE), sep = "\n\n")
 ```
 
 ```{r}

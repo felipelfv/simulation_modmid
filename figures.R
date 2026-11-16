@@ -1,360 +1,255 @@
-# paper figures from the analyze_mc.R tables (results/summary.rds,
-# results/rejection_imm_a3.rds) to plots/. methods are distinguished by
-# point shape + line type, not colour. titles are omitted; captions come from the
-# quarto chunk.
+# figures from the analyze_mc.R tables (results_main/summary.rds and
+# results_main/rejection_imm_a3.rds), written to plots/. methods are
+# distinguished by point shape and line type or by grey shade, not by colour.
+# the figures carry no titles because the captions come from the quarto chunks.
 
 library(dplyr); library(ggplot2)
 
-# summary.rds / rejection carry the soft, strict and unscreened criteria. the
-# paper uses soft.
+# the tables carry the soft, strict and unscreened criteria. the paper uses soft.
+# the rejection rate is the type I error at a3 = 0 and the power otherwise, so it
+# is stored under both names, which lets metric_spec address it like any measure.
 summary_tbl <- readRDS(file.path("results_main", "summary.rds")) |> filter(criterion == "soft")
-rej_tbl     <- readRDS(file.path("results_main", "rejection_imm_a3.rds")) |> filter(criterion == "soft")
+rej_tbl     <- readRDS(file.path("results_main", "rejection_imm_a3.rds")) |>
+  filter(criterion == "soft") |> mutate(typeI = reject, power = reject)
 plot_dir    <- "plots"
 dir.create(plot_dir, showWarnings = FALSE)
 unlink(list.files(plot_dir, pattern = "\\.png$", full.names = TRUE))
 
-mis_lv  <- c("none","c2_small","c2_medium","c3_small","c3_medium",
-             "crossload_small","crossload_medium","rescov_small","rescov_medium")
-# plotmath labels: c gets a subscript, cl/rc/none stay upright. rendered on the
-# x-axis via x_misspec (scale_x_discrete + parse) below.
-mis_lab <- c("n",
-             "c[2]*'.s'", "c[2]*'.m'", "c[3]*'.s'", "c[3]*'.m'",
-             "'cl.s'", "'cl.m'", "'rc.s'", "'rc.m'")
-dis_lv  <- c("normal","uniform","t5","chisq_same","chisq_diff")
-
-# distribution strip labels (plain text so strip.text bold applies; plotmath
-# symbols do not honour fontface)
-dist_labeller <- as_labeller(
-  c(normal = "Normal", uniform = "Uniform", t5 = "t(5)",
-    chisq_same = "Chi-square (s)", chisq_diff = "Chi-square (d)"))
-
-n_labeller <- as_labeller(function(x) paste0("N = ", x))
-
-# parameter strip labels as plotmath (subscripts for a_k, prime for c'); a3 column
-# (the design interaction value) rendered as a[3] == value. plotmath strips are not
-# bold (fontface is not honoured), unlike the plain-text distribution strips.
-param_labeller <- as_labeller(
-  c(a1 = "a[1]", a2 = "a[2]", a3 = "a[3]", b = "b", cp = "c*\"'\"", imm = "imm"),
-  label_parsed)
-a3_labeller <- as_labeller(function(x) paste0("a[3] == ", x), label_parsed)
-
-# x-axis misspecification labels: parse the plotmath strings in mis_lab
+# plotmath labels of the misspecifications, parsed on the x-axis by x_misspec
+mis_lab <- c(none = "n", c2_small = "c[2]*'.s'", c2_medium = "c[2]*'.m'",
+             c3_small = "c[3]*'.s'", c3_medium = "c[3]*'.m'",
+             crossload_small = "'cl.s'", crossload_medium = "'cl.m'",
+             rescov_small = "'rc.s'", rescov_medium = "'rc.m'")
+dis_lab <- c(normal = "Normal", uniform = "Uniform", t5 = "t(5)",
+             chisq_same = "Chi-square (s)", chisq_diff = "Chi-square (d)")
 x_misspec <- scale_x_discrete(labels = function(l) parse(text = l))
 
-# factor coding shared by the metric and rejection plots
-prep_factors <- function(d) {
-  d |> mutate(
-    misspec   = factor(misspec, levels = mis_lv, labels = mis_lab),
-    distr_exo = factor(distr_exo, levels = dis_lv),
-    rel       = factor(rel, levels = c("low", "high"),
-                       labels = c("Reliability: low", "Reliability: high")),
-    method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"), labels = c("LSAM", "LMS", "UPI", "FSR")))
+# factor coding shared by all figures
+prep_factors <- function(d) d |> mutate(
+  misspec   = factor(misspec, levels = names(mis_lab), labels = mis_lab),
+  distr_exo = factor(distr_exo, levels = names(dis_lab), labels = dis_lab),
+  rel       = factor(rel, levels = c("low", "high"),
+                     labels = c("Reliability: low", "Reliability: high")),
+  method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"),
+                     labels = c("LSAM", "LMS", "UPI", "FSR")))
+
+# rows of one figure: the given parameters at one interaction value and one
+# reliability level
+cell <- function(d, params, a3v, rel_lvl) d |>
+  filter(parameter %in% params, a3 == a3v, rel == rel_lvl) |>
+  prep_factors() |>
+  mutate(parameter = factor(parameter, levels = params))
+
+# strip labels. sample size reads N = value, the interaction value and the
+# parameters are plotmath. plotmath strips are not bold, plain text ones are.
+strip_labels <- labeller(
+  n         = function(x) paste0("N = ", x),
+  a3        = as_labeller(function(x) paste0("a[3] == ", x), label_parsed),
+  parameter = as_labeller(c(a1 = "a[1]", a2 = "a[2]", a3 = "a[3]", b = "b",
+                            cp = "c*\"'\"", imm = "imm"), label_parsed))
+
+# methods as point shapes and line types, and as grey shades for bars
+method_marks <- list(
+  scale_shape_manual(values = c(LSAM = 16, LMS = 17, UPI = 15, FSR = 18)),
+  scale_linetype_manual(values = c(LSAM = "solid", LMS = "dashed", UPI = "dotdash", FSR = "dotted")))
+method_fills <- scale_fill_manual(values = c(LSAM = "grey25", LMS = "grey55", UPI = "grey85", FSR = "white"))
+
+# theme shared by the line and bar figures
+apa <- list(theme_bw(base_size = 10),
+            theme(legend.position = "bottom", panel.grid.minor = element_blank(),
+                  strip.text = element_text(face = "bold")))
+
+# per measure: axis label, MCSE column (NULL if none), acceptable band (NULL if
+# none) and reference line
+metric_spec <- list(
+  rel_bias     = list(lab = "Relative bias", mcse = "rel_bias_mcse",     band = c(-0.10, 0.10),  ref = 0),
+  rel_rmse     = list(lab = "Relative RMSE", mcse = "rel_rmse_mcse",     band = NULL,            ref = 0),
+  coverage     = list(lab = "Coverage",      mcse = "coverage_mcse",     band = c(0.925, 0.975), ref = 0.95),
+  se_sd        = list(lab = "SE/SD",         mcse = NULL,                band = c(0.90, 1.10),   ref = 1),
+  rel_bias_var = list(lab = "SE²/VAR ratio", mcse = "rel_bias_var_mcse", band = c(0.90, 1.10),   ref = 1),
+  typeI        = list(lab = "Type I error",  mcse = "reject_mcse",       band = c(0.025, 0.075), ref = 0.05),
+  power        = list(lab = "Power",         mcse = "reject_mcse",       band = NULL,            ref = 0.80))
+
+# acceptable band and reference line of a measure
+band_ref <- function(metric) {
+  m <- metric_spec[[metric]]
+  list(if (!is.null(m$band))
+         annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
+                  fill = "grey60", alpha = 0.25),
+       geom_hline(yintercept = m$ref, linetype = "dotted"))
 }
 
-method_shapes <- c(LSAM = 16, LMS = 17, UPI = 15, FSR = 18)
-method_lines  <- c(LSAM = "solid", LMS = "dashed", UPI = "dotdash", FSR = "dotted")
-method_fills  <- c(LSAM = "grey25", LMS = "grey55", UPI = "grey85", FSR = "white")
+# plus and minus one MCSE around a measure, for marks dodged by `dodge`
+mcse_bars <- function(metric, dodge) {
+  mcse <- metric_spec[[metric]]$mcse
+  if (!is.null(mcse))
+    geom_errorbar(aes(ymin = .data[[metric]] - .data[[mcse]], ymax = .data[[metric]] + .data[[mcse]]),
+                  position = position_dodge(dodge), width = .25, linewidth = .3,
+                  linetype = "solid", colour = "grey30")
+}
 
-# shared facet + scale + theme layers; caller may override the facet
-apa_grid <- function(facets = facet_grid(distr_exo ~ rel + n,
-                                         labeller = labeller(distr_exo = dist_labeller, n = n_labeller))) list(
-                                           facets,
-                                           scale_shape_manual(values = method_shapes),
-                                           scale_linetype_manual(values = method_lines),
-                                           theme_bw(base_size = 10),
-                                           theme(legend.position = "bottom", panel.grid.minor = element_blank(),
-                                                 strip.text = element_text(face = "bold")))
-
-# per metric: axis label, MCSE column (NULL = none), acceptable band, reference line
-metric_spec <- list(
-  rel_bias = list(lab = "Relative bias", mcse = "rel_bias_mcse", band = c(-0.10, 0.10),   ref = 0),
-  rel_rmse = list(lab = "Relative RMSE", mcse = "rel_rmse_mcse", band = NULL,             ref = 0),
-  coverage = list(lab = "Coverage",      mcse = "coverage_mcse", band = c(0.925, 0.975),  ref = 0.95),
-  se_sd    = list(lab = "SE/SD",         mcse = NULL,            band = c(0.90, 1.10),    ref = 1),
-  rel_bias_var = list(lab = "SE²/VAR ratio", mcse = "rel_bias_var_mcse", band = c(0.90, 1.10), ref = 1),
-  typeI    = list(lab = "Type I error",  mcse = "reject_mcse",   band = c(0.025, 0.075),  ref = 0.05),
-  power    = list(lab = "Power",          mcse = "reject_mcse",   band = NULL,             ref = 0.80)
-)
-
-# band + ref line + +/-1 MCSE bars + line + points for a metric against x
-# (misspecification by default, sample size for the baseline figure). the caller
-# adds the facet via apa_grid.
-slice_geoms <- function(d, metric, x = "misspec", xlab = "Misspecification") {
-  m <- metric_spec[[metric]]
-  p <- ggplot(d, aes(.data[[x]], .data[[metric]], shape = method, linetype = method, group = method))
-  if (!is.null(m$band))
-    p <- p + annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
-                      fill = "grey60", alpha = 0.25)
-  p <- p + geom_hline(yintercept = m$ref, linetype = "dotted")
-  if (!is.null(m$mcse))
-    p <- p + geom_errorbar(aes(ymin = .data[[metric]] - .data[[m$mcse]],
-                               ymax = .data[[metric]] + .data[[m$mcse]]),
-                           width = .25, position = position_dodge(.5), linewidth = .3,
-                           linetype = "solid", color = "grey30")
-  p <- p +
+# one line with points per method for a measure against the misspecification or
+# against the sample size. the caller adds the facets.
+fig_lines <- function(d, metric, x = "misspec") {
+  ggplot(d, aes(.data[[x]], .data[[metric]], shape = method, linetype = method, group = method)) +
+    band_ref(metric) + mcse_bars(metric, .5) +
     geom_line(position = position_dodge(.5), linewidth = .5) +
     geom_point(position = position_dodge(.5), size = 1.6) +
-    labs(x = xlab, y = m$lab, shape = NULL, linetype = NULL)
-  if (x == "misspec") p <- p + x_misspec
-  p
+    (if (x == "misspec") x_misspec) + method_marks + apa +
+    labs(x = c(misspec = "Misspecification", n = "Sample size (N)")[[x]],
+         y = metric_spec[[metric]]$lab, shape = NULL, linetype = NULL)
 }
 
-# one metric for one parameter at fixed (a3, n): distribution x reliability grid,
-# x = misspecification, line + point per method, +/- 1 MCSE bars, acceptable band.
-fig_slice <- function(param = "imm", a3v = 0.2, metric = "rel_bias", nvals = c(200, 500)) {
-  d <- summary_tbl |>
-    filter(parameter == param, a3 == a3v, n %in% nvals) |>
-    prep_factors()
-  slice_geoms(d, metric) + apa_grid()
+# relative bias of one parameter under the correctly specified model against the
+# sample size: distribution (rows) by reliability and nonzero interaction value
+# (columns)
+fig_baseline_bias <- function(param) {
+  d <- summary_tbl |> filter(parameter == param, misspec == "none", a3 != 0) |>
+    prep_factors() |> mutate(n = factor(n))
+  fig_lines(d, "rel_bias", x = "n") + facet_grid(distr_exo ~ rel + a3, labeller = strip_labels)
 }
 
-# baseline relative bias for one parameter (imm or a3) under the correctly specified
-# condition, across ALL sample sizes, both reliabilities, both nonzero interaction
-# values, and all distributions: distribution (rows) x reliability + a3 (cols),
-# x = sample size, line + point per method, +/- 1 MCSE bars.
-fig_baseline_bias <- function(param = "imm", a3v = c(0.2, 0.4)) {
-  d <- summary_tbl |>
-    filter(parameter == param, misspec == "none", a3 %in% a3v) |>
-    prep_factors() |>
-    mutate(n = factor(n, levels = c(100, 200, 300, 500)))
-  slice_geoms(d, "rel_bias", x = "n", xlab = "Sample size (N)") +
-    apa_grid(facet_grid(distr_exo ~ rel + a3,
-                        labeller = labeller(distr_exo = dist_labeller, a3 = a3_labeller)))
+# one measure of one parameter at one interaction value and one reliability
+# level: distribution (rows) by sample size (columns)
+fig_slice <- function(param, a3v, metric, rel_lvl)
+  fig_lines(cell(summary_tbl, param, a3v, rel_lvl), metric) +
+    facet_grid(distr_exo ~ n, labeller = strip_labels)
+
+# the imm and a3 together as grey bars, one per method: parameter and
+# distribution (rows) by sample size (columns). used where the two parameters
+# share a scale, that is, for relative RMSE, type I error and power. d is the
+# table that holds the measure.
+fig_bars <- function(d, metric, a3v, rel_lvl) {
+  ggplot(cell(d, c("imm", "a3"), a3v, rel_lvl),
+         aes(misspec, .data[[metric]], fill = method, group = method)) +
+    band_ref(metric) +
+    geom_col(position = position_dodge(.8), width = .7, colour = "grey30", linewidth = .2) +
+    mcse_bars(metric, .8) +
+    facet_grid(parameter + distr_exo ~ n, labeller = strip_labels) +
+    x_misspec + method_fills + apa +
+    theme(axis.text.x = element_text(size = 6)) +
+    labs(x = "Misspecification", y = metric_spec[[metric]]$lab, fill = NULL)
 }
 
-# SE²/VAR ratio, imm and a3 together at one reliability level: distribution
-# (rows) x parameter x N (cols). high reliability goes in the manuscript, low in the
-# appendix (low-reliability cells blow up under heavy tails and swamp the y-axis).
-fig_relvar_both <- function(a3v = 0.2, rel_lvl = "high") {
-  d <- summary_tbl |>
-    filter(parameter %in% c("imm", "a3"), a3 == a3v, n %in% c(200, 500),
-           rel == rel_lvl, rel_bias_var <= 10) |>
-    prep_factors() |>
-    mutate(parameter = factor(parameter, levels = c("imm", "a3")))
-  slice_geoms(d, "rel_bias_var") +
-    apa_grid(facet_grid(distr_exo ~ parameter + n,
-                        labeller = labeller(distr_exo = dist_labeller,
-                                            parameter = param_labeller, n = n_labeller)))
+# SE²/VAR ratio of the imm and a3 at a3 = 0.2 and one reliability level:
+# distribution (rows) by parameter and sample size (columns). ratios above 10
+# occur at low reliability under heavy tails and are left out because they would
+# swamp the shared axis.
+fig_relvar <- function(rel_lvl) {
+  d <- cell(summary_tbl, c("imm", "a3"), 0.2, rel_lvl) |>
+    filter(n %in% c(200, 500), rel_bias_var <= 10)
+  fig_lines(d, "rel_bias_var") + facet_grid(distr_exo ~ parameter + n, labeller = strip_labels)
 }
 
-# imm and a3 together as greyscale grouped bars: parameter x distribution (rows),
-# reliability x N (cols), one bar per method with +/- 1 MCSE. d2 supplies an
-# alternate table (e.g. the rejection table) with its own value/MCSE columns.
-fig_bar_both <- function(metric = "rel_rmse", a3v = 0.2, nvals = c(200, 500),
-                         d2 = NULL, value = metric) {
-  m <- metric_spec[[metric]]
-  src <- if (is.null(d2)) summary_tbl else d2
-  d <- src |>
-    filter(parameter %in% c("imm", "a3"), a3 == a3v, n %in% nvals) |>
-    prep_factors() |>
-    mutate(parameter = factor(parameter, levels = c("imm", "a3")))
-  p <- ggplot(d, aes(misspec, .data[[value]], fill = method, group = method))
-  if (!is.null(m$band))
-    p <- p + annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
-                      fill = "grey60", alpha = 0.25)
-  p <- p + geom_hline(yintercept = m$ref, linetype = "dotted") +
-    geom_col(position = position_dodge(.8), width = .7, colour = "grey30", linewidth = .2)
-  if (!is.null(m$mcse))
-    p <- p + geom_errorbar(aes(ymin = .data[[value]] - .data[[m$mcse]],
-                               ymax = .data[[value]] + .data[[m$mcse]]),
-                           position = position_dodge(.8), width = .3, linewidth = .25)
-  p +
-    facet_grid(parameter + distr_exo ~ rel + n,
-               labeller = labeller(distr_exo = dist_labeller,
-                                   parameter = param_labeller, n = n_labeller)) +
-    scale_fill_manual(values = method_fills) +
-    x_misspec +
-    theme_bw(base_size = 9) +
-    theme(legend.position = "bottom", panel.grid.minor = element_blank(),
-          strip.text = element_text(face = "bold"),
-          axis.text.x = element_text(size = 6)) +
-    labs(x = "Misspecification", y = m$lab, fill = NULL)
+# one measure of the remaining structural coefficients at a3 = 0.2, high
+# reliability and N = 500: parameter (rows) by distribution (columns)
+fig_param <- function(metric) {
+  d <- cell(summary_tbl, c("a1", "a2", "b", "cp"), 0.2, "high") |> filter(n == 500)
+  fig_lines(d, metric) + facet_grid(parameter ~ distr_exo, labeller = strip_labels)
 }
 
-save_bar_both <- function(metric = "rel_rmse", a3v = 0.2, nvals = c(200, 500),
-                          w = 10, h = 12, dpi = 150, ...) {
-  f <- file.path(plot_dir, sprintf("both_%s_a3-%s.png", metric, a3v))
-  ggsave(f, fig_bar_both(metric, a3v, nvals, ...), width = w, height = h, dpi = dpi)
-}
-
-# imm and a3 together in one panel: imm as greyscale bars (method by shade), a3 as
-# a slate line + points (method by shape/line type). suits bias, where imm is the
-# larger, more structured effect and a3 the small one. distr (rows) x rel x N (cols).
-fig_combo_both <- function(metric = "rel_bias", a3v = 0.2, nvals = c(200, 500)) {
-  m <- metric_spec[[metric]]
-  base   <- summary_tbl |> filter(a3 == a3v, n %in% nvals)
-  d_bar  <- base |> filter(parameter == "imm") |> prep_factors()
-  d_line <- base |> filter(parameter == "a3")  |> prep_factors()
-  p <- ggplot(mapping = aes(misspec))
-  if (!is.null(m$band))
-    p <- p + annotate("rect", xmin = -Inf, xmax = Inf, ymin = m$band[1], ymax = m$band[2],
-                      fill = "grey60", alpha = 0.22)
-  p <- p + geom_hline(yintercept = m$ref, linetype = "dotted") +
-    geom_col(data = d_bar, aes(y = .data[[metric]], fill = method, group = method),
-             position = position_dodge(.8), width = .7, colour = "grey35", linewidth = .15) +
-    geom_line(data = d_line, aes(y = .data[[metric]], linetype = method, group = method),
-              position = position_dodge(.4), colour = "#4C72B0", linewidth = .5) +
-    geom_point(data = d_line, aes(y = .data[[metric]], shape = method, group = method),
-               position = position_dodge(.4), colour = "#4C72B0", size = 1.3)
-  p +
-    facet_grid(distr_exo ~ rel + n,
-               labeller = labeller(distr_exo = dist_labeller, n = n_labeller)) +
-    scale_fill_manual(values = method_fills, name = "imm") +
-    scale_shape_manual(values = method_shapes, name = expression(a[3])) +
-    scale_linetype_manual(values = method_lines, name = expression(a[3])) +
-    x_misspec +
-    theme_bw(base_size = 10) +
-    theme(legend.position = "bottom", panel.grid.minor = element_blank(),
-          strip.text = element_text(face = "bold"), axis.text.x = element_text(size = 6)) +
-    labs(x = "Misspecification", y = m$lab)
-}
-
-# structural-coefficient overview for one metric at fixed reliability and n:
-# parameter (rows) x distribution (cols), x = misspecification, per method.
-fig_param <- function(metric = "coverage", params = c("a1", "a2", "b", "cp"),
-                      a3v = 0.2, nval = 500, rel_lvl = "high") {
-  d <- summary_tbl |>
-    filter(parameter %in% params, a3 == a3v, n == nval, rel == rel_lvl) |>
-    prep_factors() |>
-    mutate(parameter = factor(parameter, levels = params))
-  slice_geoms(d, metric) +
-    apa_grid(facet_grid(parameter ~ distr_exo,
-                        labeller = labeller(distr_exo = dist_labeller, parameter = param_labeller)))
-}
-
-# all four performance measures for a SINGLE loading (default lm3, the only one
-# the cross-loading moves) in one figure: measure (rows, free y) x distribution
-# (cols), x = misspecification, line + point per method, per-measure band + ref.
-fig_loading_measures <- function(loading = "lm3", a3v = 0.2, nval = 500, rel_lvl = "high") {
-  meas_lv  <- c("rel_bias", "coverage", "se_sd", "rel_bias_var")
-  meas_lab <- sapply(metric_spec[meas_lv], `[[`, "lab")
-  d <- summary_tbl |>
-    filter(parameter == loading, a3 == a3v, n == nval, rel == rel_lvl) |>
-    prep_factors() |>
-    tidyr::pivot_longer(all_of(meas_lv), names_to = "measure", values_to = "value") |>
-    filter(!(measure == "rel_bias_var" & value > 10)) |>
-    mutate(measure = factor(measure, levels = meas_lv, labels = meas_lab))
-  refdf <- data.frame(
-    measure = factor(meas_lab, levels = meas_lab),
-    ref = sapply(metric_spec[meas_lv], `[[`, "ref"),
-    blo = sapply(metric_spec[meas_lv], function(m) m$band[1]),
-    bhi = sapply(metric_spec[meas_lv], function(m) m$band[2]))
-  ggplot(d, aes(misspec, value, shape = method, linetype = method, group = method)) +
-    geom_rect(data = refdf, inherit.aes = FALSE, xmin = -Inf, xmax = Inf,
-              aes(ymin = blo, ymax = bhi), fill = "grey60", alpha = 0.25) +
-    geom_hline(data = refdf, inherit.aes = FALSE, aes(yintercept = ref), linetype = "dotted") +
-    geom_line(position = position_dodge(.5), linewidth = .5) +
-    geom_point(position = position_dodge(.5), size = 1.4) +
-    apa_grid(facet_grid(measure ~ distr_exo, scales = "free_y",
-                        labeller = labeller(distr_exo = dist_labeller))) +
-    x_misspec +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6)) +
-    labs(x = "Misspecification", y = NULL, shape = NULL, linetype = NULL)
-}
-
-# draw a (landscape) plot rotated 90 degrees onto a portrait canvas, so the saved
-# PNG is sideways and sits large on a portrait end-page. w, h are the plot's
-# native landscape dimensions; the canvas is h (wide) x w (tall).
-save_rotated <- function(plot, file, w, h, dpi = 150) {
-  grDevices::png(file, width = h, height = w, units = "in", res = dpi)
-  on.exit(grDevices::dev.off())
+# saves a figure to plots/ at 150 dpi, w by h inches. rotate = TRUE draws a
+# landscape figure sideways on a portrait canvas, so that it fills a portrait
+# page.
+save_fig <- function(plot, name, w, h, rotate = FALSE) {
+  file <- file.path(plot_dir, paste0(name, ".png"))
+  if (!rotate) return(ggsave(file, plot, width = w, height = h, dpi = 150))
+  png(file, width = h, height = w, units = "in", res = 150)
+  on.exit(dev.off())
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(width = grid::unit(w, "in"),
                                     height = grid::unit(h, "in"), angle = 90))
-  grid::grid.draw(ggplot2::ggplotGrob(plot))
+  grid::grid.draw(ggplotGrob(plot))
+}
+save_bars <- function(d, metric, a3v, rel_lvl)
+  save_fig(fig_bars(d, metric, a3v, rel_lvl),
+           sprintf("both_%s_a3-%s_%s", metric, a3v, rel_lvl), 10, 12)
+
+# the imm and a3 under the correctly specified model
+for (p in c("imm", "a3"))
+  save_fig(fig_baseline_bias(p), paste0("baseline_rel_bias_", p), 10, 9)
+
+# the imm and a3 in every condition, one figure per reliability level and
+# interaction value. relative bias, coverage and SE/SD are lines with one figure
+# per parameter, because bars compress coverage and SE/SD and because the bias of
+# the two parameters differs too much in scale to share an axis. power is
+# available at a3 = 0.2 only.
+for (rl in c("low", "high")) {
+  for (a in c(0.2, 0.4)) {
+    for (p in c("imm", "a3")) for (m in c("rel_bias", "coverage", "se_sd"))
+      save_fig(fig_slice(p, a, m, rl), sprintf("%s_%s_a3-%s_%s", p, m, a, rl), 9.5, 8, rotate = TRUE)
+    save_bars(summary_tbl, "rel_rmse", a, rl)
+  }
+  save_bars(rej_tbl, "typeI", 0, rl)
+  save_bars(rej_tbl, "power", 0.2, rl)
+  save_fig(fig_relvar(rl), paste0("rel_bias_var_a3-0.2_", rl), 9.5, 8, rotate = TRUE)
 }
 
-# create all figures
-# wide multi-panel figures are saved rotated 90 degrees so they sit large on the
-# portrait end-pages; the tall bar figures and lm3 stay upright.
-
-# relative bias: imm bars + a3 slate line, one panel (wide -> rotated)
-save_rotated(fig_combo_both("rel_bias", 0.2),
-             file.path(plot_dir, "combo_rel_bias_a3-0.2.png"), w = 9.5, h = 8)
-
-# baseline relative bias under the correctly specified condition across all sample
-# sizes, both reliabilities, both nonzero interaction values, and all distributions;
-# one figure per parameter (imm, a3)
-ggsave(file.path(plot_dir, "baseline_rel_bias_imm.png"),
-       fig_baseline_bias("imm", c(0.2, 0.4)), width = 10, height = 9, dpi = 150)
-ggsave(file.path(plot_dir, "baseline_rel_bias_a3.png"),
-       fig_baseline_bias("a3", c(0.2, 0.4)), width = 10, height = 9, dpi = 150)
-
-# relative RMSE, Type I error (a3 = 0) and power (a3 = 0.2): tall bar panels, upright
-save_bar_both("rel_rmse", 0.2)
-save_bar_both("typeI", 0, d2 = rej_tbl, value = "reject")
-save_bar_both("power", 0.2, d2 = rej_tbl, value = "reject")
-
-# relative bias, coverage and SE/SD as line slices, one figure per parameter
-# (wide -> rotated). bars compress coverage (near .95) and SE/SD (near 1), and
-# imm and a3 bias differ too much in scale to share one panel
-for (p in c("imm", "a3"))
-  for (m in c("rel_bias", "coverage", "se_sd"))
-    save_rotated(fig_slice(p, 0.2, m),
-                 file.path(plot_dir, sprintf("%s_%s_a3-0.2_byrel.png", p, m)),
-                 w = 9.5, h = 8)
-
-# SE²/VAR ratio: imm + a3 in one panel (wide -> rotated); high reliability
-# in the manuscript, low reliability in the appendix (the low-reliability cells blow
-# up under heavy-tailed predictors and would swamp the shared y-axis)
-for (rl in c("high", "low"))
-  save_rotated(fig_relvar_both(0.2, rl),
-               file.path(plot_dir, sprintf("rel_bias_var_a3-0.2_%s.png", rl)),
-               w = 9.5, h = 8)
-
-# structural-coefficient overviews (wide -> rotated)
 for (m in c("rel_bias", "coverage", "se_sd"))
-  save_rotated(fig_param(m, a3v = 0.2, nval = 500, rel_lvl = "high"),
-               file.path(plot_dir, sprintf("param_%s_a3-0.2_n500_high.png", m)),
-               w = 12, h = 10)
+  save_fig(fig_param(m), sprintf("param_%s_a3-0.2_n500_high", m), 12, 10, rotate = TRUE)
 
-# loadings: all four measures for the cross-loaded indicator lm3, the only loading
-# the misspecifications move (the other eleven are flat across every measure)
-ggsave(file.path(plot_dir, "load_lm3_allmeasures_a3-0.2_n500_high.png"),
-       fig_loading_measures("lm3", 0.2, 500, "high"), width = 9, height = 8, dpi = 150)
+# the loading of the cross-loaded indicator m3, the only loading that the
+# misspecifications move, at a3 = 0.2, high reliability and N = 500: measure
+# (rows, each with its own axis, band and reference line) by distribution
+# (columns)
+load_meas <- c("rel_bias", "coverage", "se_sd", "rel_bias_var")
+load_lab  <- sapply(metric_spec[load_meas], `[[`, "lab")
+load_d    <- cell(summary_tbl, "lm3", 0.2, "high") |> filter(n == 500) |>
+  tidyr::pivot_longer(all_of(load_meas), names_to = "measure") |>
+  filter(!(measure == "rel_bias_var" & value > 10)) |>
+  mutate(measure = factor(measure, levels = load_meas, labels = load_lab))
+load_ref  <- data.frame(measure = factor(load_lab, levels = load_lab),
+                        ref = sapply(metric_spec[load_meas], `[[`, "ref"),
+                        t(sapply(metric_spec[load_meas], `[[`, "band")))
+save_fig(
+  ggplot(load_d, aes(misspec, value, shape = method, linetype = method, group = method)) +
+    geom_rect(data = load_ref, inherit.aes = FALSE, xmin = -Inf, xmax = Inf,
+              aes(ymin = X1, ymax = X2), fill = "grey60", alpha = 0.25) +
+    geom_hline(data = load_ref, aes(yintercept = ref), linetype = "dotted") +
+    geom_line(position = position_dodge(.5), linewidth = .5) +
+    geom_point(position = position_dodge(.5), size = 1.4) +
+    facet_grid(measure ~ distr_exo, scales = "free_y") + x_misspec + method_marks + apa +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6)) +
+    labs(x = "Misspecification", y = NULL, shape = NULL, linetype = NULL),
+  "load_lm3_allmeasures_a3-0.2_n500_high", 9, 8)
 
-# copula robustness: each measure under the gaussian copula (robustness run)
-# against its value under the clayton copula (main run), one point per
-# condition. points on the identity line are unaffected by the copula.
+# copula robustness: each measure of the imm or a3 under the gaussian copula
+# (robustness run) against its value under the clayton copula (main run), one
+# point per condition. points on the identity line are unaffected by the copula.
 # estimators are columns, measures are rows, point shape is the distribution.
 # the two runs number their conditions differently, so cells are matched on the
 # design factors.
-cop_keys   <- c("n", "a3", "rel", "distr_exo", "misspec", "method", "parameter")
-cop_read   <- function(dir, f) readRDS(file.path(dir, f)) |>
-  filter(criterion == "soft", parameter %in% c("imm", "a3"))
-cop_pair   <- function(f) inner_join(cop_read("results_robustness", f), cop_read("results_main", f),
-                                     by = cop_keys, suffix = c("_g", "_c"))
-cop_sum    <- cop_pair("summary.rds")
-cop_rej    <- cop_pair("rejection_imm_a3.rds")
-cop_shapes <- c(Uniform = 1, `t(5)` = 2, `Chi-square (s)` = 0, `Chi-square (d)` = 5)
-cop_fmt    <- function(v) sub("^(-?)0\\.", "\\1.", format(v, drop0trailing = TRUE, trim = TRUE))
+cop_pair <- function(f) {
+  read <- function(dir) readRDS(file.path(dir, f)) |>
+    filter(criterion == "soft", parameter %in% c("imm", "a3"))
+  inner_join(read("results_robustness"), read("results_main"), suffix = c("_g", "_c"),
+             by = c("n", "a3", "rel", "distr_exo", "misspec", "method", "parameter")) |>
+    prep_factors()
+}
+cop_sum <- cop_pair("summary.rds")
+cop_rej <- cop_pair("rejection_imm_a3.rds")
+cop_fmt <- function(v) sub("^(-?)0\\.", "\\1.", format(v, drop0trailing = TRUE, trim = TRUE))
 
 # one row of panels for one measure. the axes share one range so that the
 # identity line is the diagonal, and the acceptable band is shaded on both.
 cop_row <- function(d, value, lab, band = NULL, strips = FALSE, legend = FALSE) {
-  d <- d |> mutate(
-    x = .data[[paste0(value, "_c")]], y = .data[[paste0(value, "_g")]],
-    method    = factor(method, levels = c("lsam", "lms", "dblcent", "fsr"),
-                       labels = c("LSAM", "LMS", "UPI", "FSR")),
-    distr_exo = factor(distr_exo, levels = c("uniform", "t5", "chisq_same", "chisq_diff"),
-                       labels = names(cop_shapes)))
+  d <- d |> mutate(x = .data[[paste0(value, "_c")]], y = .data[[paste0(value, "_g")]])
   lim <- range(d$x, d$y); lim <- lim + c(-1, 1) * 0.04 * diff(lim)
-  p <- ggplot(d, aes(x, y, shape = distr_exo))
-  if (!is.null(band))
-    p <- p +
+  ggplot(d, aes(x, y, shape = distr_exo)) +
+    (if (!is.null(band)) list(
       annotate("rect", xmin = band[1], xmax = band[2], ymin = -Inf, ymax = Inf,
-               fill = "grey60", alpha = 0.2) +
+               fill = "grey60", alpha = 0.2),
       annotate("rect", xmin = -Inf, xmax = Inf, ymin = band[1], ymax = band[2],
-               fill = "grey60", alpha = 0.2)
-  p + geom_abline(linewidth = .3) +
+               fill = "grey60", alpha = 0.2))) +
+    geom_abline(linewidth = .3) +
     geom_point(size = .9, stroke = .3, alpha = .7) +
     facet_grid(. ~ method) +
-    scale_shape_manual(values = cop_shapes) +
+    scale_shape_manual(values = c(Uniform = 1, `t(5)` = 2, `Chi-square (s)` = 0, `Chi-square (d)` = 5)) +
     scale_x_continuous(labels = cop_fmt, n.breaks = 4) +
     scale_y_continuous(labels = cop_fmt, n.breaks = 4) +
     coord_fixed(xlim = lim, ylim = lim, expand = FALSE) +
-    labs(x = if (legend) "Clayton copula (main design)" else NULL,
-         y = paste0(lab, "\nGaussian copula"), shape = NULL) +
+    labs(x = if (legend) "Clayton copula (main design)", y = paste0(lab, "\nGaussian copula"),
+         shape = NULL) +
     guides(shape = guide_legend(override.aes = list(size = 2.2, alpha = 1))) +
     theme_bw(base_size = 9) +
     # the reduced top and bottom margins leave each row enough height for its
@@ -367,20 +262,21 @@ cop_row <- function(d, value, lab, band = NULL, strips = FALSE, legend = FALSE) 
 
 # the five rows are separate plots because each measure needs its own axis
 # range. they are stacked with grid and given a common left margin so that the
-# panels line up.
-save_copula <- function(param, file) {
-  s  <- filter(cop_sum, parameter == param)
+# panels line up. relative measures are undefined at a3 = 0.
+for (p in c("imm", "a3")) {
+  s  <- filter(cop_sum, parameter == p)
   s1 <- filter(s, a3 != 0)
-  r  <- filter(cop_rej, parameter == param, a3 == 0)
-  rows <- list(
+  h  <- c(1.93, 1.68, 1.68, 1.68, 2.43)
+  # the device is opened first because the grobs are sized for the open device
+  png(file.path(plot_dir, sprintf("copula_agreement_%s.png", p)),
+      width = 6.5, height = sum(h), units = "in", res = 300)
+  gs <- lapply(list(
     cop_row(s1, "rel_bias", "Relative bias", c(-.10, .10), strips = TRUE),
     cop_row(s1, "rel_rmse", "Relative RMSE"),
     cop_row(s, "coverage", "Coverage", c(.925, .975)),
     cop_row(s, "se_sd", "SE/SD", c(.90, 1.10)),
-    cop_row(r, "reject", "Type I error", c(.025, .075), legend = TRUE))
-  h  <- c(1.93, 1.68, 1.68, 1.68, 2.43)
-  png(file, width = 6.5, height = sum(h), units = "in", res = 300)
-  gs <- lapply(rows, ggplotGrob)
+    cop_row(filter(cop_rej, parameter == p, a3 == 0), "reject", "Type I error",
+            c(.025, .075), legend = TRUE)), ggplotGrob)
   w  <- do.call(grid::unit.pmax, lapply(gs, function(g) g$widths))
   grid::grid.newpage()
   grid::pushViewport(grid::viewport(layout = grid::grid.layout(5, 1, heights = grid::unit(h, "in"))))
@@ -390,7 +286,5 @@ save_copula <- function(param, file) {
     grid::grid.draw(gs[[i]])
     grid::popViewport()
   }
-  invisible(dev.off())
+  dev.off()
 }
-for (p in c("imm", "a3"))
-  save_copula(p, file.path(plot_dir, sprintf("copula_agreement_%s.png", p)))
