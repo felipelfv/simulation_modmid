@@ -180,16 +180,18 @@ Sciences, Ghent University}}
 
 
 
-\abstract{Moderated mediation is seldom estimated with latent variables,
-and approaches that can estimate it are rarely compared under
-misspecification. In a preregistered simulation we evaluated three
+\abstract{Moderated mediation is often not estimated with latent
+variables, and approaches that can estimate it are rarely compared under
+misspecification. In a preregistered simulation we evaluated four
 approaches under a latent moderated mediation model, local
-structural-after-measurement (LSAM) and two system-wide methods, across
-sample size, interaction magnitude, reliability, predictor distribution,
-and nine (mis)specification conditions. Under correct specification with
-normal predictors, all recovered the interaction coefficient and index
-of moderated mediation, differing modestly in bias, root mean square
-error, coverage, standard errors, Type I error, and power. Under
+structural-after-measurement (LSAM), two system-wide methods, and factor
+score regression as a baseline, across sample size, interaction
+magnitude, reliability, predictor distribution, and nine
+(mis)specification conditions. Under correct specification with normal
+predictors, the first three recovered the interaction coefficient and
+index of moderated mediation, differing modestly in bias, root mean
+square error, coverage, standard errors, Type I error, and power,
+whereas factor score regression underestimated both. Under
 misspecification, LSAM was most robust, leaving some estimates
 unaffected by omissions that biased system-wide approaches, although
 most misspecifications degraded performance. }
@@ -330,11 +332,11 @@ social sciences (Charlton et al., 2021; Hayes, 2018; Pieters, 2017;
 Preacher et al., 2007). In its basic and standard form, the effect of an
 independent variable on an outcome is decomposed into a direct effect
 and an indirect effect transmitted through a mediator, with all
-variables observed. This single mediator model has since been extended
-in a number of directions, most relevant here being the case in which
-the indirect effect is allowed to depend on a moderator (Edwards \&
-Lambert, 2007; Hayes, 2015; MacKinnon et al., 2007; Montoya, 2024;
-Preacher et al., 2007).
+variables observed. This single mediator model has been extended in a
+number of directions, most relevant here being the case in which the
+indirect effect is allowed to depend on a moderator (Edwards \& Lambert,
+2007; Hayes, 2015; MacKinnon et al., 2007; Montoya, 2024; Preacher et
+al., 2007).
 
 In this context, a fundamental concern may arise from measurement. Many
 constructs under investigation are not directly observed but are
@@ -376,17 +378,17 @@ latent variables (e.g., Boker et al., 2023; Bollen, 1995; Kenny \& Judd,
 estimation strategy, in which the measurement and structural parameters
 are estimated simultaneously. This is the case of the two best-known
 methods, latent moderated structural equations (LMS) and the
-unconstrained product indicator (UPI) approach. Opposed to these are
+unconstrained product indicator (UPI) approach. In contrast,
 structural-after-measurement (SAM) approaches (Cox \& Kelcey, 2021;
 Holst \& Budtz-Jørgensen, 2020; Ng \& Chan, 2020; Rosseel et al., 2025;
-Wall \& Amemiya, 2000, 2003), in which the measurement model is
-estimated first and the structural model afterward with the measurement
-parameters held fixed. Many of these approaches have so far rarely been
-applied in practice, likely held back by limited software, slow
-estimation, and error-prone implementations. With recent open-source
-implementations (Holst \& Budtz-Jørgensen, 2020; Rosseel et al., 2025;
-Slupphaug et al., 2025) and non-commercial software (Keller, 2025), this
-is likely to change.
+Wall \& Amemiya, 2000, 2003) estimate the measurement model first and
+the structural model afterward, with the measurement parameters held
+fixed. Many of these approaches have so far rarely been applied in
+practice, likely held back by limited software, slow estimation, and
+error-prone implementations. With recent open-source implementations
+(Holst \& Budtz-Jørgensen, 2020; Rosseel et al., 2025; Slupphaug et al.,
+2025) and non-commercial software (Keller, 2025), this is likely to
+change.
 
 Beyond estimation, a further consideration concerns interpretation.
 Mediation is a hypothesis about causal effects, and causal
@@ -409,36 +411,22 @@ their meaning do not depend on the structural model that follows,
 although this does not imply that the structure is correct (VanderWeele
 \& Vansteelandt, 2022).
 
-To illustrate interpretational confounding, we specify a population
-mediation model with three latent variables, X, M, and Y, each with
-three indicators and all loadings equal to 1, and derive its
-model-implied covariance matrix. We then set the covariances of the M
-indicators with \(x_1\), \(x_2\), and \(x_3\) to 3, 1, and 1, rather
-than the implied value of 2, so their association with M no longer
-follows a single common factor. We fit the model to this matrix
-(\(N = 200\)) with and without the mediator, by system-wide SEM and by
-SAM, and compare the estimated loadings of \(x_2\) and \(x_3\). Without
-the mediator, both approaches recover the true loadings of 1. Once the
-mediator enters, the system-wide loadings drop to 0.41, whereas the SAM
-loadings, estimated before the structural model, remain at 1. The code
-for this illustration is included in the manuscript source in the
-project repository.
-
-Despite this, prior simulation work has examined latent interaction
-estimation mainly under distributional misspecification (Brandt et al.,
-2014; e.g., Cham et al., 2012; Lonati et al., 2025; Vieira et al.,
-2026), and in only two cases under misspecification at the measurement
-level (Brandt et al., 2020; Navarro \& Schermelleh-Engel, 2025), which
-between them considered only the UPI and LMS among the approaches
-studied here in limited settings. Moreover, when it comes to (moderated)
-mediation, despite its popularity in applied research, only a few
-studies have investigated it with latent variables, and those assumed a
-correctly specified (and saturated) model (Cheung \& Lau, 2017; Falk \&
-Biesanz, 2015; Feng et al., 2020). In this article, we therefore
-evaluate three estimation approaches for a latent variable moderated
-mediation model: local SAM (LSAM; Rosseel et al., 2025), LMS (Kelava et
-al., 2011; Klein \& Moosbrugger, 2000), and UPI (Kelava \& Brandt, 2009;
-Marsh et al., 2004). These approaches have been explained extensively in
+Despite the relevance of misspecification, prior simulation work has
+examined latent interaction estimation mainly under distributional
+misspecification (Brandt et al., 2014; e.g., Cham et al., 2012; Lonati
+et al., 2025; Vieira et al., 2026), and in only two cases under
+misspecification at the measurement level (Brandt et al., 2020; Navarro
+\& Schermelleh-Engel, 2025). Among the approaches studied here, these
+considered only UPI and LMS, and in limited settings. Moreover, when it
+comes to (moderated) mediation, despite its popularity in applied
+research, only a few studies have investigated it with latent variables,
+and those assumed a correctly specified (and saturated) model (Cheung \&
+Lau, 2017; Falk \& Biesanz, 2015; Feng et al., 2020). In this article,
+we therefore evaluate four estimation approaches for a latent variable
+moderated mediation model: local SAM (LSAM; Rosseel et al., 2025), LMS
+(Kelava et al., 2011; Klein \& Moosbrugger, 2000), UPI (Kelava \&
+Brandt, 2009; Marsh et al., 2004), and, as a baseline, factor score
+regression (FSR). The first three have been explained extensively in
 previous research and we refer readers to it (e.g., Brandt et al., 2020;
 Kelava et al., 2011; Lin et al., 2010; Lonati et al., 2025; Rosseel et
 al., 2025; Slupphaug et al., 2025; Vieira et al., 2026).
@@ -457,14 +445,15 @@ structural models (Robitzsch, 2022), a case not yet tested for models
 with nonlinear effects. Second, we obtain inference for the index of
 moderated mediation (imm; Hayes, 2015), a nonlinear function of the
 structural parameters, with the Monte Carlo method (MacKinnon et al.,
-2004; Preacher \& Selig, 2012) rather than the bootstrap used in the
-latent variable studies above (Cheung \& Lau, 2017; Feng et al., 2020).
-Bootstrapping is computationally expensive, and its variants differ
-modestly in performance and rank differently depending on the criterion
-(Falk \& Biesanz, 2015; Tibbe \& Montoya, 2022), whereas the Monte Carlo
-method needs only the estimates and their covariance matrix. Whether it
-performs adequately for the imm in the context under investigation,
-which has not been examined, is a question we address here.
+2004; Preacher \& Selig, 2012). The latent variable studies above used
+the bootstrap (Cheung \& Lau, 2017; Feng et al., 2020). Bootstrapping is
+computationally expensive, and its variants differ modestly in
+performance and rank differently depending on the criterion (Falk \&
+Biesanz, 2015; Tibbe \& Montoya, 2022), whereas the Monte Carlo method
+needs only the estimates and their covariance matrix. Whether it meets
+the usual criteria for coverage and standard error accuracy for the imm
+in the context under investigation has not been examined, and is the
+question we address here. We do not compare it with the bootstrap.
 
 \section{Simulation Design and Performance
 Evaluation}\label{simulation-design-and-performance-evaluation}
@@ -589,18 +578,18 @@ double mean centering (Kelava \& Brandt, 2009; Lin et al., 2010; Marsh
 et al., 2004), estimated with robust ML, that is, with Huber--White
 sandwich standard errors.
 
-As a baseline, we also used factor score regression (FSR)\footnote{We
-  note that the approach of Skrondal and Laake (2001), used for latent
-  interactions by Ng and Chan (2020), would be a more principled choice,
-  in which regression (Thurstone) factor scores are used for the
-  explanatory variables and Bartlett factor scores for the response
-  variables. However, as noted previously (Devlieger et al., 2016), this
-  does not work in models where a variable is both explanatory and a
-  response, as the mediator is here.}. Specifically, Bartlett factor
-scores were computed from a confirmatory factor model of the four latent
-variables estimated by ML, and the structural model was estimated on the
-scores by ML, which gives the ordinary least squares estimates, with
-standard errors from this second step.
+As a baseline, we also used FSR\footnote{We note that the approach of
+  Skrondal and Laake (2001), used for latent interactions by Ng and Chan
+  (2020), would be a more principled choice, in which regression
+  (Thurstone) factor scores are used for the explanatory variables and
+  Bartlett factor scores for the response variables. However, as noted
+  previously (Devlieger et al., 2016), this does not work in models
+  where a variable is both explanatory and a response, as the mediator
+  is here.}. Specifically, Bartlett factor scores were computed from a
+confirmatory factor model of the four latent variables estimated by ML,
+and the structural model was estimated on the scores by ML, which gives
+the ordinary least squares estimates, with standard errors from this
+second step.
 
 \subsubsection{Data Generation}\label{data-generation}
 
