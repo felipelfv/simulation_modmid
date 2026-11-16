@@ -859,14 +859,15 @@ under correct specification and under a large number of structural and
 measurement misspecifications as well as distributional violations. 
 
 Under correct specification with normal predictors, all three recovered the 
-imm and the interaction coefficient without bias and with nominal coverage, 
+imm and the interaction coefficient with low bias and with coverage close to 
+nominal, 
 differing mainly in the SE/SD ratio, Type I error, relative RMSE, and 
 power. LMS had the lowest relative RMSE and 
 the highest power but, under nonnormal predictors, showed bias under 
 $\chi^2$ predictors at low reliability together with below-nominal coverage 
 and inflated Type I error. LSAM yielded Type I error closest to nominal, at 
 the cost of a higher relative RMSE and lower power in some cases, while UPI 
-fell in between, unbiased except at the smallest sample size with low 
+fell in between, with low bias except at the smallest sample size with low 
 reliability, where it was also the least stable. Both standard error 
 measures stayed near one except in small samples, most at low reliability, 
 where UPI overestimated standard errors, and UPI and LSAM struggled most 
