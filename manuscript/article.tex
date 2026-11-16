@@ -944,86 +944,141 @@ indicator; FSR = factor score regression.
 \subsection{Structural and Measurement
 Misspecification}\label{structural-and-measurement-misspecification}
 
+We show the relative bias of the interaction coefficient and the imm at
+\(N = 500\), because the bias induced by an omission changes little with
+sample size, and the standard errors and Type I error of the imm at the
+smallest and largest sample size.
+
 \subsubsection{Relative Bias}\label{relative-bias-1}
 
-Under misspecification, \(c_2\) biases the imm for all three estimation
-approaches across distributions, and so does \(c_3\) in most conditions,
-as expected. The size of the bias nevertheless varies with the predictor
-distribution, being largest under normal and same-skewness \(\chi^2\)
-predictors and smallest under opposite-skewness \(\chi^2\) and \(t_5\)
-predictors. For the interaction coefficient, \(c_2\) produces
-essentially no bias for all approaches, whereas \(c_3\) leads to bias
-under the system-wide approaches, mainly at low reliability. Among the
-measurement omissions, \texttt{cl} leaves the imm unbiased except for
-LMS in the \(\chi^2\) conditions, and attenuates the interaction
-coefficient only under the system-wide methods. Last, \texttt{rc}
-induces an upward bias in the imm at low reliability, most pronounced
-for LMS under same-skewness \(\chi^2\), and leaves the interaction
-coefficient largely unchanged. For the structural omissions, the bias
-increases with the omission magnitude wherever present, and it is
-generally larger at low reliability (see the supplementary materials).
-We also note that the bias of the interaction coefficient under \(c_3\)
-is the one result not implied by the omission alone.
+The structural omissions bias the imm upward for LSAM, LMS, and UPI,
+increasingly with the omission magnitude (Figure~\ref{fig-mis-bias}).
+Under \(c_2\) the three approaches are similar, with an average bias of
+0.40 to 0.47 at the medium magnitude, and the interaction coefficient is
+largely unaffected, as expected. Under \(c_3\) they differ. For LSAM the
+average bias of the imm at the medium magnitude is 0.28 at both
+reliability levels, whereas for LMS and UPI it is about 0.51 at high and
+0.80 at low reliability, partly because \(c_3\) also biases their
+interaction coefficient (by 0.29 on average at low reliability), which
+LSAM estimates with low bias. Under both omissions the bias is largest
+with normal and same-skewness \(\chi^2\) predictors and smallest with
+\(t_5\) and opposite-skewness \(\chi^2\) predictors. The medium
+cross-loading attenuates the interaction coefficient for LMS and UPI (on
+average by 0.21 and 0.27 at low reliability, against 0.05 for LSAM),
+while the imm remains largely within the acceptable range, except for
+LMS with \(\chi^2\) predictors (up to 0.36), and the residual covariance
+shifts it slightly upward at low reliability. For FSR, the structural
+omissions move the attenuated imm toward zero (on average 0.03 under the
+medium \(c_2\) at high reliability), which reflects two biases that
+offset each other and not accurate estimation. At the larger magnitude
+(\(a_3 = 0.4\)), the bias of the imm is larger under \(c_3\) and smaller
+under \(c_2\), and the relative RMSE increases with the bias throughout
+(see the supplementary materials).
 
-\subsubsection{Relative RMSE}\label{relative-rmse}
+\begin{figure}[!htbp]
 
-Under misspecification, the structural omissions (\(c_2\) and \(c_3\))
-inflate the RMSE of the imm for all three approaches. Under \(c_3\) the
-inflation is clearly larger for the system-wide approaches, especially
-at low reliability, whereas under \(c_2\) the three are more similar.
-For the interaction coefficient, \(c_3\) inflates the RMSE for both
-system-wide approaches, more so at low reliability, while LSAM is
-unaffected. The measurement omissions (\texttt{cl} and \texttt{rc}) have
-a negligible effect, except for LMS under the medium \texttt{cl} at low
-reliability.
+{\caption{{Relative Bias of the Interaction Coefficient (\(a_3\)) and
+the imm (\(a_3 b\)) Under Structural and Measurement Misspecification at
+\(a_3 = 0.2\) and \(N = 500\)}{\label{fig-mis-bias}}}}
+
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/misspec_rel_bias.png}
+
+\vspace{-20pt}
+\noindent \emph{Note.} The~gray band marks the acceptable region for the
+measure, and the error bars represent the Monte Carlo standard error
+(MCSE). On the horizontal axis, n = correctly specified model; \(c_2\)
+and \(c_3\) = omitted paths; cl = omitted cross-loading; rc = omitted
+residual covariance; .s and .m = small and medium magnitude. imm = index
+of moderated mediation; LSAM = local structural-after-measurement; LMS =
+latent moderated structural equations; UPI = unconstrained product
+indicator; FSR = factor score regression.
+
+\end{figure}
 
 \subsubsection{Standard Errors}\label{standard-errors-1}
 
-Moreover, in general, model misspecification barely alters this pattern.
-The same deviations recur throughout all omissions, with some
-fluctuations. With respect to the SE\(^2\)/VAR ratio, a similar pattern
-is observed across most conditions. Importantly, however, with
-\(N = 200\) at both reliability levels, UPI yielded overestimated values
-for both \(\chi^2\) conditions, while LSAM showed overestimated values
-for the opposite-skewness \(\chi^2\) (figures available in the project
-repository).
+The omissions change the SE/SD ratio of the imm little for LSAM, LMS,
+and UPI (Figure~\ref{fig-mis-sesd}). UPI again overestimates the
+standard errors at low reliability, in every condition at \(N = 100\)
+(1.21 to 1.91) and in fewer at larger sample sizes (1 of 45 at
+\(N = 500\)). For FSR, in contrast, omitting \(c_3\) leads to
+underestimated standard errors of the imm at both reliability levels,
+with ratios between 0.72 and 0.90 at the medium magnitude and
+\(N = 500\). This originates in the outcome equation, where the ratio
+for \(b\) decreases as well, while that for the interaction coefficient
+is unchanged.
+
+\begin{figure}[!htbp]
+
+{\caption{{SE/SD of the imm (\(a_3 b\)) Under Structural and Measurement
+Misspecification at \(a_3 = 0.2\)}{\label{fig-mis-sesd}}}}
+
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/misspec_se_sd_imm.png}
+
+\vspace{-20pt}
+\noindent \emph{Note.} The~gray band marks the acceptable region for the
+measure. On the horizontal axis, n = correctly specified model; \(c_2\)
+and \(c_3\) = omitted paths; cl = omitted cross-loading; rc = omitted
+residual covariance; .s and .m = small and medium magnitude. imm = index
+of moderated mediation; LSAM = local structural-after-measurement; LMS =
+latent moderated structural equations; UPI = unconstrained product
+indicator; FSR = factor score regression.
+
+\end{figure}
 
 \subsubsection{Coverage}\label{coverage-1}
 
-Under model misspecification, \(c_2\) and \(c_3\) reduce the imm
-coverage, since its interval is then centered on a biased estimate, with
-the largest decrease for the system-wide approaches under \(c_3\) and,
-under same-skewness \(\chi^2\), for LMS under \(c_2\) as well. This is
-larger with increasing sample size and is present under most
-distributions, albeit with different magnitudes. Moreover, under \(t_5\)
-and same-skewness \(\chi^2\) predictors, coverage remains at or slightly
-below the acceptable range under the measurement omissions across sample
-sizes and reliability levels. For the interaction coefficient, the
-medium cross-loading (\texttt{cl}) is the most damaging case, lowering
-coverage under the system-wide approaches, while LSAM holds near
-nominal. We also note that \(c_3\) lowered coverage for the system-wide
-approaches at \(N = 500\), most for LMS at low reliability, whereas
-\(c_2\) and \texttt{rc} leave coverage close to nominal.
+Under misspecification the interval is centered on a biased estimate, so
+coverage decreases wherever an omission induces bias, and more so with
+increasing sample size (see the supplementary materials). At \(N = 500\)
+under the medium \(c_3\), the coverage of the imm is as low as 0.83 for
+LSAM, 0.75 for UPI, and 0.53 for LMS. Where an omission induces little
+bias, as for the imm under the measurement omissions, coverage is as
+under correct specification.
 
 \subsubsection{Hypothesis Testing (Type I Error and
 Power)}\label{hypothesis-testing-type-i-error-and-power-1}
 
-Under misspecification, this pattern largely persists throughout
-distributions. LMS shows inflated Type I error in most cells under
-\(t_5\) and both \(\chi^2\) conditions, most severely under the
-structural omissions and the cross-loading at low reliability, and even
-under normal predictors for the medium \(c_3\). UPI is instead
-conservative at low reliability, in several cells at \(N = 200\) and
-throughout under opposite-skewness \(\chi^2\), but also inflated under
-\(t_5\) at high reliability for several omissions, whereas LSAM stays
-mostly within the acceptable range, with inflation confined largely to
-\(t_5\) predictors.
+For LSAM, the Type I error is not affected by the omissions
+(Figure~\ref{fig-mis-typeI}). It exceeds the range almost only at high
+reliability with \(t_5\) and same-skewness \(\chi^2\) predictors, as
+under correct specification, and reaches at most 0.10. LMS is liberal in
+152 of the 360 conditions, nearly all with \(t_5\) and \(\chi^2\)
+predictors, and at low reliability \(c_3\) and the cross-loading add to
+this with increasing sample size, up to 0.27 (medium \(c_3\), same
+skewness) and 0.33 (medium cross-loading, opposite skewness) at
+\(N = 500\). UPI remains conservative at low reliability, mainly at
+\(N = 100\) and with opposite-skewness \(\chi^2\) predictors at nearly
+every sample size, and is slightly liberal under the medium \(c_3\) in
+several conditions (up to 0.10). FSR stays close to the nominal level
+except under the medium cross-loading at low reliability, where its rate
+increases with sample size for \(t_5\) and \(\chi^2\) predictors, up to
+0.25. Power changes little for LSAM and FSR. For LMS and UPI it
+increases under \(c_3\) and decreases under the medium cross-loading,
+following the bias in the interaction coefficient. The exception is the
+medium cross-loading with opposite-skewness \(\chi^2\) predictors, where
+the power of LMS and FSR increases together with their Type I error.
+Power should not be interpreted where the estimate is biased (see the
+supplementary materials).
 
-Under misspecification, power barely changes for LSAM, whereas for the
-system-wide approaches it rises under \(c_3\) and falls under the
-cross-loading, except for LMS under opposite-skewness \(\chi^2\), where
-its inflated Type I error lifts it. We note, however, that interpreting
-power in the case of bias and inflated Type I error should be avoided.
+\begin{figure}[!htbp]
+
+{\caption{{Type I Error of the imm (\(a_3 b\)) Under Structural and
+Measurement Misspecification (\(a_3 = 0\))}{\label{fig-mis-typeI}}}}
+
+\includegraphics[width=1\linewidth,height=\textheight,keepaspectratio]{../plots/misspec_typeI_imm.png}
+
+\vspace{-20pt}
+\noindent \emph{Note.} The~gray band marks the acceptable region for the
+measure, and the error bars represent the Monte Carlo standard error
+(MCSE). On the horizontal axis, n = correctly specified model; \(c_2\)
+and \(c_3\) = omitted paths; cl = omitted cross-loading; rc = omitted
+residual covariance; .s and .m = small and medium magnitude. imm = index
+of moderated mediation; LSAM = local structural-after-measurement; LMS =
+latent moderated structural equations; UPI = unconstrained product
+indicator; FSR = factor score regression.
+
+\end{figure}
 
 \subsection{Additional Structural
 Estimates}\label{additional-structural-estimates}
