@@ -469,19 +469,19 @@ Estimands}\label{population-models-and-estimands}
 
 We study a moderated mediation model among four latent variables: an
 exogenous predictor \(X\), a moderator \(W\), a mediator \(M\), and an
-outcome \(Y\). The structural model is as follows
+outcome \(Y\). The structural model that is fitted in every condition,
+and that is the population model in the correctly specified condition,
+is
 
 \[
 M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
 Y = b\,M + c'\,X + \zeta_Y.
 \]
 
-This is the population model in the correctly specified condition, and
-it is the model fitted in every condition. In the misspecified
-conditions the population departs from it by one additional element,
-which the fitted model omits. Figure~\ref{fig-model} shows the
-population model, where the measurement and structural misspecifications
-studied below are drawn in gray.
+\noindent In the misspecified conditions the population departs from it
+by one additional element, which the fitted model omits.
+Figure~\ref{fig-model} shows the population model, where the measurement
+and structural misspecifications studied below are drawn in gray.
 
 The primary estimands are the interaction coefficient (\(a_3\)) and the
 imm (i.e., \(a_3 b\)). The remaining structural coefficients (\(a_1\),
@@ -574,27 +574,25 @@ in the first step and with standard errors obtained as in Vieira et al.
 (2026) (see their Appendix A). In this case, the interacting predictors
 \(X\) and \(W\) shared a single measurement block, while \(M\) and \(Y\)
 formed their own blocks. We further used LMS (Klein \& Moosbrugger,
-2000), with robust standard errors, and the extended UPI approach with
-double mean centering (Kelava \& Brandt, 2009; Lin et al., 2010; Marsh
-et al., 2004), estimated with robust ML, that is, with Huber--White
-sandwich standard errors.
-
-As a baseline, we also used FSR\footnote{We note that the approach of
-  Skrondal and Laake (2001), used for latent interactions by Ng and Chan
-  (2020), would be a more principled choice, in which regression
-  (Thurstone) factor scores are used for the explanatory variables and
-  Bartlett factor scores for the response variables. However, as noted
-  previously (Devlieger et al., 2016), this does not work in models
-  where a variable is both explanatory and a response, as the mediator
-  is here.}. Specifically, Bartlett factor scores were computed from a
-confirmatory factor model of the four latent variables estimated by ML,
-and the structural model was estimated on the scores by ML, which gives
-the ordinary least squares estimates, with standard errors from this
-second step.
+2000) and the extended UPI approach with double mean centering (Kelava
+\& Brandt, 2009; Lin et al., 2010; Marsh et al., 2004), the latter
+estimated by ML. For both, robust standard errors were obtained with the
+Huber--White sandwich estimator. As a baseline, we also used
+FSR\footnote{We note that the approach of Skrondal and Laake (2001),
+  used for latent interactions by Ng and Chan (2020), would be a more
+  principled choice, in which regression (Thurstone) factor scores are
+  used for the explanatory variables and Bartlett factor scores for the
+  response variables. However, as noted previously (Devlieger et al.,
+  2016), this does not work in models where a variable is both
+  explanatory and a response, as the mediator is here.}. Specifically,
+Bartlett factor scores were computed from a confirmatory factor model of
+the four latent variables estimated by ML, and the structural model was
+estimated on the scores by ML, which gives the ordinary least squares
+estimates, with standard errors solely from this second step.
 
 \subsubsection{Data Generation}\label{data-generation}
 
-The supplementary materials describe the complete data-generating
+The supplementary materials describe the complete data generating
 mechanism and its calibration in detail. Briefly, the latent variables
 \(X\) and \(W\) were drawn from a bivariate distribution with
 \(\operatorname{Cor}(X, W) = \rho = 0.3\), constructed with the
@@ -731,19 +729,21 @@ same estimated covariance matrix of the parameter estimates.
 \subsubsection{Reproducibility and Computational
 Details}\label{reproducibility-and-computational-details}
 
-All analyses were conducted in R (R Core Team, 2025) using the
+All analyses were conducted in R (R Core Team, 2026) using the
 \emph{lavaan} (Rosseel, 2012) and \emph{modsem} (Slupphaug et al., 2025)
 packages for estimation, \emph{covsim} (Grønneberg et al., 2022) and
 \emph{rvinecopulib} (Nagler \& Vatter, 2025) for data generation, and
 \emph{simhelpers} (Joshi \& Pustejovsky, 2025) for performance
-evaluation. Conditions were run in parallel with the \emph{parallel}
-package. Reproducible and independent random-number streams were
-obtained with the L'Ecuyer-CMRG generator. The computational environment
-was pinned with Nix (Dolstra et al., 2004) via the \emph{rix} package
-(Rodrigues \& Baumann, 2026) to ensure reproducibility, and the article
-was written with the \emph{apaquarto} extension (Schneider, 2026). For
-the R version, package versions, code, manuscript, and materials, see
-the project repository.
+evaluation. For data and figure processing, we used \emph{dplyr}
+(Wickham et al., 2026), \emph{tidyr} (Wickham et al., 2025), and
+\emph{ggplot2} (Wickham, 2016). Conditions were run in parallel with the
+\emph{parallel} package (R Core Team, 2026). Reproducible and
+independent random-number streams were obtained with the L'Ecuyer-CMRG
+generator. The computational environment was pinned with Nix (Dolstra et
+al., 2004) via the \emph{rix} package (Rodrigues \& Baumann, 2026) to
+ensure reproducibility, and the article was written with the
+\emph{apaquarto} extension (Schneider, 2026). For the R version, package
+versions, code, manuscript, and materials, see the project repository.
 
 \section{Results}\label{results}
 
@@ -1586,9 +1586,9 @@ and Measures}, \emph{6}(2), 77--98.
 \url{https://doi.org/10.1080/19312458.2012.679848}
 
 \bibitem[\citeproctext]{ref-RCoreTeam}
-R Core Team. (2025). \emph{R: A language and environment for statistical
+R Core Team. (2026). \emph{R: A language and environment for statistical
 computing}. R Foundation for Statistical Computing.
-\url{https://www.R-project.org/}
+\url{https://doi.org/10.32614/R.manuals}
 
 \bibitem[\citeproctext]{ref-Rhemtulla2020}
 Rhemtulla, M., Bork, R. van, \& Borsboom, D. (2020). Worse than
@@ -1713,6 +1713,19 @@ Wang, Y. A., \& Rhemtulla, M. (2021). Power analysis for parameter
 estimation in structural equation modeling: A discussion and tutorial.
 \emph{Advances in Methods and Practices in Psychological Science},
 \emph{4}(1), 1--17. \url{https://doi.org/10.1177/2515245920918253}
+
+\bibitem[\citeproctext]{ref-Wickham2016}
+Wickham, H. (2016). \emph{{ggplot2}: Elegant graphics for data
+analysis}. Springer. \url{https://doi.org/10.1007/978-3-319-24277-4}
+
+\bibitem[\citeproctext]{ref-Wickham2026}
+Wickham, H., François, R., Henry, L., Müller, K., \& Vaughan, D. (2026).
+\emph{{dplyr}: A grammar of data manipulation}.
+\url{https://CRAN.R-project.org/package=dplyr}
+
+\bibitem[\citeproctext]{ref-Wickham2025}
+Wickham, H., Vaughan, D., \& Girlich, M. (2025). \emph{{tidyr}: Tidy
+messy data}. \url{https://CRAN.R-project.org/package=tidyr}
 
 \end{CSLReferences}
 
