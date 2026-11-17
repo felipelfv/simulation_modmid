@@ -865,65 +865,90 @@ baseline, under correct specification and under structural and measurement
 misspecifications as well as distributional violations.
 
 Under correct specification with normal predictors, LSAM, LMS, and UPI
-recovered the imm and the interaction coefficient with low bias and with
-coverage close to nominal, whereas FSR attenuated the imm by about a quarter
-at high and about half at low reliability. LMS had the lowest relative RMSE
-and the highest power, but it was biased with $\chi^2$ predictors and its Type
-I error was inflated with $t_5$ and $\chi^2$ predictors, as expected given its
-assumption of normal latent predictors. Among the three, LSAM yielded Type I
-error closest to nominal, at some cost in relative RMSE and power, while UPI
-fell in between, with low bias except at the smallest sample size with low
-reliability, where it was also the least stable. Its standard errors were
+recovered the imm and the interaction coefficient with acceptable bias and
+with coverage close to nominal, whereas FSR attenuated the imm by about a
+quarter at high and about half at low reliability. Across the predictor
+distributions, LMS had the lowest relative RMSE and the highest power, but
+with $\chi^2$ predictors it was biased and with $t_5$ and $\chi^2$ predictors
+its Type I error was inflated, as expected given its assumption of normal
+latent predictors [@Lonati2025].^[The results of LMS with nonnormal
+predictors also depended on the copula. When the predictors were combined
+through a Gaussian instead of the Clayton copula, its bias was larger with
+$\chi^2$ predictors (e.g., 0.32 against 0.15 with same-skewness predictors at
+$a_3 = 0.2$, $N = 500$, and low reliability) and smaller with uniform and
+$t_5$ predictors, in line with how far the mixed moments of the predictors
+beyond the second order are from normality under each copula (see Figure 1 and Table 7 of
+the supplementary materials).] Among the three, LSAM yielded Type I error
+closest to nominal, at some cost in relative RMSE and power, while UPI had
+the highest relative RMSE and the lowest power, with acceptable bias except
+at the smallest sample size with low reliability, where it was also the
+least stable. Its standard errors were
 overestimated in small samples at low reliability, largely because of a few
 extreme values, and UPI and LSAM struggled most under opposite-skewness
 $\chi^2$ predictors.
 
-Under misspecification, LSAM was the more robust approach. The structural
-omissions in the outcome equation ($c_2$, $c_3$) biased the outcome-side
-coefficients, and thereby the imm, for all approaches but left the mediator
+Under misspecification, LSAM was less affected than the system-wide
+approaches, without being robust to every omission. The structural omissions
+in the outcome equation ($c_2$, $c_3$) biased the coefficients of that
+equation, and thereby the imm, for all approaches but left the mediator
 equation, and hence the interaction coefficient, unaffected under LSAM,
 whereas the system-wide approaches also carried them into the mediator
 equation, biasing $a_2$ under $c_2$ and the interaction coefficient under
 $c_3$. The cross-loading (`cl`) was the most damaging for the structural
 coefficients. Under the system-wide approaches it biased most of them,
 including the interaction coefficient, while under LSAM it affected mainly
-$a_1$ and $c'$. The imm was little affected, but for the system-wide
-approaches only because opposite biases in the interaction coefficient and $b$
-offset each other. The residual covariance (`rc`) had little effect. The Type
+$a_1$ and $c'$. The imm, however, was little affected. The residual covariance (`rc`) had little effect. The Type
 I error of LSAM was unchanged by the omissions, whereas that of LMS rose to
 0.33. Where bias was substantial, it was smaller under LSAM, except for $c'$
 under the structural omissions, and it increased with the magnitude of the
 omission.
 
-Regarding the imm, the Monte Carlo method delivered standard errors and 
-confidence intervals that behaved like those of the interaction coefficient, 
-with the deviations at low reliability and small samples reflecting the 
-standard errors of the underlying estimates. Under misspecification its coverage dropped with the bias of its constituents despite wider intervals. The method thus appears an adequate and far cheaper 
-alternative to the bootstrap here, although a direct comparison remains to be 
-made.
+Regarding the imm, the Monte Carlo method delivered standard errors and
+confidence intervals that behaved like those of the interaction coefficient,
+with the deviations at low reliability and small samples reflecting the
+standard errors of the underlying estimates. Under correct specification, the
+method was thus adequate by the criteria applied to standard errors and
+coverage. Under misspecification, its coverage dropped with the bias of its
+constituents despite wider intervals.
 
-These patterns are broadly consistent with previous research. The behavior 
+Moreover, these patterns are broadly consistent with previous research. The behavior 
 of LMS and UPI under nonnormality and their stability under normality 
 reproduce earlier findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], 
 as does that of LSAM [@Rosseel2025; @Vieira2026]. The measurement 
 misspecification results align with @Brandt2020, where an omitted 
 cross-loading was likewise damaging for every estimator, including UPI. 
 @NavarroSchermelleh2025 likewise found the latent interaction effect 
-underestimated under omitted cross-loadings with LMS. Even so, @Brandt2020 found no approach free of bias and none uniformly 
+underestimated under omitted positive cross-loadings with LMS. Even so, @Brandt2020 found no approach free of bias and none uniformly 
 best, as we also observed. Lastly, the contrast between the structural and 
 the measurement omissions matches the expectation of @Robitzsch2022 that 
 the advantage of SAM lies in structural rather than measurement 
 misspecification, since the cross-loading biased LSAM as well, whereas the 
 structural omissions left its mediator equation untouched.
 
-Finally, although we evaluated the estimation approaches from a statistical 
-perspective, the moderated mediation model itself rests on strong causal 
-assumptions [@Imai2010; @Rohrer2022]. Good statistical performance in certain 
-conditions is therefore not, on its own, a justification for a causal claim, 
-and we direct interested readers to the developing literature on the causal 
-interpretation of mediation [@Morelli2026; @Imai2010]. Moreover, 
-misspecification had strong consequences across all approaches, and 
-many of the omissions studied may be highly plausible in applied contexts.
+For applied researchers, these results suggest the following within the
+conditions studied. When the latent predictors can be assumed normal, LMS is
+the most efficient choice. When they may be nonnormal, LSAM is preferable,
+because it kept the Type I error closest to nominal, at the price of lower
+power with strongly skewed predictors. LSAM was also less affected by
+misspecification without being robust to it, since the imm was still biased
+under both structural omissions and the omitted cross-loading biased its
+estimates as well. UPI had acceptable bias but the lowest power, and it is
+not advisable in small samples with low reliability. FSR is not recommended,
+since it attenuated the imm by a quarter to a half, as is known to happen
+when the measurement error in the scores is ignored [@NgChan2020]. With an interaction of
+the size studied here, a power of 0.80 required about 300 observations at
+high and 500 at low reliability for most predictor distributions. Still,
+misspecification had strong consequences across all approaches, and many of
+the omissions studied may be highly plausible in applied contexts. No
+approach protected against an omitted path in the outcome equation or a
+misspecified measurement model, and both should therefore be examined before
+the imm is interpreted, which the separate measurement step of LSAM makes
+natural. Finally, although we evaluated the estimation approaches from a
+statistical perspective, the moderated mediation model itself rests on strong causal
+assumptions [@Imai2010; @Rohrer2022]. Good statistical performance in certain
+conditions is therefore not, on its own, a justification for a causal claim,
+and we direct interested readers to the developing literature on the causal
+interpretation of mediation [@Morelli2026; @Imai2010].
 
 {{< pagebreak >}}
 
