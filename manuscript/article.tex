@@ -354,13 +354,13 @@ less reliable than either of its constituents (Bohrnstedt \& Marwell,
 1978; Busemeyer \& Jones, 1983). To address this, structural equation
 modeling (SEM) with latent variables has been advocated, especially in
 the context of mediation (Cheung \& Lau, 2008; Falk \& Biesanz, 2015;
-Ledgerwood \& Shrout, 2011; Montoya, 2024). It estimates structural
-relationships between common factors, from which indicator-specific
-unique variance has been partitioned, provided the measurement model is
-correctly specified (Bollen, 1989; DeShon, 1998; Rhemtulla et al.,
-2020). Yet we also note that latent variables do not necessarily improve
-power in general, whether for interactions or not (Cham et al., 2012;
-Ledgerwood \& Shrout, 2011; Wang \& Rhemtulla, 2021).
+Ledgerwood \& Shrout, 2011; Montoya, 2024). With a correctly specified
+measurement model, SEM estimates structural paths among latent factors
+while accounting for indicator-specific residual variance (Bollen, 1989;
+DeShon, 1998; Rhemtulla et al., 2020). Yet we also note that latent
+variables do not necessarily improve power in general, whether for
+interactions or not (Cham et al., 2012; Ledgerwood \& Shrout, 2011; Wang
+\& Rhemtulla, 2021).
 
 Moderated mediation with latent variables is not straightforward in
 terms of statistical estimation. Indeed, a latent interaction\footnote{We
@@ -393,10 +393,10 @@ change.
 Beyond estimation, a further consideration concerns interpretation.
 Mediation is a hypothesis about causal effects, and causal
 interpretation requires identification assumptions that \emph{may} not
-be verified from the data alone (Imai et al., 2010; Morelli et al.,
-2026; Rohrer et al., 2022). With latent variable models, further caution
-is needed (Sterner et al., 2024; VanderWeele \& Vansteelandt, 2022). We
-focus on one that is central to interpretation: the estimated latent
+be verified from the data alone (e.g., Imai et al., 2010; Rohrer et al.,
+2022). With latent variable models, further caution is needed (Morelli
+et al., 2026; Sterner et al., 2024; VanderWeele \& Vansteelandt, 2022).
+We focus on one that is central to interpretation: the estimated latent
 variables must validly represent the intended constructs (Gonzalez \&
 MacKinnon, 2021). In fact, when they do not, the model is subject to
 interpretational confounding (Burt, 1976), a discrepancy between the
@@ -404,12 +404,13 @@ empirical meaning assigned to a latent variable through its estimated
 measurement parameters and the meaning intended by the researcher. This
 reflects an underlying property of system-wide estimation, namely that
 the consequences of a misspecification are not confined to the part of
-the model in which it occurs (Bainter \& Bollen, 2014). Burt (1976)
-proposed estimating the measurement model first, as a SAM approach does
-(e.g., Rosseel \& Loh, 2024), so that the estimated latent variables and
-their meaning do not depend on the structural model that follows,
-although this does not imply that the structure is correct (VanderWeele
-\& Vansteelandt, 2022).
+the model in which it occurs (Bainter \& Bollen, 2014; Bollen et al.,
+2007; Kaplan, 1988). Burt (1976) proposed estimating the measurement
+model first in order to separate the estimated latent variables and
+their empirical meaning from the structural model that follows. SAM
+approaches follow this strategy (e.g., Rosseel \& Loh, 2024), although
+it does not imply that the structure is correct (VanderWeele \&
+Vansteelandt, 2022).
 
 Despite the relevance of misspecification, prior simulation work has
 examined latent interaction estimation mainly under distributional
@@ -1278,6 +1279,13 @@ Bollen, K. A., \& Hoyle, R. H. (2012). Latent variables in structural
 equation modeling. In R. H. Hoyle (Ed.), \emph{Handbook of structural
 equation modeling} (pp. 56--67). The Guilford Press.
 
+\bibitem[\citeproctext]{ref-Bollen2007}
+Bollen, K. A., Kirby, J. B., Curran, P. J., Paxton, P. M., \& Chen, F.
+(2007). Latent variable models under misspecification: Two-stage least
+squares ({2SLS}) and maximum likelihood ({ML}) estimators.
+\emph{Sociological Methods \& Research}, \emph{36}(1), 48--86.
+\url{https://doi.org/10.1177/0049124107301947}
+
 \bibitem[\citeproctext]{ref-Brandt2014}
 Brandt, H., Kelava, A., \& Klein, A. G. (2014). A simulation study
 comparing recent approaches for the estimation of nonlinear effects in
@@ -1430,6 +1438,12 @@ mediation analysis. \emph{Psychological Methods}, \emph{15}(4),
 Joshi, M., \& Pustejovsky, J. (2025). \emph{{simhelpers}: Helper
 functions for simulation studies}.
 \url{https://CRAN.R-project.org/package=simhelpers}
+
+\bibitem[\citeproctext]{ref-Kaplan1988}
+Kaplan, D. (1988). The impact of specification error on the estimation,
+testing, and improvement of structural equation models.
+\emph{Multivariate Behavioral Research}, \emph{23}(1), 69--86.
+\url{https://doi.org/10.1207/s15327906mbr2301_4}
 
 \bibitem[\citeproctext]{ref-KelavaBrandt2009}
 Kelava, A., \& Brandt, H. (2009). Estimation of nonlinear latent
