@@ -783,7 +783,8 @@ coverage. Relative bias is shown at both nonzero interaction magnitudes
 the smaller one, and the Type I error under no interaction
 (\(a_3 = 0\)).
 
-\subsubsection{Relative Bias}\label{relative-bias}
+\subsubsection{Relative Bias and Relative
+RMSE}\label{relative-bias-and-relative-rmse}
 
 An absolute relative bias of at most 0.10 (10\%) was considered
 acceptable, following previous research (Brandt et al., 2014; Vieira et
@@ -799,8 +800,12 @@ reliability) and about \(-0.10\) under opposite skewness
 (\(a_3 = 0.4\)). FSR underestimates the imm in every condition, by 21\%
 to 35\% at high reliability and by 41\% to 56\% at low reliability,
 irrespective of sample size. The interaction coefficient shows the same
-pattern. For its relative bias and for the relative RMSE of both, see
-Figures 3 and 12 to 15 of the supplementary materials.
+pattern (see Figure 3 of the supplementary materials). Among LSAM, LMS,
+and UPI, the relative RMSE is lowest for LMS and highest for UPI in
+nearly every condition. That of LSAM is close to that of LMS (on average
+5\% to 8\% higher), except with opposite-skewness \(\chi^2\) predictors,
+where it is about 1.4 times as large (see Figures 12 to 15 of the
+supplementary materials).
 
 \begin{figure}[!htbp]
 
@@ -902,18 +907,20 @@ reliability, UPI is instead conservative in 10 conditions (0.01 at the
 lowest), largely those in which its standard errors are overestimated.
 FSR keeps the Type I error acceptable in all but one condition (0.09).
 
-At \(a_3 = 0.2\), power increases with sample size and reliability. LSAM
-and LMS have similar power with normal, uniform, and \(t_5\) predictors,
-whereas with \(\chi^2\) predictors LMS has higher power than LSAM and
-UPI. The difference is largest with opposite-skewness \(\chi^2\)
-predictors at low reliability, where at \(N = 500\) power is 0.80 for
-LMS, 0.46 for LSAM, and 0.31 for UPI. The higher power of LMS in this
-condition comes with a slightly liberal Type I error (0.08), but its
-estimates are also more precise. Indeed, with opposite-skewness
-\(\chi^2\) predictors, the standard deviation of the LSAM and UPI
-estimates is 1.3 to 1.9 times that of LMS. FSR has power close to that
-of LMS. The interaction coefficient gives nearly identical results (see
-Figures 32 to 35 of the supplementary materials).
+At \(a_3 = 0.2\), power increases with sample size and reliability, and
+reaches 0.80 for most distributions only from \(N = 300\) at high
+reliability and at \(N = 500\) at low reliability. LSAM and LMS have
+similar power with normal, uniform, and \(t_5\) predictors, whereas with
+\(\chi^2\) predictors LMS has higher power than LSAM and UPI. The
+difference is largest with opposite-skewness \(\chi^2\) predictors at
+low reliability, where at \(N = 500\) power is 0.80 for LMS, 0.46 for
+LSAM, and 0.31 for UPI. The higher power of LMS in this condition comes
+with a slightly liberal Type I error (0.08), but its estimates are also
+more precise. Indeed, with opposite-skewness \(\chi^2\) predictors, the
+standard deviation of the LSAM and UPI estimates is 1.3 to 1.9 times
+that of LMS. FSR has power close to that of LMS. The interaction
+coefficient gives nearly identical results (see Figures 32 to 35 of the
+supplementary materials).
 
 \begin{figure}[!htbp]
 
@@ -947,7 +954,8 @@ induced by an omission changes little with sample size, and the standard
 errors and Type I error of the imm at the smallest and largest sample
 size.
 
-\subsubsection{Relative Bias}\label{relative-bias-1}
+\subsubsection{Relative Bias and Relative
+RMSE}\label{relative-bias-and-relative-rmse-1}
 
 Both structural omissions bias the imm upward through \(b\) for LSAM,
 LMS, and UPI, increasingly with the omission magnitude, but they differ
@@ -972,9 +980,12 @@ imm, slightly upward for the three approaches (by about 0.09 at the
 medium magnitude and low reliability). For FSR, the structural omissions
 move the attenuated imm toward zero (on average 0.03 under the medium
 \(c_2\) at high reliability), which reflects two biases that offset each
-other and not accurate estimation. For the remaining sample sizes, the
-larger interaction magnitude (\(a_3 = 0.4\)), and the relative RMSE, see
-Figures 4 to 15 of the supplementary materials.
+other and not accurate estimation. The relative RMSE follows the bias
+and is accordingly lowest for LSAM under the medium \(c_3\) (at
+\(N = 500\) and low reliability 0.62, against 1.04 for LMS and 1.11 for
+UPI; see Figures 12 to 15 of the supplementary materials). For the
+remaining sample sizes and the larger interaction magnitude
+(\(a_3 = 0.4\)), see Figures 4 to 11 of the supplementary materials.
 
 \begin{figure}[!htbp]
 
