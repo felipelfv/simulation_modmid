@@ -21,6 +21,8 @@ author:
     affiliations:
       - ref: UGent
 
+bibliography: "references.bib"
+
 floatsintext: true
 
 format:
@@ -88,6 +90,185 @@ tbl <- function(d, col_names, align = NULL) {
         escape = FALSE, linesep = "", align = align, col.names = col_names)
 }
 ```
+
+\newpage
+
+# Calibration and Data Generation
+
+This section gives the formulas behind the data-generating mechanism. The 
+calibration that fixes the variance parameters comes first, followed by the 
+three-stage data generation that uses them.
+
+## Calibration
+
+The structural disturbance variances and indicator error variances were fixed by
+the following closed-form calibration, computed once under the normal baseline.
+
+### Structural residual variances
+
+The disturbance variances $\psi_M, \psi_Y$ are fixed so that each structural
+equation explains a fraction $R^2 \approx 0.30$ of its outcome's variance at the
+central interaction level $a_3 = 0.2$ under the normal baseline. Writing the
+systematic part of $M$ as $S_M = a_1 X + a_2 W + a_3 (X W)$, its variance needs
+only second moments,
+
+$$
+\operatorname{Var}(S_M) = a_1^2 + a_2^2 + 2 a_1 a_2 \rho + a_3^2 (1 + \rho^2),
+$$
+
+\noindent and the disturbance is the remainder that brings the signal share to $R^2$,
+
+$$
+\psi_M = \operatorname{Var}(S_M)\,\frac{1 - R^2}{R^2}, \qquad
+\psi_Y = \operatorname{Var}(b M + c' X)\,\frac{1 - R^2}{R^2},
+$$
+
+\noindent with $\operatorname{Var}(b M + c' X) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c'\,(a_1 + a_2 \rho)$.
+Fixed at these values, the population variances of $M$ and $Y$ are closed-form
+functions of the parameters,
+
+$$
+\operatorname{Var}(M) = \operatorname{Var}(S_M) + \psi_M, \qquad
+\operatorname{Var}(Y) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c'\,(a_1 + a_2 \rho) + \psi_Y,
+$$
+
+\noindent evaluated once under the normal baseline and held fixed across distributions, so
+that $R^2$ and reliability drift only through the design factors.
+
+### Indicator reliabilities
+
+To hit a target reliability $\omega \in \{0.5, 0.7\}$, the error variance of
+indicator $j$ is set from the latent variance $V = \operatorname{Var}(\eta)$,
+
+$$
+\theta_{\eta j} = \lambda_j^2\, V\,\frac{1 - \omega}{\omega}.
+$$
+
+For $X, W$ the variance is exactly $1$; for $M, Y$ it is the closed form above,
+fixed at the normal baseline, so the realized reliability drifts mildly across
+distributions.
+
+### Calibrating the misspecification magnitudes
+
+The *small* and *medium* labels are standardized coefficients, $t \in \{0.25, 0.50\}$.
+For an omitted predictor $p$ added to a baseline outcome $y_0$, the
+magnitude is the fully standardized regression coefficient of $p$,
+
+$$
+t = \frac{\beta\,\operatorname{sd}(p)}{\operatorname{sd}(y_0 + \beta p)}.
+$$
+
+Squaring and substituting $\operatorname{Var}(y_0 + \beta p) = \operatorname{Var}(y_0) + \beta^2 \operatorname{Var}(p) + 2 \beta \operatorname{Cov}(p, y_0)$
+yields a quadratic $A\beta^2 + B\beta + C = 0$ with
+
+$$
+A = \operatorname{Var}(p)\,(1 - t^2), \quad
+B = -2 t^2 \operatorname{Cov}(p, y_0), \quad
+C = -t^2 \operatorname{Var}(y_0).
+$$
+
+Since $A > 0$ and $C < 0$ the roots have opposite sign; the positive omitted path
+is the positive root,
+
+$$
+\beta = \frac{t^2 \operatorname{Cov}(p, y_0) + \sqrt{\,t^4 \operatorname{Cov}(p, y_0)^2 + t^2 (1 - t^2)\,\operatorname{Var}(p)\,\operatorname{Var}(y_0)\,}}{\operatorname{Var}(p)\,(1 - t^2)}.
+$$
+
+The three moments are estimated from one large ($n = 10^6$) sample per
+distribution and $a_3$ level. The predictor $p$ and baseline $y_0$ differ by
+misspecification,
+
+$$
+\begin{aligned}
+c_2: \quad & p = W,   && y_0 = b M + c' X + \zeta_Y, \\
+c_3: \quad & p = X W, && y_0 = b M + c' X + \zeta_Y, \\
+\texttt{cl}: \quad & p = X,   && y_0 = m_3 = \lambda_3 M + \delta_{m_3}.
+\end{aligned}
+$$
+
+$c_2$ and $c_3$ are reliability independent; `cl` depends on $\omega$ because its
+baseline $m_3$ carries measurement noise. `rc` never enters the calibration: it
+is a residual correlation and equals its target in every cell.
+
+### Holding $Y$ reliability fixed under $c_2$ and $c_3$
+
+Adding an omitted structural path inflates $\operatorname{Var}(Y)$ by
+$\kappa = \operatorname{Var}(y_0 + \beta p) / \operatorname{Var}(y_0)$, which would
+raise $Y$'s indicator reliability as a side effect. Scaling the $Y$-indicator
+noise by the same $\kappa$ makes signal and noise move together, so $\kappa$
+cancels and the reliability returns to its no-misspecification value,
+
+$$
+\omega_j = \frac{\kappa\,\lambda_j^2 V}{\kappa\,\lambda_j^2 V + \kappa\,\theta_j}
+= \frac{\lambda_j^2 V}{\lambda_j^2 V + \theta_j}.
+$$
+
+The latent effect size is untouched; only the $Y$ indicators are made
+correspondingly noisier. The measurement level misspecifications `cl` and `rc`
+act on the indicators directly and are not compensated, since that contamination
+is itself the misspecification.
+
+## Data generation
+
+Using the calibrated variances above, data were generated in three stages: the
+correlated exogenous predictors, the dependent latent variables through the
+structural model, and the observed indicators through the measurement model.
+
+### Stage I: Exogenous predictors
+
+The correlated predictors $(X, W)$ were generated with the vine-to-anything
+(VITA) method [@Gronneberg2022], as implemented in the *covsim*
+package, with sampling via *rvinecopulib* [@Nagler2025]. They were specified to
+have mean $0$, variance $1$, and the covariance structure
+
+$$
+\Phi = \begin{bmatrix} 1 & \rho \\ \rho & 1 \end{bmatrix}
+     = \begin{bmatrix} 1 & 0.3 \\ 0.3 & 1 \end{bmatrix},
+$$
+
+\noindent so that the conditions differ only in distributional shape. Under the normal
+condition, the predictors had Gaussian marginals with the specified covariance
+structure. Under the uniform condition, they had symmetric uniform marginals
+$\mathrm{U}(-\sqrt3, \sqrt3)$, which have mean $0$ and variance $1$. Under the
+$t_5$ condition, they had Student $t$ marginals with five degrees of freedom,
+rescaled by $\sqrt{5/3}$ to unit variance. The two $\chi^2$ conditions used
+$\chi^2_2$ marginals, centered by their mean ($2$) and scaled by their standard
+deviation ($2$) to mean $0$ and variance $1$. In the same-direction condition
+both predictors are right-skewed, whereas in the opposite-direction condition
+$W$ is negated so that $X$ and $W$ are skewed in opposite directions, with the
+sampled correlation sign flipped to restore $\operatorname{Cor}(X, W) = \rho$. In
+every condition, VITA constructed a vine copula (Gaussian under the normal
+condition, Clayton otherwise) to impose the target correlation while preserving
+the marginals, with the $t_5$ and $\chi^2$ draws standardized
+afterwards as described. 
+
+### Stage II: Structural model
+
+The dependent latent variables were generated from the structural equations
+
+$$
+M = a_1 X + a_2 W + a_3 (X \times W) + \zeta_M, \qquad
+Y = b M + c' X + \zeta_Y,
+$$
+
+\noindent with independent Gaussian disturbances $\zeta_M \sim \mathcal{N}(0, \psi_M)$ and
+$\zeta_Y \sim \mathcal{N}(0, \psi_Y)$. The disturbance variances $\psi_M, \psi_Y$
+take the calibrated values so that each equation explains $R^2 \approx 0.30$ of
+its outcome's variance at the central interaction level under the normal baseline.
+
+### Stage III: Measurement model
+
+Each latent $\eta \in \{X, W, M, Y\}$ was measured by four indicators,
+
+$$
+z_{\eta j} = \lambda_j\,\eta + \delta_{\eta j}, \qquad \lambda = (1, 0.8, 0.7, 0.6),
+$$
+
+\noindent with independent Gaussian errors $\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$.
+The error variances $\theta_{\eta j}$ take the calibrated values that achieve the
+target reliability $\omega \in \{0.5, 0.7\}$. Only the exogenous predictors varied
+in distribution. The structural disturbances and measurement errors were Gaussian
+in every condition.
 
 \newpage
 
@@ -510,3 +691,10 @@ knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
 #| out-width: "100%"
 knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 ```
+
+\newpage
+
+# References
+
+::: {#refs}
+:::
