@@ -155,11 +155,14 @@ fig_bars <- function(d, metric, a3v, rel_lvl) {
 # SE²/VAR ratio of the imm and a3 at a3 = 0.2 and one reliability level:
 # distribution (rows) by parameter and sample size (columns). ratios above 10
 # occur at low reliability under heavy tails and are left out because they would
-# swamp the shared axis.
+# swamp the shared axis. the axis stops at 2.5 so that the ratios close to 1 can
+# be read. the ratios above it are not shown: one for LMS at high reliability,
+# and those of UPI at N = 200 with chi-square predictors at low reliability.
 fig_relvar <- function(rel_lvl) {
   d <- cell(summary_tbl, c("imm", "a3"), 0.2, rel_lvl) |>
     filter(n %in% c(200, 500), rel_bias_var <= 10)
-  fig_lines(d, "rel_bias_var") + facet_grid(distr_exo ~ parameter + n, labeller = strip_labels)
+  fig_lines(d, "rel_bias_var") + facet_grid(distr_exo ~ parameter + n, labeller = strip_labels) +
+    coord_cartesian(ylim = c(0.5, 2.5))
 }
 
 # one measure of the remaining structural coefficients at a3 = 0.2, N = 500 and

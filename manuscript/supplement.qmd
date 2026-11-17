@@ -491,6 +491,7 @@ knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
 ```{r}
 #| label: fig-s-relvar-high
 #| fig-cap: "SE$^2$/VAR Ratio of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Across Distributions and (Mis)specifications at High Reliability for $N = 200$ and $500$ at $a_3 = 0.2$"
+#| apa-note: "The vertical axis is truncated at 2.5 for visualization. One ratio lies above it and is not shown (7.00, for LMS and the imm with $t_5$ predictors under the medium cross-loading at $N = 200$)."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
 ```
@@ -498,6 +499,7 @@ knitr::include_graphics("../plots/rel_bias_var_a3-0.2_high.png")
 ```{r}
 #| label: fig-s-relvar-low
 #| fig-cap: "SE$^2$/VAR Ratio of the imm ($a_3 b$) and the Interaction Coefficient ($a_3$) Across Distributions and (Mis)specifications at Low Reliability for $N = 200$ and $500$ at $a_3 = 0.2$"
+#| apa-note: "The vertical axis is truncated at 2.5 for visualization. The ratios of UPI at $N = 200$ lie above it and are not shown with $\\chi^2$ predictors in every condition (2.70 to 6.68) and with $t_5$ predictors under correct specification (about 3.6)."
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
 ```
