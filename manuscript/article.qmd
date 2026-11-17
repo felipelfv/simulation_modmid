@@ -126,10 +126,9 @@ where the product term is even less reliable than either of its constituents
 [@Bohrnstedt1978; @Busemeyer1983]. To address this, structural equation 
 modeling (SEM) with latent variables has been advocated, especially in the 
 context of mediation [@CheungLau2008; @FalkBiesanz2015; @LedgerwoodShrout2011; 
-@Montoya2024]. It estimates structural relationships between common factors, 
-from which indicator-specific unique variance has been partitioned, provided the 
-measurement model is correctly specified [@Bollen1989; @DeShon1998; 
-@Rhemtulla2020]. Yet we also note that latent variables do not necessarily 
+@Montoya2024]. With a correctly specified measurement model, SEM estimates
+structural paths among latent factors while accounting for indicator-specific
+residual variance [@Bollen1989; @DeShon1998; @Rhemtulla2020]. Yet we also note that latent variables do not necessarily 
 improve power in general, whether for interactions or not [@Cham2012; 
 @LedgerwoodShrout2011; @WangRhemtulla2021].
 
@@ -162,8 +161,9 @@ non-commercial software [@Keller2025], this is likely to change.
 Beyond estimation, a further consideration concerns interpretation. Mediation is 
 a hypothesis about causal effects, and causal interpretation requires 
 identification assumptions that *may* not be verified from the data alone 
-[@Imai2010; @Morelli2026; @Rohrer2022]. With latent variable 
-models, further caution is needed [@Sterner2024; @VanderWeeleVansteelandt2022]. 
+[e.g., @Imai2010; @Rohrer2022]. With latent variable
+models, further caution is needed [@Morelli2026; @Sterner2024;
+@VanderWeeleVansteelandt2022].
 We focus on one that is central to interpretation: the estimated latent 
 variables must validly represent the intended constructs 
 [@GonzalezMacKinnon2021]. In fact, when they do not, the model is subject to 
@@ -172,11 +172,12 @@ meaning assigned to a latent variable through its estimated
 measurement parameters and the meaning intended by the researcher. This 
 reflects an underlying property of system-wide estimation, namely that the 
 consequences of a misspecification are not confined to the part of the model 
-in which it occurs [@BainterBollen2014]. @Burt1976 proposed estimating the 
-measurement model first, as a SAM approach does [e.g., @RosseelLoh2024], so 
-that the estimated latent variables and their meaning do not depend on the 
-structural model that follows, although this does not imply that the structure 
-is correct [@VanderWeeleVansteelandt2022].
+in which it occurs [@BainterBollen2014; @Bollen2007; @Kaplan1988]. @Burt1976 proposed estimating the 
+measurement model first in order to separate the estimated latent
+variables and their empirical meaning from the structural model that 
+follows. SAM 
+approaches follow this strategy [e.g., @RosseelLoh2024], although it does 
+not imply that the structure is correct [@VanderWeeleVansteelandt2022].
 
 Despite the relevance of misspecification, prior simulation work has examined
 latent interaction estimation mainly under distributional misspecification
