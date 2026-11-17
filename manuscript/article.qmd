@@ -238,15 +238,15 @@ recent recommendations for the conduct and reporting of simulation studies
 
 We study a moderated mediation model among four latent variables: an
 exogenous predictor $X$, a moderator $W$, a mediator $M$, and an outcome $Y$.
-The structural model is as follows
+The structural model that is fitted in every condition, and that is the
+population model in the correctly specified condition, is
 
 $$
 M = a_1 X + a_2 W + a_3\,(X \times W) + \zeta_M, \qquad
 Y = b\,M + c'\,X + \zeta_Y.
 $$
 
-This is the population model in the correctly specified condition, and it is
-the model fitted in every condition. In the misspecified conditions the
+\noindent In the misspecified conditions the
 population departs from it by one additional element, which the fitted model
 omits. @fig-model shows the population model, where the measurement and
 structural misspecifications studied below are drawn in gray.
@@ -397,12 +397,11 @@ with standard errors obtained as in @Vieira2026 (see their Appendix A). In
 this case, the
 interacting predictors $X$ and $W$ shared a single measurement block,
 while $M$ and $Y$ formed their own blocks. We further used LMS 
-[@KleinMoosbrugger2000], with robust standard errors, and the extended UPI 
-approach with 
-double mean centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], estimated with 
-robust ML, that is, with Huber–White sandwich standard errors.
-
-As a baseline, we also used FSR^[We note that the 
+[@KleinMoosbrugger2000] and the extended UPI approach with double mean 
+centering [@KelavaBrandt2009; @Marsh2004; @Lin2010], the latter estimated by 
+ML. For both, robust standard errors were obtained with the Huber–White 
+sandwich estimator.
+As a baseline, we also used FSR^[We note that the
 approach of @SkrondalLaake2001, used for latent interactions by @NgChan2020, 
 would be a more principled choice, in which regression (Thurstone) factor 
 scores are used for the explanatory variables and Bartlett factor scores for 
@@ -411,12 +410,12 @@ does not work in models where a variable is both explanatory and a response,
 as the mediator is here.]. Specifically, Bartlett factor scores were computed 
 from a confirmatory factor model of the four latent variables estimated by 
 ML, and the structural model was estimated on the scores by ML, which gives 
-the ordinary least squares estimates, with standard errors from this second 
-step.
+the ordinary least squares estimates, with standard errors solely from this
+second step.
 
 ### Data Generation
 
-The supplementary materials describe the complete data-generating mechanism 
+The supplementary materials describe the complete data generating mechanism 
 and its calibration in detail. Briefly, the latent variables $X$ and $W$ were drawn from a bivariate
 distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the
 vine-to-anything (VITA) algorithm [@Gronneberg2022]. Five 
@@ -547,8 +546,10 @@ matrix of the parameter estimates.
 All analyses were conducted in R [@RCoreTeam] using the *lavaan* [@Rosseel2012]
 and *modsem* [@Slupphaug2025] packages for estimation, *covsim* [@Gronneberg2022]
 and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
-[@Joshi2025] for performance evaluation. Conditions were run in parallel with 
-the *parallel* package. Reproducible and independent random-number streams were obtained with the 
+[@Joshi2025] for performance evaluation. For data and figure processing, we 
+used *dplyr* [@Wickham2026], *tidyr* [@Wickham2025], and *ggplot2* 
+[@Wickham2016]. Conditions were run in parallel with 
+the *parallel* package [@RCoreTeam]. Reproducible and independent random-number streams were obtained with the 
 L'Ecuyer-CMRG generator. 
 The computational environment was pinned with Nix [@dolstra_etall_2004] via the 
 *rix* package [@rix] to ensure reproducibility, and the article was 
