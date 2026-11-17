@@ -935,7 +935,7 @@ under both structural omissions and the omitted cross-loading biased its
 estimates as well. UPI had acceptable bias but the lowest power, and it is
 not advisable in small samples with low reliability. FSR is not recommended,
 since it attenuated the imm by a quarter to a half, as is known to happen
-when the measurement error in the scores is ignored [@NgChan2020]. With an interaction of
+when the measurement error in the scores is ignored [@Devlieger2016; @NgChan2020; @Rosseel2025]. With an interaction of
 the size studied here, a power of 0.80 required about 300 observations at
 high and 500 at low reliability for most predictor distributions. Still,
 misspecification had strong consequences across all approaches, and many of
