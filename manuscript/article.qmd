@@ -535,7 +535,7 @@ $$
 \mathrm{imm}^{(d)} = a_3^{(d)}\, b^{(d)},
 $$
 
-where $\hat\Sigma_{a_3 b}$ is the estimated covariance of $(\hat a_3, \hat b)$,
+\noindent where $\hat\Sigma_{a_3 b}$ is the estimated covariance of $(\hat a_3, \hat b)$,
 and took the $2.5$th and $97.5$th empirical percentiles of
 $\{\mathrm{imm}^{(d)}\}_{d=1}^{D}$ as the interval. The structural coefficients
 and loadings use Wald-based intervals from the same estimated covariance 
@@ -569,16 +569,15 @@ outlier information, are available in the supplementary materials.
 
 ## Convergence, Outliers, and Inadmissible Solutions
 
-LSAM and FSR converged in every replication of every condition. UPI converged 
-in at least 99% of replications at high reliability and in at least 93% at low 
-reliability, with the lowest rates at $N = 100$ with $\chi^2$ predictors. LMS 
-converged in at least 98% of replications with normal and uniform predictors, 
-but with $t_5$ predictors at high reliability its rate decreased with sample 
-size, to 89% at $N = 500$. Outliers were below 1% in most conditions and 
-exceeded 4% only for UPI, reaching 11% at $N = 100$ with low reliability and 
-$\chi^2$ predictors. Inadmissible solutions arose almost exclusively for UPI,
-mainly at $N = 100$ with low reliability. They were retained, and excluding them 
-changes the results only for UPI in these conditions. Details are in the 
+LSAM and FSR converged in every replication of every condition. UPI and LMS
+converged in at least 98% of replications in most conditions, with lowest
+rates of 93% for UPI ($N = 100$, low reliability, $\chi^2$ predictors) and 89%
+for LMS ($N = 500$, high reliability, $t_5$ predictors). Outliers were below
+1% in most conditions and reached at most 3% for LSAM, LMS, and FSR and 11%
+for UPI ($N = 100$, low reliability, $\chi^2$ predictors). Inadmissible
+solutions arose almost exclusively for UPI, mainly at $N = 100$ with low
+reliability. They were retained, and excluding them changes the results only
+for UPI in these conditions. Details are in Tables 3 and 4 of the
 supplementary materials.
 
 ## Correct Structural and Measurement Specification
@@ -591,22 +590,21 @@ Type I error under no interaction ($a_3 = 0$).
 
 ### Relative Bias
 
-An absolute relative bias of at most 0.10 (10%) was considered acceptable, 
-following previous research [@Brandt2014; @Vieira2026]. With normal, uniform, 
-and $t_5$ predictors, LSAM, LMS, and UPI recover the imm with low bias, within 
-the acceptable range at every sample size and reliability level and for both interaction magnitudes, the only
-exception being LMS with $t_5$ predictors at $N = 100$ and low reliability
-(@fig-baseline-bias-imm). With $\chi^2$ predictors, the bias of LSAM and UPI 
-exceeds this range only at $N = 100$ with low reliability, whereas that of LMS 
-persists at every sample size and depends on the 
-interaction magnitude. It is positive under same skewness at $a_3 = 0.2$ with 
-low reliability (0.11 at $N = 100$ and 0.15 otherwise)
-and negative under opposite skewness at $a_3 = 0.4$ at both reliability levels
-(about $-0.10$). FSR underestimates the imm in every condition, by 21% to 35%
-at high reliability and by 41% to 56% at low reliability, irrespective of
-sample size. The interaction coefficient shows the same pattern, with a smaller 
-underestimation by FSR (12% to 27% at high and 27% to 44% at low reliability; 
-see the supplementary materials).
+An absolute relative bias of at most 0.10 (10%) was considered acceptable,
+following previous research [@Brandt2014; @Vieira2026]. LSAM and UPI recover
+the imm with acceptable bias in nearly all conditions
+(@fig-baseline-bias-imm). Their bias exceeds the acceptable range only at
+$N = 100$ with low reliability and $\chi^2$ predictors, where it reaches
+$-0.11$ for LSAM and $-0.18$ for UPI. With normal, uniform, and $t_5$
+predictors, the bias of LMS is acceptable as well, with one exception at
+$N = 100$ ($-0.16$). With $\chi^2$ predictors, however, its bias persists
+across sample sizes, reaching 0.15 under same skewness ($a_3 = 0.2$, low
+reliability) and about $-0.10$ under opposite skewness ($a_3 = 0.4$). FSR
+underestimates the imm in every condition, by 21% to 35% at high reliability
+and by 41% to 56% at low reliability, irrespective of sample size. The
+interaction coefficient shows the same pattern. For its relative bias and
+for the relative RMSE of both, see Figures 3 and 12 to 15 of the
+supplementary materials.
 
 ```{r}
 #| label: fig-baseline-bias-imm
@@ -618,18 +616,19 @@ knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
 
 ### Standard Errors
 
-SE/SD ratios between 0.90 and 1.10 were considered acceptable [@Brandt2014; 
+SE/SD ratios between 0.90 and 1.10 were considered acceptable [@Brandt2014;
 @Vieira2026]. For the imm, whose standard error is based on the Monte Carlo
-method, the ratio is within this range for LSAM and LMS in every condition
-(@fig-sesd). UPI overestimates the standard error at low reliability, in every
-distribution up to $N = 200$ and with $\chi^2$ predictors up to $N = 300$,
-with ratios as high as 1.64, and in one condition at high reliability. Much of this overestimation is due to a small number of extreme standard 
-errors, without which the ratio is within the range in 9 of these 13 
-conditions (see the supplementary materials). For the
-interaction coefficient the ratios are slightly lower than for the imm, so
-that LSAM and LMS fall just below 0.90 in a few conditions with $t_5$ and
-same-skewness $\chi^2$ predictors. For FSR the ratio is within or slightly
-below the acceptable range.
+method, the ratio is acceptable for LSAM and LMS in every condition
+(@fig-sesd). UPI overestimates the standard error in 13 conditions, all but
+one at low reliability and none at $N = 500$, with ratios as high as 1.64.
+Much of this overestimation is due to a small number of extreme standard
+errors, without which the ratio is acceptable in 9 of these 13 conditions
+(see Table 5 of the supplementary materials). FSR slightly underestimates the
+standard error in a few conditions (0.86 at the lowest). For the interaction
+coefficient the ratios are slightly lower than for the imm, so that LSAM and
+LMS also fall just below 0.90 in a few conditions (0.87 at the lowest). For
+the results at the larger interaction magnitude ($a_3 = 0.4$), see Figures
+18, 19, 22, and 23 of the supplementary materials.
 
 ```{r}
 #| label: fig-sesd
@@ -641,21 +640,19 @@ knitr::include_graphics("../plots/baseline_se_sd.png")
 
 ### Coverage
 
-Coverage between 92.5% and 97.5% was considered acceptable. With normal,
-uniform, and opposite-skewness $\chi^2$ predictors, the coverage of the imm is
-within this range for LSAM, LMS, and UPI, apart from a single condition for
-LMS (@fig-coverage). With $t_5$ and same-skewness $\chi^2$ predictors it falls
-slightly below the range in several conditions, to about 0.90 at the lowest.
-With these two distributions, the coverage of the interaction coefficient is
-on average 0.01 lower than that of the imm and falls below the range more
-often. For FSR, coverage decreases with sample size, because the interval
-narrows around a biased estimate, and it is lower for the imm than for the
-interaction coefficient. At $N = 500$ with low reliability it lies between
-0.16 and 0.38 for the imm. At the larger magnitude ($a_3 = 0.4$), the
-coverage of the imm falls below the range more often for UPI, in 17 of 40
-conditions with $t_5$ and $\chi^2$ predictors, and for LMS with
-opposite-skewness $\chi^2$ predictors, at every sample size and reliability
-level (see the supplementary materials).
+Coverage between 92.5% and 97.5% was considered acceptable. For the imm, the
+coverage of LSAM, LMS, and UPI is acceptable in most conditions
+(@fig-coverage). It falls slightly below the range in 5 to 7 of the 40
+conditions per approach, nearly all with $t_5$ and same-skewness $\chi^2$
+predictors, to 0.91 for LSAM and UPI and 0.90 for LMS at the lowest. The
+coverage of the interaction coefficient is slightly lower and falls below the
+range more often (0.89 at the lowest). For FSR, coverage decreases with
+sample size, because the interval narrows around a biased estimate, to as low
+as 0.16 for the imm at $N = 500$ with low reliability. At the larger
+interaction magnitude ($a_3 = 0.4$), the coverage of the imm falls below the
+range more often for UPI (0.88 at the lowest) and for LMS with
+opposite-skewness $\chi^2$ predictors (see Figures 26, 27, 30, and 31 of the
+supplementary materials).
 
 ```{r}
 #| label: fig-coverage
@@ -668,29 +665,24 @@ knitr::include_graphics("../plots/baseline_coverage.png")
 ### Hypothesis Testing (Type I Error and Power)
 
 Type I error rates between 2.5% and 7.5% were considered acceptable. At
-$a_3 = 0$, LMS is liberal in many conditions with $t_5$ and $\chi^2$ 
-predictors, with rates up to 0.10 that increase with sample size at low 
-reliability, and with $t_5$ predictors at high 
-reliability LSAM and UPI are slightly liberal as well at most sample sizes 
-(@fig-test). UPI is 
-conservative at low reliability, mainly up to $N = 200$, and with 
-opposite-skewness $\chi^2$ predictors at every sample size, which are largely 
-the conditions in which its standard errors are overestimated. Otherwise the 
-rates are within the acceptable range, apart from two conditions at 
-$N = 100$. At $a_3 = 0.2$, power increases with sample size and reliability. LSAM and LMS have similar power with normal, uniform, and $t_5$ predictors, 
-LMS has higher power than LSAM and UPI with $\chi^2$ predictors, and UPI has 
-the lowest power at low reliability. The difference is largest with 
-opposite-skewness $\chi^2$ predictors at low reliability, where at $N = 500$ 
-power is 0.80 for LMS, 0.46 for LSAM, and 0.31 for UPI. This reflects the 
-precision of the estimates more than the liberal Type I error of LMS. With 
-these predictors the standard deviation of the LSAM and UPI estimates is 1.3 
-to 1.9 times that of LMS, whereas with the other distributions that of LSAM 
-is at most 1.15 times. FSR keeps the
-Type I error within the acceptable range in all but one condition and has
-power close to that of LMS, because its estimates and their standard errors 
-are attenuated by similar factors. The interaction coefficient gives 
-nearly identical results (see the 
-supplementary materials).
+$a_3 = 0$, LMS is liberal in 17 of the 40 conditions, nearly all with $t_5$
+and $\chi^2$ predictors, with rates up to 0.10 (@fig-test). LSAM and UPI are
+slightly liberal in a few conditions at high reliability (up to 0.09 and
+0.08). At low reliability, UPI is instead conservative in 10 conditions (0.01
+at the lowest), largely those in which its standard errors are overestimated.
+FSR keeps the Type I error acceptable in all but one condition (0.09).
+
+At $a_3 = 0.2$, power increases with sample size and reliability. LSAM and
+LMS have similar power with normal, uniform, and $t_5$ predictors, whereas
+with $\chi^2$ predictors LMS has higher power than LSAM and UPI. The
+difference is largest with opposite-skewness $\chi^2$ predictors at low
+reliability, where at $N = 500$ power is 0.80 for LMS, 0.46 for LSAM, and
+0.31 for UPI. The higher power of LMS in this condition comes with a slightly
+liberal Type I error (0.08), but its estimates are also more precise. Indeed,
+with opposite-skewness $\chi^2$ predictors, the standard deviation of the
+LSAM and UPI estimates is 1.3 to 1.9 times that of LMS. FSR has power close
+to that of LMS. The interaction coefficient gives nearly identical results
+(see Figures 32 to 35 of the supplementary materials).
 
 ```{r}
 #| label: fig-test

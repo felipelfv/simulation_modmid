@@ -605,13 +605,6 @@ cop_diff_tbl(cop_r, "reject")
 The figures below show the complete results for the imm and the interaction coefficient in every condition of the design. They are ordered by performance measure, then by estimand, interaction magnitude, and reliability level, and each shows all sample sizes, distributions, and (mis)specifications. Power is shown at $a_3 = 0.2$. In each, LSAM = local structural-after-measurement, LMS = latent moderated structural equations, UPI = unconstrained product indicator, FSR = factor score regression, imm = index of moderated mediation, and n = no misspecification. Where shown, the gray band marks the acceptable region for the measure and the error bars represent the Monte Carlo standard error (MCSE).
 
 ```{r}
-#| label: fig-s-baseline-bias-imm
-#| fig-cap: "Relative Bias of the imm ($a_3 b$) Under the Correctly Specified Condition Across Sample Sizes, Reliability, Interaction Values, and Distributions"
-#| out-width: "100%"
-knitr::include_graphics("../plots/baseline_rel_bias_imm.png")
-```
-
-```{r}
 #| label: fig-s-baseline-bias-a3
 #| fig-cap: "Relative Bias of the Interaction Coefficient ($a_3$) Under the Correctly Specified Condition Across Sample Sizes, Reliability, Interaction Values, and Distributions"
 #| out-width: "100%"
