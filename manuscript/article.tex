@@ -644,14 +644,14 @@ remaining replications, outliers were identified per condition and
 approach as estimates of the imm or a structural coefficient more than
 three interquartile ranges beyond the quartiles, or with a standard
 error above \(10\)\footnote{The standard error criterion additionally
-  removed 113 replications (about \(0.01\%\)), almost all for UPI at the
-  smallest sample size with low reliability.}. We also recorded, without
-removing them, inadmissible solutions, in which a residual variance was
-nonpositive or the covariance matrix of the latent variables and
-disturbances was not positive definite. The same was done for converged
-solutions whose information matrix was not positive definite. Their
-frequencies and the sensitivity of the results to the outlier screening
-are reported in the supplementary materials.
+  removed 113 replications (about \(0.01\%\)), almost all for UPI and
+  mostly at the smallest sample size with low reliability.}. We also
+recorded, without removing them, inadmissible solutions, in which a
+residual variance was nonpositive or the covariance matrix of the latent
+variables and disturbances was not positive definite. The same was done
+for converged solutions whose information matrix was not positive
+definite. Their frequencies and the sensitivity of the results to the
+outlier screening are reported in the supplementary materials.
 
 \subsubsection{Performance Measures}\label{performance-measures}
 
@@ -801,7 +801,7 @@ irrespective of sample size. The interaction coefficient shows the same
 pattern (see Figure 3 of the supplementary materials). Among LSAM, LMS,
 and UPI, the relative RMSE is lowest for LMS and highest for UPI in
 nearly every condition. That of LSAM is close to that of LMS (on average
-5\% to 8\% higher), except with opposite-skewness \(\chi^2\) predictors,
+about 6\% higher), except with opposite-skewness \(\chi^2\) predictors,
 where it is about 1.4 times as large (see Figures 12 to 15 of the
 supplementary materials).
 
@@ -963,7 +963,7 @@ is largely unaffected, as expected, except for LMS at low reliability
 (up to 0.15 in absolute value), and the bias of the imm is similar for
 the three approaches (on average 0.40 to 0.49 at the medium magnitude).
 Under \(c_3\), LMS and UPI also overestimate the interaction coefficient
-(by 0.30 on average at the medium magnitude and low reliability),
+(by about 0.30 on average at the medium magnitude and low reliability),
 whereas LSAM does not. The bias of the imm is accordingly smaller for
 LSAM (on average 0.27 at high and 0.28 at low reliability) than for LMS
 and UPI (about 0.50 at high and 0.77 to 0.80 at low reliability). The
@@ -1045,9 +1045,9 @@ Under misspecification the interval is centered on a biased estimate,
 and coverage therefore mirrors the bias reported above. It decreases
 wherever an omission induces bias, more so with increasing sample size,
 and is as under correct specification where an omission induces little
-bias. At \(N = 500\) under the medium structural omissions, the coverage
-of the imm is as low as 0.75 for LSAM and UPI and 0.53 for LMS (see
-Figures 24 to 31 of the supplementary materials).
+bias. At \(N = 500\) and \(a_3 = 0.2\) under the medium structural
+omissions, the coverage of the imm is as low as 0.75 for LSAM and UPI
+and 0.53 for LMS (see Figures 24 to 31 of the supplementary materials).
 
 \subsubsection{Hypothesis Testing (Type I Error and
 Power)}\label{hypothesis-testing-type-i-error-and-power-1}
@@ -1098,21 +1098,21 @@ with sample size, and for LMS and UPI it is generally smaller at high
 reliability. Under correct specification, LSAM, LMS, and UPI estimate
 all four coefficients with acceptable bias at every sample size and
 reliability level, whereas FSR attenuates \(a_1\), \(a_2\), and \(b\)
-(on average by 0.16 to 0.20). The structural omissions bias the
-outcome-equation coefficients \(b\) and \(c'\) for LSAM, LMS, and UPI,
-with a smaller bias in \(b\) for LSAM (on average 0.39 under the medium
-\(c_2\), against 0.52 for LMS and UPI). In the mediator equation, LSAM
-estimates \(a_1\) and \(a_2\) with acceptable bias under both omissions,
-whereas the medium \(c_2\) biases \(a_2\) for LMS and UPI (on average by
-0.21 and 0.24). The cross-loading biases \(a_1\) and \(c'\) for every
-approach and \(a_2\) and \(b\) mainly for LMS and UPI (at the medium
-magnitude about \(-0.27\) and 0.40, against \(-0.08\) and 0.14 for
-LSAM). The relative bias of \(c'\) is large throughout because its
-population value is small (0.15). The SE/SD ratio is acceptable for
-LSAM, LMS, and UPI in nearly all conditions, whereas FSR underestimates
-the standard errors of \(a_1\), \(a_2\), and \(b\) in many conditions
-and those of \(c'\) under \(c_3\) (see Figures 36 to 38 of the
-supplementary materials).
+(on average by 0.16 to 0.20 at low reliability). The structural
+omissions bias the outcome-equation coefficients \(b\) and \(c'\) for
+LSAM, LMS, and UPI, with a smaller bias in \(b\) for LSAM (on average
+0.39 under the medium \(c_2\), against 0.52 for LMS and UPI). In the
+mediator equation, LSAM estimates \(a_1\) and \(a_2\) with acceptable
+bias under both omissions, whereas the medium \(c_2\) biases \(a_2\) for
+LMS and UPI (on average by 0.21 and 0.24). The cross-loading biases
+\(a_1\) and \(c'\) for every approach and \(a_2\) and \(b\) mainly for
+LMS and UPI (at the medium magnitude about \(-0.27\) and 0.40, against
+\(-0.08\) and 0.14 for LSAM). The relative bias of \(c'\) is large
+throughout because its population value is small (0.15). The SE/SD ratio
+is acceptable for LSAM, LMS, and UPI in nearly all conditions, whereas
+FSR underestimates the standard errors of \(a_1\), \(a_2\), and \(b\) in
+many conditions and those of \(c'\) under \(c_3\) (see Figures 36 to 38
+of the supplementary materials).
 
 \begin{figure}[!htbp]
 
@@ -1144,11 +1144,10 @@ shown at \(N = 500\) with low reliability (Figure~\ref{fig-load}). Only
 the cross-loading moves it beyond the acceptable range. At the medium
 magnitude its relative bias is 0.81 to 0.98 for LMS, UPI, and FSR,
 against 0.38 to 0.52 for LSAM, and coverage accordingly falls to nearly
-zero for every approach. The SE/SD ratio remains acceptable for LMS and
-UPI and is at or just below 0.90 for LSAM with \(\chi^2\) predictors,
-whereas FSR underestimates the standard errors (0.56 to 0.70). For the
-results at high reliability, see Figure 41 of the supplementary
-materials.
+zero for every approach. The SE/SD ratio remains acceptable for LSAM,
+LMS, and UPI (0.90 at the lowest), whereas FSR underestimates the
+standard errors (0.56 to 0.70). For the results at high reliability, see
+Figure 41 of the supplementary materials.
 
 \begin{figure}[!htbp]
 
@@ -1180,26 +1179,26 @@ Under correct specification with normal predictors, LSAM, LMS, and UPI
 recovered the imm and the interaction coefficient with acceptable bias
 and with coverage close to nominal, whereas FSR attenuated the imm by
 about a quarter at high and about half at low reliability. Across the
-predictor distributions, LMS had the lowest relative RMSE and the
-highest power, but with \(\chi^2\) predictors it was biased and with
-\(t_5\) and \(\chi^2\) predictors its Type I error was inflated, as
-expected given its assumption of normal latent predictors (Lonati et
-al., 2025).\footnote{The results of LMS with nonnormal predictors also
-  depended on the copula. When the predictors were combined through a
-  Gaussian instead of the Clayton copula, its bias was larger with
-  \(\chi^2\) predictors (e.g., 0.32 against 0.15 with same-skewness
-  predictors at \(a_3 = 0.2\), \(N = 500\), and low reliability) and
-  smaller with uniform and \(t_5\) predictors, in line with how far the
-  mixed moments of the predictors beyond the second order are from
-  normality under each copula (see Figure 1 and Table 7 of the
-  supplementary materials).} Among the three, LSAM yielded Type I error
-closest to nominal, at some cost in relative RMSE and power, while UPI
-had the highest relative RMSE and the lowest power, with acceptable bias
-except at the smallest sample size with low reliability, where it was
-also the least stable. Its standard errors were overestimated in small
-samples at low reliability, largely because of a few extreme values, and
-UPI and LSAM struggled most under opposite-skewness \(\chi^2\)
-predictors.
+predictor distributions, LMS had the lowest relative RMSE of the three
+and similar or higher power, but with \(\chi^2\) predictors it was
+biased and with \(t_5\) and \(\chi^2\) predictors its Type I error was
+inflated, as expected given its assumption of normal latent predictors
+(Lonati et al., 2025).\footnote{The results of LMS with nonnormal
+  predictors also depended on the copula. When the predictors were
+  combined through a Gaussian instead of the Clayton copula, its bias
+  was larger with \(\chi^2\) predictors (e.g., 0.32 against 0.15 with
+  same-skewness predictors at \(a_3 = 0.2\), \(N = 500\), and low
+  reliability) and smaller with uniform and \(t_5\) predictors, in line
+  with how far the mixed moments of the predictors beyond the second
+  order are from normality under each copula (see Figure 1 and Table 7
+  of the supplementary materials).} Among the three, LSAM yielded Type I
+error closest to nominal, at some cost in relative RMSE and power, while
+UPI had the highest relative RMSE and the lowest power, with acceptable
+bias except at the smallest sample size with low reliability, where it
+was also the least stable. Its standard errors were overestimated in
+small samples at low reliability, largely because of a few extreme
+values, and UPI and LSAM struggled most under opposite-skewness
+\(\chi^2\) predictors.
 
 Under misspecification, LSAM was less affected than the system-wide
 approaches, without being robust to every omission. The structural
@@ -1211,12 +1210,14 @@ them into the mediator equation, biasing \(a_2\) under \(c_2\) and the
 interaction coefficient under \(c_3\). The cross-loading (\texttt{cl})
 was the most damaging for the structural coefficients. Under the
 system-wide approaches it biased most of them, including the interaction
-coefficient, while under LSAM it affected mainly \(a_1\) and \(c'\). The
-imm, however, was little affected. The residual covariance (\texttt{rc})
-had little effect. The Type I error of LSAM was unchanged by the
-omissions, whereas that of LMS rose to 0.33. Where bias was substantial,
-it was smaller under LSAM, except for \(c'\) under the structural
-omissions, and it increased with the magnitude of the omission.
+coefficient, while under LSAM it affected mainly \(a_1\) and \(c'\) and,
+to a lesser extent, \(b\). The imm, however, was little affected. The
+residual covariance (\texttt{rc}) had little effect. The Type I error of
+LSAM was unchanged by the omissions, whereas that of LMS rose to 0.33.
+Where bias was substantial, it was smaller under LSAM, except for the
+imm under \(c_2\) and \(c'\) under the structural omissions, where the
+approaches were alike, and it increased with the magnitude of the
+omission.
 
 Regarding the imm, the Monte Carlo method delivered standard errors and
 confidence intervals that behaved like those of the interaction
