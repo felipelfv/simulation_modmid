@@ -1173,31 +1173,26 @@ factor score regression.
 
 \section{Discussion}\label{discussion}
 
-We evaluated four estimation approaches for a latent variable moderated
-mediation model, the two-step LSAM, the system-wide LMS and UPI, and FSR
-as a baseline, under correct specification, structural and measurement
-misspecification, and nonnormal predictors. Under correct specification
-with normal predictors, LSAM, LMS, and UPI recovered the imm and the
-interaction coefficient with acceptable bias and with coverage close to
-nominal, whereas FSR attenuated the imm by about a quarter at high and
-about half at low reliability. Across the predictor distributions, LMS
-had the lowest relative RMSE of the three and similar or higher power,
-but with \(\chi^2\) predictors it was biased and with \(t_5\) and
-\(\chi^2\) predictors its Type I error was inflated.\footnote{The
-  results of LMS with nonnormal predictors also depended on the copula.
-  When the predictors were combined through a Gaussian instead of the
-  Clayton copula, its bias was larger with \(\chi^2\) predictors (e.g.,
-  0.32 against 0.15 with same-skewness predictors at \(a_3 = 0.2\),
-  \(N = 500\), and low reliability) and smaller with uniform and \(t_5\)
-  predictors, in line with how far the mixed moments of the predictors
-  beyond the second order are from normality under each copula (see
-  Figure 1 and Table 7 of the supplementary materials).} LSAM yielded
-the Type I error closest to nominal, at some cost in relative RMSE and
-power. UPI had the highest relative RMSE and the lowest power, with
-acceptable bias except at the smallest sample size with low reliability,
-where it was also the least stable and its standard errors were
-overestimated. UPI and LSAM struggled most under opposite-skewness
-\(\chi^2\) predictors.
+Under correct specification with normal predictors, LSAM, LMS, and UPI
+recovered the imm and the interaction coefficient with acceptable bias
+and with coverage close to nominal, whereas FSR attenuated the imm by
+about a quarter at high and about half at low reliability. Across the
+predictor distributions, LMS had the lowest relative RMSE of the three
+and similar or higher power, but with \(\chi^2\) predictors it was
+biased and with \(t_5\) and \(\chi^2\) predictors its Type I error was
+inflated.\footnote{The results of LMS with nonnormal predictors also
+  depended on the copula. With a Gaussian instead of the Clayton copula,
+  its bias was larger with \(\chi^2\) predictors (e.g., 0.32 against
+  0.15 with same-skewness predictors at \(a_3 = 0.2\), \(N = 500\), and
+  low reliability) and smaller with uniform and \(t_5\) predictors, in
+  line with how far the higher-order mixed moments of the predictors are
+  from normality (see Figure 1 and Table 7 of the supplementary
+  materials).} LSAM yielded the Type I error closest to nominal, at some
+cost in relative RMSE and power. UPI had the highest relative RMSE and
+the lowest power, with acceptable bias except at the smallest sample
+size with low reliability, where it was also the least stable and its
+standard errors were overestimated. UPI and LSAM struggled most under
+opposite-skewness \(\chi^2\) predictors.
 
 Under misspecification, LSAM was less affected than the system-wide
 approaches, without being robust to every omission. The structural
