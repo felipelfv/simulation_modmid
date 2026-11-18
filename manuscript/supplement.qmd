@@ -102,7 +102,9 @@ three-stage data generation that uses them.
 ## Calibration
 
 The structural disturbance variances and indicator error variances were fixed by
-the following closed-form calibration, computed once under the normal baseline.
+the following calibration in closed form under the normal baseline. The
+disturbance variances were computed once, at $a_3 = 0.2$, and the error
+variances at the interaction magnitude of each condition.
 
 ### Structural residual variances
 
@@ -116,14 +118,16 @@ $$
 \operatorname{Var}(S_M) = a_1^2 + a_2^2 + 2 a_1 a_2 \rho + a_3^2 (1 + \rho^2),
 $$
 
-\noindent and the disturbance is the remainder that brings the signal share to $R^2$,
+\noindent and the disturbance is the remainder that brings the signal share to
+$R^2$,
 
 $$
 \psi_M = \operatorname{Var}(S_M)\,\frac{1 - R^2}{R^2}, \qquad
 \psi_Y = \operatorname{Var}(b M + c' X)\,\frac{1 - R^2}{R^2},
 $$
 
-\noindent with $\operatorname{Var}(b M + c' X) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c'\,(a_1 + a_2 \rho)$.
+\noindent with
+$\operatorname{Var}(b M + c' X) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c'\,(a_1 + a_2 \rho)$.
 Fixed at these values, the population variances of $M$ and $Y$ are closed-form
 functions of the parameters,
 
@@ -132,8 +136,9 @@ $$
 \operatorname{Var}(Y) = b^2 \operatorname{Var}(M) + c'^2 + 2 b c'\,(a_1 + a_2 \rho) + \psi_Y,
 $$
 
-\noindent evaluated once under the normal baseline and held fixed across distributions, so
-that $R^2$ and reliability drift only through the design factors.
+\noindent evaluated under the normal baseline at the interaction magnitude of
+each condition and held fixed across distributions, so that $R^2$ and
+reliability drift only through the design factors.
 
 ### Indicator reliabilities
 
@@ -144,21 +149,22 @@ $$
 \theta_{\eta j} = \lambda_j^2\, V\,\frac{1 - \omega}{\omega}.
 $$
 
-For $X, W$ the variance is exactly $1$; for $M, Y$ it is the closed form above,
-fixed at the normal baseline, so the realized reliability drifts mildly across
-distributions.
+\noindent For $X, W$ the variance is exactly $1$; for $M, Y$ it is the closed
+form above, fixed at the normal baseline, so the realized reliability drifts
+mildly across distributions.
 
 ### Calibrating the misspecification magnitudes
 
-The *small* and *medium* labels are standardized coefficients, $t \in \{0.25, 0.50\}$.
-For an omitted predictor $p$ added to a baseline outcome $y_0$, the
-magnitude is the fully standardized regression coefficient of $p$,
+The *small* and *medium* labels are standardized coefficients,
+$t \in \{0.25, 0.50\}$. For an omitted predictor $p$ added to a baseline outcome
+$y_0$, the magnitude is the fully standardized regression coefficient of $p$,
 
 $$
 t = \frac{\beta\,\operatorname{sd}(p)}{\operatorname{sd}(y_0 + \beta p)}.
 $$
 
-Squaring and substituting $\operatorname{Var}(y_0 + \beta p) = \operatorname{Var}(y_0) + \beta^2 \operatorname{Var}(p) + 2 \beta \operatorname{Cov}(p, y_0)$
+\noindent Squaring and substituting
+$\operatorname{Var}(y_0 + \beta p) = \operatorname{Var}(y_0) + \beta^2 \operatorname{Var}(p) + 2 \beta \operatorname{Cov}(p, y_0)$
 yields a quadratic $A\beta^2 + B\beta + C = 0$ with
 
 $$
@@ -167,16 +173,21 @@ B = -2 t^2 \operatorname{Cov}(p, y_0), \quad
 C = -t^2 \operatorname{Var}(y_0).
 $$
 
-Since $A > 0$ and $C < 0$ the roots have opposite sign; the positive omitted path
-is the positive root,
+\noindent Since $A > 0$ and $C < 0$ the roots have opposite sign; the positive
+omitted path is the positive root,
 
 $$
 \beta = \frac{t^2 \operatorname{Cov}(p, y_0) + \sqrt{\,t^4 \operatorname{Cov}(p, y_0)^2 + t^2 (1 - t^2)\,\operatorname{Var}(p)\,\operatorname{Var}(y_0)\,}}{\operatorname{Var}(p)\,(1 - t^2)}.
 $$
 
-The three moments are estimated from one large ($n = 10^6$) sample per
-distribution and $a_3$ level. The predictor $p$ and baseline $y_0$ differ by
-misspecification,
+\noindent The three moments are computed without simulation. The mixed moments
+of the standardized predictors, $E[X^2 W]$, $E[X W^2]$, and $E[X^2 W^2]$, are
+obtained by numerical integration over the population of each distribution (see
+Stage I), and $\operatorname{Var}(p)$, $\operatorname{Cov}(p, y_0)$, and
+$\operatorname{Var}(y_0)$ then follow from the structural equations at each
+$a_3$ level. Under the normal condition these moments have closed forms, which
+were used to check the integration. The predictor $p$ and baseline $y_0$ differ
+by misspecification,
 
 $$
 \begin{aligned}
@@ -186,24 +197,25 @@ c_3: \quad & p = X W, && y_0 = b M + c' X + \zeta_Y, \\
 \end{aligned}
 $$
 
-$c_2$ and $c_3$ are reliability independent; `cl` depends on $\omega$ because its
-baseline $m_3$ carries measurement noise. `rc` never enters the calibration: it
-is a residual correlation and equals its target in every cell.
+\noindent $c_2$ and $c_3$ are reliability independent; `cl` depends on $\omega$
+because its baseline $m_3$ carries measurement noise. `rc` never enters the
+calibration: it is a residual correlation and equals its target in every cell.
 
 ### Holding $Y$ reliability fixed under $c_2$ and $c_3$
 
 Adding an omitted structural path inflates $\operatorname{Var}(Y)$ by
-$\kappa = \operatorname{Var}(y_0 + \beta p) / \operatorname{Var}(y_0)$, which would
-raise $Y$'s indicator reliability as a side effect. Scaling the $Y$-indicator
-noise by the same $\kappa$ makes signal and noise move together, so $\kappa$
-cancels and the reliability returns to its no-misspecification value,
+$\kappa = \operatorname{Var}(y_0 + \beta p) / \operatorname{Var}(y_0)$, which
+would raise $Y$'s indicator reliability as a side effect. Scaling the
+$Y$-indicator noise by the same $\kappa$ makes signal and noise move together,
+so $\kappa$ cancels and the reliability returns to its no-misspecification
+value,
 
 $$
 \omega_j = \frac{\kappa\,\lambda_j^2 V}{\kappa\,\lambda_j^2 V + \kappa\,\theta_j}
 = \frac{\lambda_j^2 V}{\lambda_j^2 V + \theta_j}.
 $$
 
-The latent effect size is untouched; only the $Y$ indicators are made
+\noindent The latent effect size is untouched; only the $Y$ indicators are made
 correspondingly noisier. The measurement level misspecifications `cl` and `rc`
 act on the indicators directly and are not compensated, since that contamination
 is itself the misspecification.
@@ -226,21 +238,30 @@ $$
      = \begin{bmatrix} 1 & 0.3 \\ 0.3 & 1 \end{bmatrix},
 $$
 
-\noindent so that the conditions differ only in distributional shape. Under the normal
-condition, the predictors had Gaussian marginals with the specified covariance
-structure. Under the uniform condition, they had symmetric uniform marginals
-$\mathrm{U}(-\sqrt3, \sqrt3)$, which have mean $0$ and variance $1$. Under the
-$t_5$ condition, they had Student $t$ marginals with five degrees of freedom,
-rescaled by $\sqrt{5/3}$ to unit variance. The two $\chi^2$ conditions used
-$\chi^2_2$ marginals, centered by their mean ($2$) and scaled by their standard
-deviation ($2$) to mean $0$ and variance $1$. In the same-direction condition
-both predictors are right-skewed, whereas in the opposite-direction condition
-$W$ is negated so that $X$ and $W$ are skewed in opposite directions, with the
-sampled correlation sign flipped to restore $\operatorname{Cor}(X, W) = \rho$. In
-every condition, VITA constructed a vine copula (Gaussian under the normal
-condition, Clayton otherwise) to impose the target correlation while preserving
-the marginals, with the $t_5$ and $\chi^2$ draws standardized
-afterwards as described. 
+\noindent so that the conditions differ only in distributional shape. Under the
+normal condition, the predictors had Gaussian marginals with the specified
+covariance structure. Under the uniform condition, they had symmetric uniform
+marginals $\mathrm{U}(-\sqrt3, \sqrt3)$, which have mean $0$ and variance $1$.
+Under the $t_5$ condition, they had Student $t$ marginals with five degrees of
+freedom, rescaled by $\sqrt{5/3}$ to unit variance. The two $\chi^2$ conditions
+used $\chi^2_2$ marginals, centered by their mean ($2$) and scaled by their
+standard deviation ($2$) to mean $0$ and variance $1$. In the condition with the
+same direction of skewness, both predictors are skewed to the right. In the
+condition with opposite directions, the copula was fitted to a correlation of
+$-\rho$ and $W$ was then negated, so that $X$ and $W$ are skewed in opposite
+directions with $\operatorname{Cor}(X, W) = \rho$. In every condition, VITA
+constructed a vine copula (Gaussian under the normal condition, Clayton
+otherwise) that imposes the target correlation while preserving the marginals,
+with the $t_5$ and $\chi^2$ draws standardized afterwards as described. The
+copula of each condition was constructed once and saved, so that every
+replication of a condition was sampled from the same population. Because the
+algorithm calibrates the copula parameter on simulated draws ($10^7$ per
+evaluation), the random seed was fixed. The resulting Clayton parameters were
+0.51 (uniform), 0.45 ($t_5$), 1.05 ($\chi^2$, same direction), and 0.74 with a
+rotation of 90 degrees ($\chi^2$, opposite direction), and the Gaussian
+parameter under the normal condition was 0.30. In an independent sample of
+$2 \times 10^7$ draws from each saved population, the correlation was within
+0.001 of its target.
 
 ### Stage II: Structural model
 
@@ -251,10 +272,11 @@ M = a_1 X + a_2 W + a_3 (X \times W) + \zeta_M, \qquad
 Y = b M + c' X + \zeta_Y,
 $$
 
-\noindent with independent Gaussian disturbances $\zeta_M \sim \mathcal{N}(0, \psi_M)$ and
-$\zeta_Y \sim \mathcal{N}(0, \psi_Y)$. The disturbance variances $\psi_M, \psi_Y$
-take the calibrated values so that each equation explains $R^2 \approx 0.30$ of
-its outcome's variance at the central interaction level under the normal baseline.
+\noindent with independent Gaussian disturbances
+$\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$.
+The disturbance variances $\psi_M, \psi_Y$ take the calibrated values so that
+each equation explains $R^2 \approx 0.30$ of its outcome's variance at the
+central interaction level under the normal baseline.
 
 ### Stage III: Measurement model
 
@@ -264,11 +286,12 @@ $$
 z_{\eta j} = \lambda_j\,\eta + \delta_{\eta j}, \qquad \lambda = (1, 0.8, 0.7, 0.6),
 $$
 
-\noindent with independent Gaussian errors $\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$.
-The error variances $\theta_{\eta j}$ take the calibrated values that achieve the
-target reliability $\omega \in \{0.5, 0.7\}$. Only the exogenous predictors varied
-in distribution. The structural disturbances and measurement errors were Gaussian
-in every condition.
+\noindent with independent Gaussian errors
+$\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$. The error variances
+$\theta_{\eta j}$ take the calibrated values that achieve the target reliability
+$\omega \in \{0.5, 0.7\}$. Only the exogenous predictors varied in distribution.
+The structural disturbances and measurement errors were Gaussian in every
+condition.
 
 \newpage
 
@@ -310,7 +333,29 @@ pick <- function(d, spec, by) {
 }
 ```
 
-The indicator error variances were calibrated under normality to the target reliability and then held fixed across the predictor distributions, and the structural disturbance variances were set so that $R^2 \approx 0.3$ for $M$ and $Y$ under normality, correct specification, and $a_3 = 0.2$. Because the variance of the product term and of $M$ depends on the predictor distribution and on $a_3$, the realized reliability of the $M$ and $Y$ indicators and the explained variance of both equations vary across conditions. @tbl-reliability and @tbl-r2 report their realized values, computed in every generated dataset as the mean over the four indicators of $\lambda_j^2 \operatorname{Var}(\eta) / \operatorname{Var}(z_{\eta j})$ and as the variance of the structural part over the variance of the latent outcome, and averaged over replications and sample sizes. Under the cross-loading, the $m_3$ indicator carries variance from $X$ that the formula does not count as true-score variance, so the reliability of $M$ falls by construction. Under $c_2$ and $c_3$, the $Y$ indicator error variances were rescaled to keep the reliability of $Y$ at its baseline value, so only its $R^2$ rises. The residual covariance leaves both quantities unchanged. Each tabled value is a mean over `r format(n_pooled, big.mark = ",")` replications in @tbl-reliability and twice that in @tbl-r2, with its Monte Carlo standard error in parentheses, at most `r sprintf("%.4f", mcse_rel)` for the reliabilities and `r sprintf("%.4f", mcse_r2)` for the $R^2$ values.
+The indicator error variances were calibrated under normality to the target
+reliability and then held fixed across the predictor distributions, and the
+structural disturbance variances were set so that $R^2 \approx 0.3$ for $M$ and
+$Y$ under normality, correct specification, and $a_3 = 0.2$. Because the
+variance of the product term and of $M$ depends on the predictor distribution
+and on $a_3$, the realized reliability of the $M$ and $Y$ indicators and the
+explained variance of both equations vary across conditions. @tbl-reliability
+and @tbl-r2 report their realized values, computed in every generated dataset as
+the mean over the four indicators of
+$\lambda_j^2 \operatorname{Var}(\eta) / \operatorname{Var}(z_{\eta j})$ and as
+the variance of the structural part over the variance of the latent outcome, and
+averaged over replications and sample sizes. Under the cross-loading, the $m_3$
+indicator carries variance from $X$ that the formula does not count as
+true-score variance, so the reliability of $M$ falls by construction. Under
+$c_2$ and $c_3$, the $Y$ indicator error variances were rescaled to keep the
+reliability of $Y$ at its baseline value, so only its $R^2$ rises. The residual
+covariance leaves both quantities unchanged. Each value in @tbl-reliability is
+the mean over `r format(n_pooled, big.mark = ",")` generated datasets, that is,
+1,000 replications at each of the four sample sizes. Each value in @tbl-r2 is
+the mean over `r format(2 * n_pooled, big.mark = ",")`, because that table also
+pools the two reliability levels. The Monte Carlo standard errors are given in
+parentheses and are at most `r sprintf("%.4f", mcse_rel)` for the reliabilities
+and `r sprintf("%.4f", mcse_r2)` for the $R^2$ values.
 
 \renewcommand{\tabfont}{\footnotesize}
 
@@ -355,7 +400,17 @@ tbl(tab, c("Distribution", "$a_3$", "$R^2_M$", "$R^2_Y$ none", "$R^2_Y$ $c_2$.s"
 
 # Convergence, Inadmissible Solutions, and Outliers
 
-@tbl-convergence reports, for each reliability level, sample size, and estimation approach, how often a replication did not converge, gave an inadmissible solution, had an information matrix that was not positive definite at the solution, or was flagged as an outlier. A solution was counted as nonconverged when the optimizer reported nonconvergence or when any estimate, standard error, or confidence-interval bound was missing or non-finite. An inadmissible solution is a converged solution in which a residual variance was nonpositive or the covariance matrix of the exogenous latent variables and latent disturbances was not positive definite. Inadmissible solutions and converged solutions with an information matrix that was not positive definite were counted but not removed. Outliers are defined as in the main text.
+@tbl-convergence reports, for each reliability level, sample size, and
+estimation approach, how often a replication did not converge, gave an
+inadmissible solution, had an information matrix that was not positive definite
+at the solution, or was flagged as an outlier. A solution was counted as
+nonconverged when the optimizer reported nonconvergence or when any estimate,
+standard error, or confidence-interval bound was missing or non-finite. An
+inadmissible solution is a converged solution in which a residual variance was
+nonpositive or the covariance matrix of the exogenous latent variables and
+latent disturbances was not positive definite. Inadmissible solutions and
+converged solutions with an information matrix that was not positive definite
+were counted but not removed. Outliers are defined as in the main text.
 
 \renewcommand{\tabfont}{\footnotesize}
 
@@ -383,7 +438,7 @@ tab <- main$report |>
             .groups = "drop") |>
   mutate(retained = blank(retained, paste(rel, n)),
          n = blank(n, paste(rel, n)), rel = blank(rel, rel))
-tbl(tab, c("Reliability", "$N$", "Estimator", "Nonconverged", "Inadmissible",
+tbl(tab, c("Reliability", "$N$", "Approach", "Nonconverged", "Inadmissible",
            "NPD information", "Outlier", "Retained"), align = c(rep("l", 3), rep("r", 5)))
 ```
 
@@ -394,7 +449,17 @@ tbl(tab, c("Reliability", "$N$", "Estimator", "Nonconverged", "Inadmissible",
 
 # Sensitivity to Outlier Screening
 
-The main text reports performance measures after removing, condition-wide, every replication flagged as an outlier on any estimation approach, that is, an estimate beyond three interquartile ranges from the quartiles or a standard error above 10 on any structural parameter. As a sensitivity analysis, all measures were recomputed with the screening switched off, retaining every converged replication. @tbl-outliers reports, for each sample size, reliability level, and estimation approach, the proportion of replications removed and the largest absolute difference in each performance measure between the reported value and the value with the removed replications retained, taken over all estimands, predictor distributions, interaction magnitudes, and (mis)specification conditions.
+The main text reports performance measures after removing, condition-wide, every
+replication flagged as an outlier on any estimation approach, that is, an
+estimate beyond three interquartile ranges from the quartiles or a standard
+error above 10 on any structural parameter. As a sensitivity analysis, all
+measures were recomputed with the screening switched off, retaining every
+converged replication. @tbl-outliers reports, for each sample size, reliability
+level, and estimation approach, the proportion of replications removed and the
+largest absolute difference in each performance measure between the reported
+value and the value with the removed replications retained, taken over all
+estimands, predictor distributions, interaction magnitudes, and
+(mis)specification conditions.
 
 ```{r}
 #| label: tbl-outliers
@@ -408,8 +473,8 @@ alt_r <- filter(main$reject,  criterion == "unscreened")
 # removal is condition-wide, so the percentage is shown once per block
 removed <- main$report |>
   filter(criterion == "soft") |>
-  distinct(across(all_of(keys)), n_reps, n_final) |>
-  mutate(pct = 100 * (n_reps - n_final) / n_reps) |>
+  distinct(across(all_of(keys)), n_reps, n_global_conv, n_final) |>
+  mutate(pct = 100 * (n_global_conv - n_final) / n_reps) |>
   group_by(rel, n) |>
   summarise(removed = sprintf("%.1f (%.1f)", mean(pct), max(pct)), .groups = "drop")
 tab <- max_diff(ref_s, alt_s, ref_r, alt_r, by) |>
@@ -419,7 +484,7 @@ tab <- max_diff(ref_s, alt_s, ref_r, alt_r, by) |>
   arrange(rel, n, method) |>
   mutate(removed = blank(removed, paste(rel, n))) |>
   select(rel, n, removed, method, all_of(names(measures)))
-tbl(tab, c("Reliability", "$N$", "Removed", "Estimator", unname(measures)))
+tbl(tab, c("Reliability", "$N$", "Removed", "Approach", unname(measures)))
 ```
 
 \FloatBarrier
@@ -427,12 +492,23 @@ tbl(tab, c("Reliability", "$N$", "Removed", "Estimator", unname(measures)))
 
 # Extreme Standard Errors and the SE/SD Ratio
 
-The main text reports SE/SD ratios above 1.10 for UPI at low reliability and small sample sizes. To examine whether that overestimation reflects a few replications with very large standard errors rather than a general overstatement of uncertainty, a standard error was classified as extreme when it lay more than three interquartile ranges above the upper quartile of its cell, and the ratio was recomputed with those replications dropped from the mean standard error only. The standard deviation of the estimates keeps every replication, since it is the quantity the standard errors are meant to track. @tbl-se-extreme lists every condition at $a_3 = 0.2$ under correct specification, the condition shown in the main text, in which the SE/SD ratio of the interaction coefficient or the imm exceeds 1.10.
+The main text reports SE/SD ratios above 1.10 for UPI at low reliability and
+small sample sizes. To examine whether that overestimation reflects a few
+replications with very large standard errors rather than a general overstatement
+of uncertainty, a standard error was classified as extreme when it lay more than
+three interquartile ranges above the upper quartile of the standard errors in
+its condition, for the same approach and estimand, and the ratio was recomputed
+with those replications dropped from the mean standard error only. The standard
+deviation of the estimates keeps every replication, since it is the quantity the
+standard errors are meant to track. @tbl-se-extreme lists every condition in
+which the SE/SD ratio of the interaction coefficient or the imm exceeds 1.10 at
+$a_3 = 0.2$ under correct specification, the setting of the corresponding figure
+in the main text.
 
 ```{r}
 #| label: tbl-se-extreme
 #| tbl-cap: "Conditions With an SE/SD Ratio Above 1.10 at $a_3 = 0.2$ Under Correct Specification, With and Without Extreme Standard Errors"
-#| apa-note: "Extreme SEs is the percentage of replications in the cell whose standard error lies more than three interquartile ranges above the upper quartile. SE/SD is the ratio as reported in the main text, the mean standard error over the standard deviation of the estimates. The last column gives the same ratio after removing the extreme standard errors from the mean, with the standard deviation unchanged. imm = index of moderated mediation; UPI = unconstrained product indicator; (s) = same skewness; (d) = opposite skewness."
+#| apa-note: "Extreme SEs is the percentage of replications in the condition whose standard error lies more than three interquartile ranges above the upper quartile. SE/SD is the ratio as reported in the main text, the mean standard error over the standard deviation of the estimates. The last column gives the same ratio after removing the extreme standard errors from the mean, with the standard deviation unchanged. imm = index of moderated mediation; UPI = unconstrained product indicator; (s) = same skewness; (d) = opposite skewness."
 tab <- readRDS(file.path(res_main, "se_extremes.rds")) |>
   filter(criterion == "soft", misspec == "none", a3 == 0.2, se_sd > 1.10) |>
   mutate(parameter = factor(parameter, c("a3", "imm"), c("$a_3$", "imm")),
@@ -448,7 +524,7 @@ tab <- readRDS(file.path(res_main, "se_extremes.rds")) |>
          rel = blank(rel, paste(parameter, method, rel)),
          method = blank(method, paste(parameter, method)),
          parameter = blank(parameter, parameter))
-tbl(tab, c("Estimand", "Estimator", "Reliability", "$N$", "Distribution",
+tbl(tab, c("Estimand", "Approach", "Reliability", "$N$", "Distribution",
            "Extreme SEs (\\%)", "SE/SD", "SE/SD, removed"), align = c(rep("l", 5), rep("r", 3)))
 ```
 
@@ -457,7 +533,24 @@ tbl(tab, c("Estimand", "Estimator", "Reliability", "$N$", "Distribution",
 
 # Robustness to the Copula
 
-In the main design, the normal condition draws the latent predictors through a Gaussian copula, whereas the four nonnormal conditions combine nonnormal margins with a Clayton copula. The nonnormal conditions therefore differ from the normal condition in the dependence structure as well as in the margins. To separate the two, the four nonnormal conditions were regenerated with a Gaussian copula, so that only the margins differ from the normal condition, with every other aspect of the design, including the calibrated misspecification magnitudes, held fixed. @fig-copula-imm and @fig-copula-a3 plot, for every condition, the value of each measure under the Gaussian copula against its value under the Clayton copula, and @tbl-copula reports, for the interaction coefficient and the imm, how often the two copulas lead to the same verdict on each performance measure. @tbl-copula-bias to @tbl-copula-typei report the mean difference in each measure by distribution and (mis)specification.
+In the main design, the normal condition draws the latent predictors through a
+Gaussian copula, whereas the four nonnormal conditions combine nonnormal margins
+with a Clayton copula. The nonnormal conditions therefore differ from the normal
+condition in the dependence structure as well as in the margins. To separate the
+two, the four nonnormal conditions were regenerated with a Gaussian copula, so
+that only the margins differ from the normal condition, with every other aspect
+of the design held fixed. The misspecification coefficients were recalibrated
+for these populations, so that their standardized magnitudes are the same as in
+the main design. @fig-copula-imm and @fig-copula-a3 plot, for every condition,
+the value of each measure under the Gaussian copula against its value under the
+Clayton copula, and @tbl-copula reports, for the interaction coefficient and the
+imm, how often the two copulas lead to the same verdict on each performance
+measure, that is, whether the measure lies inside its acceptable range.
+@tbl-copula-bias to @tbl-copula-typei report the mean difference in each measure
+by distribution and (mis)specification. @tbl-copula-moments gives, for each
+distribution and copula, the population covariances of the product term $XW$
+with $X$ and with $W$ and its variance, which are $0$, $0$, and
+$1 + \rho^2 = 1.09$ under normality.
 
 ```{r}
 #| label: fig-copula-imm
@@ -529,7 +622,7 @@ tab <- cop |>
   mutate(K = blank(K, paste(parameter, measure)),
          measure = blank(measure, paste(parameter, measure)),
          parameter = blank(parameter, parameter))
-tbl(tab, c("Estimand", "Measure", "Estimator", "Conditions", "Same (\\%)",
+tbl(tab, c("Estimand", "Measure", "Approach", "Conditions", "Same (\\%)",
            "Changed, within MCSE (\\%)", "Changed, beyond MCSE (\\%)", "Largest"),
     align = c(rep("l", 3), rep("r", 5)))
 ```
@@ -555,7 +648,7 @@ cop_diff_tbl <- function(d, value) {
     tidyr::pivot_wider(names_from = mis, values_from = diff) |>
     mutate(method = blank(method, paste(parameter, method)),
            parameter = blank(parameter, parameter))
-  tbl(tab, c("Estimand", "Estimator", "Distribution", "None", "$c_2$", "$c_3$", "cl", "rc"),
+  tbl(tab, c("Estimand", "Approach", "Distribution", "None", "$c_2$", "$c_3$", "cl", "rc"),
       align = c(rep("l", 3), rep("r", 5)))
 }
 ```
@@ -595,6 +688,31 @@ cop_diff_tbl(cop_s, "se_sd")
 cop_diff_tbl(cop_r, "reject")
 ```
 
+```{r}
+#| label: tbl-copula-moments
+#| tbl-cap: "Population Moments of the Product Term Under the Clayton and the Gaussian Copula"
+#| apa-note: "Covariances of the product term $XW$ with $X$ and with $W$, and its variance, in the population of each distribution, computed by numerical integration as in the calibration. Under normality the two covariances are $0$ and the variance is $1 + \\rho^2 = 1.09$. The normal condition uses the Gaussian copula in both designs. $\\chi^2$ (s) = same skewness; $\\chi^2$ (d) = opposite skewness."
+# moments of the standardized predictors saved by the calibration of each run
+prod_mom <- function(dir, copula) {
+  m <- readRDS(file.path(dir, "calibration.rds"))$moments
+  tibble(distr_exo = names(m), copula = copula,
+         cov_x = sapply(m, `[[`, "x2w"), cov_w = sapply(m, `[[`, "xw2"),
+         var_p = sapply(m, `[[`, "var_p"))
+}
+# the normal condition is the same bivariate normal in both runs
+tab <- bind_rows(prod_mom(res_main, "Clayton"),
+                 filter(prod_mom(res_rob, "Gaussian"), distr_exo != "normal")) |>
+  mutate(copula = if_else(distr_exo == "normal", "Gaussian", copula),
+         distr_exo = factor(distr_exo, names(dist_lab), dist_lab)) |>
+  arrange(distr_exo, copula) |>
+  transmute(distr_exo = blank(distr_exo, distr_exo), copula,
+            cov_x = signed(cov_x), cov_w = signed(cov_w),
+            var_p = sprintf("%.3f", var_p))
+tbl(tab, c("Distribution", "Copula", "$\\operatorname{Cov}(X, XW)$",
+           "$\\operatorname{Cov}(W, XW)$", "$\\operatorname{Var}(XW)$"),
+    align = c("l", "l", rep("r", 3)))
+```
+
 \renewcommand{\tabfont}{}
 
 \FloatBarrier
@@ -602,7 +720,22 @@ cop_diff_tbl(cop_r, "reject")
 
 # Complete Figures
 
-The figures below show the complete results for the imm and the interaction coefficient in every condition of the design. They are ordered by performance measure, then by estimand, interaction magnitude, and reliability level, and each shows all sample sizes, distributions, and (mis)specifications. Power is shown at $a_3 = 0.2$. In each, LSAM = local structural-after-measurement, LMS = latent moderated structural equations, UPI = unconstrained product indicator, FSR = factor score regression, imm = index of moderated mediation, and n = no misspecification. Where shown, the gray band marks the acceptable region for the measure and the error bars represent the Monte Carlo standard error (MCSE).
+The figures below show the complete results for the imm and the interaction
+coefficient in every condition of the design. They are ordered by performance
+measure, then by estimand, interaction magnitude, and reliability level, and
+each shows all sample sizes, distributions, and (mis)specifications. Power is
+shown at $a_3 = 0.2$. The first figure shows the relative bias of the
+interaction coefficient under correct specification, and the last six show the
+remaining structural coefficients, the SE$^2$/VAR ratio, and the loading of the
+cross-loaded indicator $m_3$ in the conditions named in their captions. In each
+figure, LSAM = local structural-after-measurement, LMS = latent moderated
+structural equations, UPI = unconstrained product indicator, FSR = factor score
+regression, imm = index of moderated mediation, n = no misspecification, $c_2$
+and $c_3$ = omitted paths, cl = omitted cross-loading, rc = omitted residual
+covariance, and .s and .m = small and medium magnitude. Where shown, the gray
+band marks the acceptable region for the measure, which for the SE$^2$/VAR ratio
+is taken to be the same as for the SE/SD ratio (0.90 to 1.10), and the error
+bars represent the Monte Carlo standard error (MCSE).
 
 ```{r}
 #| label: fig-s-baseline-bias-a3
@@ -680,7 +813,7 @@ knitr::include_graphics("../plots/rel_bias_var_a3-0.2_low.png")
 
 ```{r}
 #| label: fig-s-load
-#| fig-cap: "Performance of the Cross-Loaded Mediator Indicator Loading ($m_3$) Across All Measures, Distributions, and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
+#| fig-cap: "Relative Bias, Coverage, SE/SD, and SE$^2$/VAR Ratio of the Loading of the Cross-Loaded Mediator Indicator ($m_3$) Across Distributions and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
 #| out-width: "100%"
 knitr::include_graphics("../plots/load_lm3_allmeasures_a3-0.2_n500_high.png")
 ```
