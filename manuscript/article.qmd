@@ -91,7 +91,6 @@ format:
     include-in-header:
       text: |
         \raggedbottom
-        \usepackage{pdflscape}
 
 execute:
   echo: false
@@ -211,14 +210,6 @@ method needs only the estimates and their covariance matrix. Whether it
 meets the usual criteria for coverage and standard error accuracy for the
 imm in the context under investigation has not been examined, and is the
 question we address here. We do not compare it with the bootstrap.
-
-```{r}
-#| include: false
-# smoke-test for the knitr engine. add library() calls and data reads
-# (e.g. readRDS("../results/summary.rds")) — plus the matching packages in
-# gen_env.R's r_pkgs — as the manuscript needs them.
-invisible(1 + 1)
-```
 
 # Simulation Design and Performance Evaluation
 
