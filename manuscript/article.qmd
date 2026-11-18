@@ -112,70 +112,65 @@ case in which the indirect effect is allowed to depend on a moderator
 In this context, a fundamental concern may arise from measurement. Many
 constructs under investigation are not directly observed but are measured
 indirectly through multiple items, that is, they are latent variables
-[@BollenHoyle2012]. When such constructs are reduced to summary scores
-(e.g., a sum or mean of the items) and analyzed as though they were observed, 
-a restrictive measurement structure is imposed rather than tested 
-[@McNeishWolf2020] and measurement error is left unmodeled. This error can 
-attenuate or inflate the indirect effect and distort inferences about it 
-[@ColePreacher2014; @HoyleKenny1999], and it is especially consequential for 
-the mediator, which acts at once as a predictor and an outcome 
-[@GonzalezMacKinnon2021]. The problem is compounded under moderation, 
-where the product term is even less reliable than either of its constituents 
-[@Bohrnstedt1978; @Busemeyer1983]. To address this, structural equation 
-modeling (SEM) with latent variables has been advocated, especially in the 
-context of mediation [@CheungLau2008; @FalkBiesanz2015; @LedgerwoodShrout2011; 
+[@BollenHoyle2012]. When such constructs are reduced to summary scores (e.g., a
+sum or mean of the items) and analyzed as though they were observed, a
+restrictive measurement structure is imposed rather than tested
+[@McNeishWolf2020] and measurement error is left unmodeled. This error can
+attenuate or inflate the indirect effect and distort inferences about it
+[@ColePreacher2014; @HoyleKenny1999], and it is especially consequential for the
+mediator, which acts at once as a predictor and an outcome
+[@GonzalezMacKinnon2021]. The problem is compounded under moderation, where the
+product term is even less reliable than either of its constituents
+[@Bohrnstedt1978; @Busemeyer1983]. To address this, structural equation modeling
+(SEM) with latent variables has been advocated, especially in the context of
+mediation [@CheungLau2008; @FalkBiesanz2015; @LedgerwoodShrout2011;
 @Montoya2024]. With a correctly specified measurement model, SEM estimates
 structural paths among latent factors while accounting for indicator-specific
-residual variance [@Bollen1989; @DeShon1998; @Rhemtulla2020]. Yet we also note that latent variables do not necessarily 
-improve power in general, whether for interactions or not [@Cham2012; 
-@LedgerwoodShrout2011; @WangRhemtulla2021].
+residual variance [@Bollen1989; @DeShon1998; @Rhemtulla2020]. Yet we also note
+that latent variables do not necessarily improve power in general, whether for
+interactions or not [@Cham2012; @LedgerwoodShrout2011; @WangRhemtulla2021].
 
 Moderated mediation with latent variables is not straightforward in terms of
-statistical estimation. Indeed, a latent interaction^[We use interaction and 
-moderation interchangeably, as the focus is on estimation, but we highlight 
-that they imply different interpretations and causal assumptions [@VanderWeele2009]. 
-An interaction also need not be a product term, although 
-that is the most common functional form used by researchers [@Rimpler2026].] 
-involves the product 
-of two latent variables, which is unobserved and nonnormal 
-even when its constituents are normal [@KelavaBrandt2022]. Following this, a
-number of methods have been proposed to estimate nonlinear effects among 
-latent variables [e.g., @Boker2023; @Bollen1995; @KennyJudd1984; 
-@KleinMoosbrugger2000; @KleinMuthen2007; @Marsh2004; @MooijaartBentler2010]. 
-Most adopt a joint ("system-wide") estimation strategy, in which the 
-measurement and structural parameters are estimated simultaneously. This is 
-the case of the two best-known methods, latent moderated structural equations 
-(LMS) and the unconstrained product indicator (UPI) approach. In contrast,
-structural-after-measurement (SAM) approaches [@CoxKelcey2021;
-@HolstBudtz2020; @NgChan2020; @Rosseel2025;
-@WallAmemiya2000; @WallAmemiya2003] estimate the measurement model
-first and the structural model afterward, with the measurement
-parameters held fixed. Many of these approaches have so far rarely 
-been applied in practice, likely held back by limited software, slow 
-estimation, and error-prone implementations. With recent open-source 
-implementations [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and 
+statistical estimation. Indeed, a latent interaction^[We use interaction and
+moderation interchangeably, as the focus is on estimation, but we highlight that
+they imply different interpretations and causal assumptions [@VanderWeele2009].
+An interaction also need not be a product term, although that is the most common
+functional form used by researchers [@Rimpler2026].] involves the product of two
+latent variables, which is unobserved and nonnormal even when its constituents
+are normal [@KelavaBrandt2022]. Following this, a number of methods have been
+proposed to estimate nonlinear effects among latent variables [e.g., @Boker2023;
+@Bollen1995; @KennyJudd1984; @KleinMoosbrugger2000; @KleinMuthen2007;
+@Marsh2004; @MooijaartBentler2010]. Most adopt a joint ("system-wide")
+estimation strategy, in which the measurement and structural parameters are
+estimated simultaneously. This is the case of the two best-known methods, latent
+moderated structural equations (LMS) and the unconstrained product indicator
+(UPI) approach. In contrast, structural-after-measurement (SAM) approaches
+[@CoxKelcey2021; @HolstBudtz2020; @NgChan2020; @Rosseel2025; @WallAmemiya2000;
+@WallAmemiya2003] estimate the measurement model first and the structural model
+afterward, with the measurement parameters held fixed. Many of these approaches
+have so far rarely been applied in practice, likely held back by limited
+software, slow estimation, and error-prone implementations. With recent
+open-source implementations [@HolstBudtz2020; @Rosseel2025; @Slupphaug2025] and
 non-commercial software [@Keller2025], this is likely to change.
 
-Beyond estimation, a further consideration concerns interpretation. Mediation is 
-a hypothesis about causal effects, and causal interpretation requires 
-identification assumptions that *may* not be verified from the data alone 
-[e.g., @Imai2010; @Rohrer2022]. With latent variable
-models, further caution is needed [@Morelli2026; @Sterner2024;
-@VanderWeeleVansteelandt2022].
-We focus on one that is central to interpretation: the estimated latent 
-variables must validly represent the intended constructs 
-[@GonzalezMacKinnon2021]. In fact, when they do not, the model is subject to 
-interpretational confounding [@Burt1976], a discrepancy between the empirical 
-meaning assigned to a latent variable through its estimated 
-measurement parameters and the meaning intended by the researcher. This 
-reflects an underlying property of system-wide estimation, namely that the 
-consequences of a misspecification are not confined to the part of the model 
-in which it occurs [@BainterBollen2014; @Bollen2007; @Kaplan1988]. @Burt1976 proposed estimating the 
-measurement model first in order to separate the estimated latent
-variables and their empirical meaning from the structural model that 
-follows. SAM 
-approaches follow this strategy [e.g., @RosseelLoh2024], although it does 
-not imply that the structure is correct [@VanderWeeleVansteelandt2022].
+Beyond estimation, a further consideration concerns interpretation. Mediation is
+a hypothesis about causal effects, and causal interpretation requires
+identification assumptions that *may* not be verified from the data alone [e.g.,
+@Imai2010; @Rohrer2022]. With latent variable models, further caution is needed
+[@Morelli2026; @Sterner2024; @VanderWeeleVansteelandt2022]. We focus on one that
+is central to interpretation: the estimated latent variables must validly
+represent the intended constructs [@GonzalezMacKinnon2021]. In fact, when they
+do not, the model is subject to interpretational confounding [@Burt1976], a
+discrepancy between the empirical meaning assigned to a latent variable through
+its estimated measurement parameters and the meaning intended by the researcher.
+This reflects an underlying property of system-wide estimation, namely that the
+consequences of a misspecification are not confined to the part of the model in
+which it occurs [@BainterBollen2014; @Bollen2007; @Kaplan1988]. @Burt1976
+proposed estimating the measurement model first in order to separate the
+estimated latent variables and their empirical meaning from the structural model
+that follows. SAM approaches follow this strategy [e.g., @RosseelLoh2024],
+although it does not imply that the structure is correct
+[@VanderWeeleVansteelandt2022].
 
 Despite the relevance of misspecification, prior simulation work has examined
 latent interaction estimation mainly under distributional misspecification
@@ -249,21 +244,21 @@ population departs from it by one additional element, which the fitted model
 omits. @fig-model shows the population model, where the measurement and
 structural misspecifications studied below are drawn in gray.
 
-The primary estimands are the interaction coefficient ($a_3$) and the imm
-(i.e., $a_3 b$). The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) 
-and the twelve freely estimated factor loadings serve as secondary estimands. 
-Note the imm is a derived quantity rather than a free parameter, hence its 
-true value is computed as $a_3 b$ implied by the correctly specified model.
+The primary estimands are the interaction coefficient ($a_3$) and the imm (i.e.,
+$a_3 b$). The remaining structural coefficients ($a_1$, $a_2$, $b$, $c'$) and
+the twelve freely estimated factor loadings serve as secondary estimands. Note
+the imm is a derived quantity rather than a free parameter, hence its true value
+is computed as $a_3 b$ implied by the correctly specified model.
 
 Population values were fixed at $a_1 = 0.4$, $a_2 = 0.3$, $b = 0.5$, and
-$c' = 0.15$, with $\operatorname{Cor}(X, W) = 0.3$. The interaction coefficient $a_3$
-is a design factor (see below). These coefficients, together with the structural
-disturbance variances, were chosen so that under the baseline condition (normal
-exogenous predictors and a correctly specified model) each dependent latent
-variable has $R^2 \approx 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
-because $a_3$ contributes to the variance of $M$, the explained variance is 
-naturally higher with a larger $a_3$ and lower when its effect is null. The
-realized values are reported in the supplementary
+$c' = 0.15$, with $\operatorname{Cor}(X, W) = 0.3$. The interaction coefficient
+$a_3$ is a design factor (see below). These coefficients, together with the
+structural disturbance variances, were chosen so that under the baseline
+condition (normal exogenous predictors and a correctly specified model) each
+dependent latent variable has $R^2 \approx 0.30$ at the interaction level
+$a_3 = 0.20$. Also note that, because $a_3$ contributes to the variance of $M$,
+the explained variance is naturally higher with a larger $a_3$ and lower when
+its effect is null. The realized values are reported in the supplementary
 materials. Each latent variable is measured by four congeneric indicators with
 loadings $1.0$, $0.8$, $0.7$, and $0.6$.
 
@@ -364,28 +359,26 @@ Data Generation below). This yielded
 $4 \times 3 \times 2 \times 5 \times 9 = 1{,}080$ 
 conditions, each replicated 1,000 times.
 
-Sample sizes cover the small to moderate range, where interaction terms 
-are estimated with limited power [@Brandt2020; @Lonati2025]. The interaction 
-magnitudes include a null condition to assess Type I error for the interaction 
-coefficient and imm, and two nonzero levels representing small and moderate 
-latent moderation effects, following previous research [@Feng2020; 
-@KleinMoosbrugger2000]. Reliability levels of $0.5$ and $0.7$ were chosen 
-because measurement error is amplified in product terms and is therefore 
-especially consequential for latent
-interaction estimation [@Lonati2025; @Vieira2026; @Brandt2020].
-Nonnormality of the latent predictors is both empirically common and 
-methodologically central for latent interaction approaches, whose distributional 
-assumptions differ across approaches [@KleinMoosbrugger2000; @KleinMuthen2007; 
-@Cham2012; @Lonati2025; @Vieira2026]. 
-The misspecification conditions follow the moderated mediation 
-framework for the two structural omissions [@Preacher2007] and prior 
-latent interaction simulation work for the two measurement omissions 
-[@Brandt2020]. They were also chosen as interpretable violations, acting 
-respectively as a measured mediator–outcome confounder [@Imai2010], a 
-conflated moderated direct effect [@Edwards2007], exposure-correlated 
-measurement error in the mediator [@VanderWeeleValeri2012; @Fritz2016], and 
-a shared unmeasured cause of a mediator and an outcome indicator [@Cole2007]. 
-The misspecification cases are detailed below.
+Sample sizes cover the small to moderate range, where interaction terms are
+estimated with limited power [@Brandt2020; @Lonati2025]. The interaction
+magnitudes include a null condition to assess Type I error for the interaction
+coefficient and imm, and two nonzero levels representing small and moderate
+latent moderation effects, following previous research [@Feng2020;
+@KleinMoosbrugger2000]. Reliability levels of $0.5$ and $0.7$ were chosen
+because measurement error is amplified in product terms and is therefore
+especially consequential for latent interaction estimation [@Lonati2025;
+@Vieira2026; @Brandt2020]. Nonnormality of the latent predictors is both
+empirically common and methodologically central for latent interaction
+approaches, whose distributional assumptions differ across approaches
+[@KleinMoosbrugger2000; @KleinMuthen2007; @Cham2012; @Lonati2025; @Vieira2026].
+The misspecification conditions follow the moderated mediation framework for the
+two structural omissions [@Preacher2007] and prior latent interaction simulation
+work for the two measurement omissions [@Brandt2020]. They were also chosen as
+interpretable violations, acting respectively as a measured mediator–outcome
+confounder [@Imai2010], a conflated moderated direct effect [@Edwards2007],
+exposure-correlated measurement error in the mediator [@VanderWeeleValeri2012;
+@Fritz2016], and a shared unmeasured cause of a mediator and an outcome
+indicator [@Cole2007]. The misspecification cases are detailed below.
 
 ### Estimation Approaches
 
@@ -413,60 +406,59 @@ second step.
 
 ### Data Generation
 
-The supplementary materials describe the complete data generating mechanism 
-and its calibration in detail. Briefly, the latent variables $X$ and $W$ were drawn from a bivariate
-distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$, constructed with the
-vine-to-anything (VITA) algorithm [@Gronneberg2022]. Five 
-exogenous distributions were examined, each standardized to mean $0$ and 
-variance $1$. The normal condition draws $X, W \sim \mathcal{N}(0, 1)$ 
-through a Gaussian copula, whereas the remaining four combine nonnormal 
-margins with the Clayton copula: uniform, $t_5$, and two $\chi^2(2)$ 
-conditions in which $X$ and $W$ are skewed in the same or in opposite 
-directions. The nonnormal conditions therefore differ from the normal 
-condition in the dependence between the predictors as well as in their 
-margins. As a sensitivity analysis, they were repeated with a Gaussian 
-copula to separate the two (see the supplementary materials). For each 
-distribution, the bivariate population was constructed once and every 
-replication was sampled from it. Then, $M$ and $Y$ were generated from the 
-structural equations above with independent Gaussian disturbances 
-$\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$, 
+The supplementary materials describe the complete data generating mechanism and
+its calibration in detail. Briefly, the latent variables $X$ and $W$ were drawn
+from a bivariate distribution with $\operatorname{Cor}(X, W) = \rho = 0.3$,
+constructed with the vine-to-anything (VITA) algorithm [@Gronneberg2022]. Five
+exogenous distributions were examined, each standardized to mean $0$ and
+variance $1$. The normal condition draws $X, W \sim \mathcal{N}(0, 1)$ through a
+Gaussian copula, whereas the remaining four combine nonnormal margins with the
+Clayton copula: uniform, $t_5$, and two $\chi^2(2)$ conditions in which $X$ and
+$W$ are skewed in the same or in opposite directions. The nonnormal conditions
+therefore differ from the normal condition in the dependence between the
+predictors as well as in their margins. As a sensitivity analysis, they were
+repeated with a Gaussian copula to separate the two (see the supplementary
+materials). For each distribution, the bivariate population was constructed once
+and every replication was sampled from it. Then, $M$ and $Y$ were generated from
+the structural equations above with independent Gaussian disturbances
+$\zeta_M \sim \mathcal{N}(0, \psi_M)$ and $\zeta_Y \sim \mathcal{N}(0, \psi_Y)$,
 and the four indicators ($j = 1, \dots, 4$) of each latent variable
-$\eta \in \{X, W, M, Y\}$ were formed as 
-$z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$,
-with loadings $\lambda = (1, 0.8, 0.7, 0.6)$ and Gaussian errors
-$\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$ whose variances 
-$\theta_{\eta j}$ were set to give the target reliability 
-$\omega \in \{0.5, 0.7\}$ under normal predictors and held fixed across 
+$\eta \in \{X, W, M, Y\}$ were formed as
+$z_{\eta j} = \lambda_j \eta + \delta_{\eta j}$, with loadings
+$\lambda = (1, 0.8, 0.7, 0.6)$ and Gaussian errors
+$\delta_{\eta j} \sim \mathcal{N}(0, \theta_{\eta j})$ whose variances
+$\theta_{\eta j}$ were set to give the target reliability
+$\omega \in \{0.5, 0.7\}$ under normal predictors and held fixed across
 distributions.
 
-The nine (mis)specification conditions comprise one correctly specified 
-condition and four types of misspecification, each at two calibrated 
-magnitudes (standardized $0.25$ and $0.50$), similar to @Brandt2020. The two structural ones are an 
-omitted direct effect of the moderator on the outcome ($c_2$) and an omitted 
-moderated direct effect ($c_3$). The two in the measurement model are a 
-cross-loading of a mediator indicator on $X$ (`cl`) and a residual covariance 
-between a mediator and an outcome indicator (`rc`). In every case the effect 
-is present in the population but omitted from the estimated model.
+The nine (mis)specification conditions comprise one correctly specified
+condition and four types of misspecification, each at two calibrated magnitudes
+(standardized $0.25$ and $0.50$), similar to @Brandt2020. The two structural
+ones are an omitted direct effect of the moderator on the outcome ($c_2$) and an
+omitted moderated direct effect ($c_3$). The two in the measurement model are a
+cross-loading of a mediator indicator on $X$ (`cl`) and a residual covariance
+between a mediator and an outcome indicator (`rc`). In every case the effect is
+present in the population but omitted from the estimated model.
 
 ### Convergence, Outliers, and Inadmissible Solutions
 
-Following previous research [@Lonati2025; @Vieira2026], replications were 
-screened in two sequential steps, and a replication that failed either step 
-for any estimation approach was removed for all of them, so that every 
-approach is compared on the same replications. First, a solution was treated 
-as nonconverged when the optimizer reported nonconvergence or when any 
-estimate, standard error, or confidence interval bound was missing or 
-non-finite. Second, among the remaining replications, outliers were 
-identified per condition and approach as estimates of the imm or a structural 
-coefficient more than three interquartile ranges beyond the quartiles, or 
-with a standard error above $10$^[The standard error criterion additionally 
-removed 113 replications (about $0.01\%$), almost all for UPI and mostly at the smallest
-sample size with low reliability.]. We also recorded, without removing them, 
-inadmissible solutions, in which a residual variance was nonpositive or the 
-covariance matrix of the latent variables and disturbances was not positive 
-definite. The same was done for converged solutions whose information matrix 
-was not positive definite. Their frequencies and the sensitivity of the 
-results to the outlier screening are reported in the supplementary materials.
+Following previous research [@Lonati2025; @Vieira2026], replications were
+screened in two sequential steps, and a replication that failed either step for
+any estimation approach was removed for all of them, so that every approach is
+compared on the same replications. First, a solution was treated as nonconverged
+when the optimizer reported nonconvergence or when any estimate, standard error,
+or confidence interval bound was missing or non-finite. Second, among the
+remaining replications, outliers were identified per condition and approach as
+estimates of the imm or a structural coefficient more than three interquartile
+ranges beyond the quartiles, or with a standard error above $10$^[The standard
+error criterion additionally removed 113 replications (about $0.01\%$), almost
+all for UPI and mostly at the smallest sample size with low reliability.]. We
+also recorded, without removing them, inadmissible solutions, in which a
+residual variance was nonpositive or the covariance matrix of the latent
+variables and disturbances was not positive definite. The same was done for
+converged solutions whose information matrix was not positive definite. Their
+frequencies and the sensitivity of the results to the outlier screening are
+reported in the supplementary materials.
 
 ### Performance Measures
 
@@ -533,26 +525,26 @@ $$
 \mathrm{imm}^{(d)} = a_3^{(d)}\, b^{(d)},
 $$
 
-\noindent where $\hat\Sigma_{a_3 b}$ is the estimated covariance of $(\hat a_3, \hat b)$,
-and took the $2.5$th and $97.5$th empirical percentiles of
+\noindent where $\hat\Sigma_{a_3 b}$ is the estimated covariance of
+$(\hat a_3, \hat b)$, and took the $2.5$th and $97.5$th empirical percentiles of
 $\{\mathrm{imm}^{(d)}\}_{d=1}^{D}$ as the interval. The structural coefficients
-and loadings use Wald-based intervals from the same estimated covariance 
-matrix of the parameter estimates. 
+and loadings use Wald-based intervals from the same estimated covariance matrix
+of the parameter estimates.
 
 ### Reproducibility and Computational Details
 
 All analyses were conducted in R [@RCoreTeam] using the *lavaan* [@Rosseel2012]
-and *modsem* [@Slupphaug2025] packages for estimation, *covsim* [@Gronneberg2022]
-and *rvinecopulib* [@Nagler2025] for data generation, and *simhelpers*
-[@Joshi2025] for performance evaluation. For data and figure processing, we 
-used *dplyr* [@Wickham2026], *tidyr* [@Wickham2025], and *ggplot2* 
-[@Wickham2016]. Conditions were run in parallel with 
-the *parallel* package [@RCoreTeam]. Reproducible and independent random-number streams were obtained with the 
-L'Ecuyer-CMRG generator. 
-The computational environment was pinned with Nix [@dolstra_etall_2004] via the 
-*rix* package [@rix] to ensure reproducibility, and the article was 
-written with the *apaquarto* extension [@apaquarto]. For the R version, package 
-versions, code, manuscript, and materials, see the project repository.
+and *modsem* [@Slupphaug2025] packages for estimation, *covsim*
+[@Gronneberg2022] and *rvinecopulib* [@Nagler2025] for data generation, and
+*simhelpers* [@Joshi2025] for performance evaluation. For data and figure
+processing, we used *dplyr* [@Wickham2026], *tidyr* [@Wickham2025], and
+*ggplot2* [@Wickham2016]. Conditions were run in parallel with the *parallel*
+package [@RCoreTeam]. Reproducible and independent random-number streams were
+obtained with the L'Ecuyer-CMRG generator. The computational environment was
+pinned with Nix [@dolstra_etall_2004] via the *rix* package [@rix] to ensure
+reproducibility, and the article was written with the *apaquarto* extension
+[@apaquarto]. For the R version, package versions, code, manuscript, and
+materials, see the project repository.
 
 # Results
 
@@ -562,21 +554,21 @@ measurement specification and then under misspecification. We then turn to the
 remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), and we
 close with the estimated factor loadings, focusing mainly on that of the
 cross-loaded indicator ($m_3$). Due to the large number of conditions, the
-figures in the main text show a subset. Complete results, and detailed convergence and 
-outlier information, are available in the supplementary materials.
+figures in the main text show a subset. Complete results, and detailed
+convergence and outlier information, are available in the supplementary
+materials.
 
 ## Convergence, Outliers, and Inadmissible Solutions
 
 LSAM and FSR converged in every replication of every condition. UPI and LMS
-converged in at least 98% of replications in most conditions, with lowest
-rates of 93% for UPI ($N = 100$, low reliability, $\chi^2$ predictors) and 89%
-for LMS ($N = 500$, high reliability, $t_5$ predictors). Outliers were below
-1% in most conditions and reached at most 3% for LSAM, LMS, and FSR and 11%
-for UPI ($N = 100$, low reliability, $\chi^2$ predictors). Inadmissible
-solutions arose almost exclusively for UPI, mainly at $N = 100$ with low
-reliability. They were retained, and excluding them changes the results primarily
-for UPI in these conditions. Details are in Tables 3 and 4 of the
-supplementary materials.
+converged in at least 98% of replications in most conditions, with lowest rates
+of 93% for UPI ($N = 100$, low reliability, $\chi^2$ predictors) and 89% for LMS
+($N = 500$, high reliability, $t_5$ predictors). Outliers were below 1% in most
+conditions and reached at most 3% for LSAM, LMS, and FSR and 11% for UPI
+($N = 100$, low reliability, $\chi^2$ predictors). Inadmissible solutions arose
+almost exclusively for UPI, mainly at $N = 100$ with low reliability. They were
+retained, and excluding them changes the results primarily for UPI in these
+conditions. Details are in Tables 3 and 4 of the supplementary materials.
 
 ## Correct Structural and Measurement Specification
 
@@ -700,45 +692,45 @@ knitr::include_graphics("../plots/baseline_reject_imm.png")
 
 ## Structural and Measurement Misspecification
 
-Recall that the imm is the product of the interaction coefficient ($a_3$),
-from the mediator equation, and $b$, from the outcome equation. The
-structural omissions ($c_2$ and $c_3$) are in the outcome equation, to which
-$b$ belongs. The measurement omissions (the cross-loading, `cl`, and the residual
-covariance, `rc`) involve a mediator indicator, and the mediator enters both
-equations. We show the relative bias of the interaction coefficient and the
-imm at $N = 500$, because the bias induced by an omission changes little with
-sample size, and the standard errors and Type I error of the imm at the
-smallest and largest sample size.
+Recall that the imm is the product of the interaction coefficient ($a_3$), from
+the mediator equation, and $b$, from the outcome equation. The structural
+omissions ($c_2$ and $c_3$) are in the outcome equation, to which $b$ belongs.
+The measurement omissions (the cross-loading, `cl`, and the residual covariance,
+`rc`) involve a mediator indicator, and the mediator enters both equations. We
+show the relative bias of the interaction coefficient and the imm at $N = 500$,
+because the bias induced by an omission changes little with sample size, and the
+standard errors and Type I error of the imm at the smallest and largest sample
+size.
 
 ### Relative Bias and Relative RMSE
 
 Both structural omissions bias the imm upward through $b$ for LSAM, LMS, and
 UPI, increasingly with the omission magnitude, but they differ in whether the
-bias also reaches the interaction coefficient (@fig-mis-bias). Under $c_2$
-the interaction coefficient is largely unaffected, as expected, except for
-LMS at low reliability (up to 0.15 in absolute value), and the bias of the
-imm is similar for the three approaches (on average 0.40 to 0.49 at the
-medium magnitude). Under $c_3$, LMS and UPI also overestimate the interaction
-coefficient (by about 0.30 on average at the medium magnitude and low reliability),
-whereas LSAM does not. The bias of the imm is accordingly smaller for LSAM
-(on average 0.27 at high and 0.28 at low reliability) than for LMS and UPI
-(about 0.50 at high and 0.77 to 0.80 at low reliability). The medium cross-loading biases the two
-components of the imm in opposite directions for LMS and UPI, attenuating the
-interaction coefficient (on average by 0.21 and 0.26 at low reliability) and
-inflating $b$ (by 0.40), so that the bias of the imm remains largely
-acceptable, except for LMS with $\chi^2$ predictors (up to 0.35). For LSAM
-both biases are smaller (0.07 and 0.14). The residual covariance leaves the
-interaction coefficient unaffected and biases $b$, and thereby the imm,
-slightly upward for the three approaches (by about 0.09 at the medium
+bias also reaches the interaction coefficient (@fig-mis-bias). Under $c_2$ the
+interaction coefficient is largely unaffected, as expected, except for LMS at
+low reliability (up to 0.15 in absolute value), and the bias of the imm is
+similar for the three approaches (on average 0.40 to 0.49 at the medium
+magnitude). Under $c_3$, LMS and UPI also overestimate the interaction
+coefficient (by about 0.30 on average at the medium magnitude and low
+reliability), whereas LSAM does not. The bias of the imm is accordingly smaller
+for LSAM (on average 0.27 at high and 0.28 at low reliability) than for LMS and
+UPI (about 0.50 at high and 0.77 to 0.80 at low reliability). The medium
+cross-loading biases the two components of the imm in opposite directions for
+LMS and UPI, attenuating the interaction coefficient (on average by 0.21 and
+0.26 at low reliability) and inflating $b$ (by 0.40), so that the bias of the
+imm remains largely acceptable, except for LMS with $\chi^2$ predictors (up to
+0.35). For LSAM both biases are smaller (0.07 and 0.14). The residual covariance
+leaves the interaction coefficient unaffected and biases $b$, and thereby the
+imm, slightly upward for the three approaches (by about 0.09 at the medium
 magnitude and low reliability). For FSR, the structural omissions move the
 attenuated imm toward zero (on average 0.03 under the medium $c_2$ at high
-reliability), which reflects two biases that offset each other and not
-accurate estimation. For LSAM, LMS, and UPI, the relative RMSE follows
-the bias and is accordingly lowest for LSAM under the medium $c_3$ (at $N = 500$ and low reliability
-0.62, against 1.04 for LMS and 1.11 for UPI; see Figures 12 to 15 of the
-supplementary materials). The remaining
-sample sizes and the larger interaction magnitude are also reported
-($a_3 = 0.4$; see Figures 4 to 11 of the supplementary materials).
+reliability), which reflects two biases that offset each other and not accurate
+estimation. For LSAM, LMS, and UPI, the relative RMSE follows the bias and is
+accordingly lowest for LSAM under the medium $c_3$ (at $N = 500$ and low
+reliability 0.62, against 1.04 for LMS and 1.11 for UPI; see Figures 12 to 15 of
+the supplementary materials). The remaining sample sizes and the larger
+interaction magnitude are also reported ($a_3 = 0.4$; see Figures 4 to 11 of the
+supplementary materials).
 
 ```{r}
 #| label: fig-mis-bias
@@ -775,9 +767,9 @@ knitr::include_graphics("../plots/misspec_se_sd_imm.png")
 Under misspecification the interval is centered on a biased estimate, and
 coverage therefore mirrors the bias reported above. It decreases wherever an
 omission induces bias, more so with increasing sample size, and is as under
-correct specification where an omission induces little bias. At $N = 500$ and $a_3 = 0.2$
-under the medium structural omissions, the coverage of the imm is as low as
-0.75 for LSAM and UPI and 0.53 for LMS (see Figures 24 to 31 of the
+correct specification where an omission induces little bias. At $N = 500$ and
+$a_3 = 0.2$ under the medium structural omissions, the coverage of the imm is as
+low as 0.75 for LSAM and UPI and 0.53 for LMS (see Figures 24 to 31 of the
 supplementary materials).
 
 ### Hypothesis Testing (Type I Error and Power)
@@ -809,25 +801,25 @@ knitr::include_graphics("../plots/misspec_typeI_imm.png")
 
 ## Additional Structural Estimates
 
-For the remaining structural coefficients ($a_1$, $a_2$, $b$, and $c'$), we
-show the relative bias at $N = 500$ with low reliability and $a_3 = 0.2$
-(@fig-param-bias). The bias changes little with sample size, and for LMS and
-UPI it is generally smaller at high reliability. Under correct specification,
-LSAM, LMS, and UPI estimate all four coefficients with acceptable bias at
-every sample size and reliability level, whereas FSR attenuates $a_1$, $a_2$, and $b$ (on average by
-0.16 to 0.20 at low reliability). The structural omissions bias the outcome-equation
-coefficients $b$ and $c'$ for LSAM, LMS, and UPI, with a smaller bias in $b$
-for LSAM (on average 0.39 under the medium $c_2$, against 0.52 for LMS and
-UPI). In the mediator equation, LSAM estimates $a_1$ and $a_2$ with
-acceptable bias under both omissions, whereas the medium $c_2$ biases $a_2$
+For the remaining structural coefficients ($a_1$, $a_2$, $b$, and $c'$), we show
+the relative bias at $N = 500$ with low reliability and $a_3 = 0.2$
+(@fig-param-bias). The bias changes little with sample size, and for LMS and UPI
+it is generally smaller at high reliability. Under correct specification, LSAM,
+LMS, and UPI estimate all four coefficients with acceptable bias at every sample
+size and reliability level, whereas FSR attenuates $a_1$, $a_2$, and $b$ (on
+average by 0.16 to 0.20 at low reliability). The structural omissions bias the
+outcome-equation coefficients $b$ and $c'$ for LSAM, LMS, and UPI, with a
+smaller bias in $b$ for LSAM (on average 0.39 under the medium $c_2$, against
+0.52 for LMS and UPI). In the mediator equation, LSAM estimates $a_1$ and $a_2$
+with acceptable bias under both omissions, whereas the medium $c_2$ biases $a_2$
 for LMS and UPI (on average by 0.21 and 0.24). The cross-loading biases $a_1$
 and $c'$ for every approach and $a_2$ and $b$ mainly for LMS and UPI (at the
-medium magnitude about $-0.27$ and 0.40, against $-0.08$ and 0.14 for LSAM).
-The relative bias of $c'$ is large throughout because its population value is
-small (0.15). The SE/SD ratio is acceptable for LSAM, LMS, and UPI in nearly
-all conditions, whereas FSR underestimates the standard errors of $a_1$,
-$a_2$, and $b$ in many conditions and those of $c'$ under $c_3$ (see Figures
-36 to 38 of the supplementary materials).
+medium magnitude about $-0.27$ and 0.40, against $-0.08$ and 0.14 for LSAM). The
+relative bias of $c'$ is large throughout because its population value is small
+(0.15). The SE/SD ratio is acceptable for LSAM, LMS, and UPI in nearly all
+conditions, whereas FSR underestimates the standard errors of $a_1$, $a_2$, and
+$b$ in many conditions and those of $c'$ under $c_3$ (see Figures 36 to 38 of
+the supplementary materials).
 
 ```{r}
 #| label: fig-param-bias
@@ -843,12 +835,12 @@ Eleven of the twelve freely estimated loadings are recovered with acceptable
 bias by all approaches (at most 0.06 in absolute value). The exception is the
 loading of the cross-loaded mediator indicator $m_3$, shown at $N = 500$ with
 low reliability (@fig-load). Only the cross-loading moves it beyond the
-acceptable range. At the medium magnitude its relative bias is 0.81 to 0.98
-for LMS, UPI, and FSR, against 0.38 to 0.52 for LSAM, and coverage
-accordingly falls to nearly zero for every approach. The SE/SD ratio remains
-acceptable for LSAM, LMS, and UPI (0.90 at the lowest), whereas FSR
-underestimates the standard errors (0.56 to 0.70). The results at high reliability are also reported (see Figure 41 of the
-supplementary materials).
+acceptable range. At the medium magnitude its relative bias is 0.81 to 0.98 for
+LMS, UPI, and FSR, against 0.38 to 0.52 for LSAM, and coverage accordingly falls
+to nearly zero for every approach. The SE/SD ratio remains acceptable for LSAM,
+LMS, and UPI (0.90 at the lowest), whereas FSR underestimates the standard
+errors (0.56 to 0.70). The results at high reliability are also reported (see
+Figure 41 of the supplementary materials).
 
 ```{r}
 #| label: fig-load
@@ -860,13 +852,94 @@ knitr::include_graphics("../plots/load_lm3_a3-0.2_n500_low.png")
 
 # Discussion
 
-We evaluated four estimation approaches for a latent variable moderated mediation model, the two-step LSAM, the system-wide LMS and UPI, and FSR as a baseline, under correct specification, structural and measurement misspecification, and nonnormal predictors. Under correct specification with normal predictors, LSAM, LMS, and UPI recovered the imm and the interaction coefficient with acceptable bias and with coverage close to nominal, whereas FSR attenuated the imm by about a quarter at high and about half at low reliability. Across the predictor distributions, LMS had the lowest relative RMSE of the three and similar or higher power, but with $\chi^2$ predictors it was biased and with $t_5$ and $\chi^2$ predictors its Type I error was inflated.^[The results of LMS with nonnormal predictors also depended on the copula. When the predictors were combined through a Gaussian instead of the Clayton copula, its bias was larger with $\chi^2$ predictors (e.g., 0.32 against 0.15 with same-skewness predictors at $a_3 = 0.2$, $N = 500$, and low reliability) and smaller with uniform and $t_5$ predictors, in line with how far the mixed moments of the predictors beyond the second order are from normality under each copula (see Figure 1 and Table 7 of the supplementary materials).] LSAM yielded the Type I error closest to nominal, at some cost in relative RMSE and power. UPI had the highest relative RMSE and the lowest power, with acceptable bias except at the smallest sample size with low reliability, where it was also the least stable and its standard errors were overestimated. UPI and LSAM struggled most under opposite-skewness $\chi^2$ predictors.
+Under correct specification with normal predictors, LSAM, LMS, and UPI recovered
+the imm and the interaction coefficient with acceptable bias and with coverage
+close to nominal, whereas FSR attenuated the imm by about a quarter at high and
+about half at low reliability. Across the predictor distributions, LMS had the
+lowest relative RMSE of the three and similar or higher power, but with $\chi^2$
+predictors it was biased and with $t_5$ and $\chi^2$ predictors its Type I error
+was inflated.^[The results of LMS with nonnormal predictors also depended on the
+copula. With a Gaussian instead of the Clayton copula, its bias was larger with
+$\chi^2$ predictors (e.g., 0.32 against 0.15 with same-skewness predictors at
+$a_3 = 0.2$, $N = 500$, and low reliability) and smaller with uniform and $t_5$
+predictors, in line with how far the higher-order mixed moments of the
+predictors are from normality (see Figure 1 and Table 7 of the supplementary
+materials).] LSAM yielded the Type I error closest to nominal, at some cost in
+relative RMSE and power. UPI had the highest relative RMSE and the lowest power,
+with acceptable bias except at the smallest sample size with low reliability,
+where it was also the least stable and its standard errors were overestimated.
+UPI and LSAM struggled most under opposite-skewness $\chi^2$ predictors.
 
-Under misspecification, LSAM was less affected than the system-wide approaches, without being robust to every omission. The structural omissions in the outcome equation ($c_2$, $c_3$) biased the coefficients of that equation, and thereby the imm, for all approaches but left the mediator equation, and hence the interaction coefficient, unaffected under LSAM, whereas the system-wide approaches also carried them into the mediator equation, biasing $a_2$ under $c_2$ and the interaction coefficient under $c_3$. The cross-loading (`cl`) was the most damaging for the structural coefficients. Under the system-wide approaches it biased most of them, including the interaction coefficient, while under LSAM it affected mainly $a_1$ and $c'$ and, to a lesser extent, $b$. The imm, however, was little affected. The residual covariance (`rc`) had little effect. The Type I error of LSAM was unchanged by the omissions, whereas that of LMS rose to 0.33. Where bias was substantial, it was smaller under LSAM, except for the imm under $c_2$ and $c'$ under the structural omissions, where the approaches were alike, and it increased with the magnitude of the omission. We also highlight that, for the imm, the Monte Carlo interval behaved like the interval of the interaction coefficient. It was adequate under correct specification, with deviations at low reliability and small samples that reflect the standard errors of the underlying estimates, and under misspecification its coverage dropped with the bias of its constituents despite wider intervals.
+Under misspecification, LSAM was less affected than the system-wide approaches,
+without being robust to every omission. The structural omissions in the outcome
+equation ($c_2$, $c_3$) biased the coefficients of that equation, and thereby
+the imm, for all approaches but left the mediator equation, and hence the
+interaction coefficient, unaffected under LSAM, whereas the system-wide
+approaches also carried them into the mediator equation, biasing $a_2$ under
+$c_2$ and the interaction coefficient under $c_3$. The cross-loading (`cl`) was
+the most damaging for the structural coefficients. Under the system-wide
+approaches it biased most of them, including the interaction coefficient, while
+under LSAM it affected mainly $a_1$ and $c'$ and, to a lesser extent, $b$. The
+imm, however, was little affected. The residual covariance (`rc`) had little
+effect. The Type I error of LSAM was unchanged by the omissions, whereas that of
+LMS rose to 0.33. Where bias was substantial, it was smaller under LSAM, except
+for the imm under $c_2$ and $c'$ under the structural omissions, where the
+approaches were alike, and it increased with the magnitude of the omission. We
+also highlight that, for the imm, the Monte Carlo interval behaved like the
+interval of the interaction coefficient. It was adequate under correct
+specification, with deviations at low reliability and small samples that reflect
+the standard errors of the underlying estimates, and under misspecification its
+coverage dropped with the bias of its constituents despite wider intervals.
 
-These patterns are broadly consistent with previous research. Under distributional misspecification, the behavior of LMS is expected given its assumption of normal latent predictors and reproduces earlier findings [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], as does that of LSAM [@Rosseel2025; @Vieira2026]. The same holds for UPI, whose largely unbiased estimates and inaccurate standard errors were reported before [@Brandt2014; @Cham2012; @Lonati2025; @Marsh2004; @Vieira2026], and for FSR, whose attenuation is known to occur when the measurement error in the scores is ignored [@Devlieger2016; @NgChan2020; @Rosseel2025]. Turning to misspecification, our results for the measurement omissions align with @Brandt2020, where an omitted cross-loading likewise biased UPI, and with @NavarroSchermelleh2025, who found the latent interaction effect underestimated under omitted positive cross-loadings with LMS. As in our study, @Brandt2020 also found no approach free of bias and none uniformly best. Lastly, the contrast between the structural and the measurement omissions matches the expectation of @Robitzsch2022 that the advantage of LSAM lies in structural rather than measurement misspecification, since the cross-loading biased LSAM as well, whereas the structural omissions left its mediator equation untouched.
+These patterns are broadly consistent with previous research. Under
+distributional misspecification, the behavior of LMS is expected given its
+assumption of normal latent predictors and reproduces earlier findings
+[@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], as does that of LSAM
+[@Rosseel2025; @Vieira2026]. The same holds for UPI, whose largely unbiased
+estimates and inaccurate standard errors were reported before [@Brandt2014;
+@Cham2012; @Lonati2025; @Marsh2004; @Vieira2026], and for FSR, whose attenuation
+is known to occur when the measurement error in the scores is ignored
+[@Devlieger2016; @NgChan2020; @Rosseel2025]. Turning to misspecification, our
+results for the measurement omissions align with @Brandt2020, where an omitted
+cross-loading likewise biased UPI, and with @NavarroSchermelleh2025, who found
+the latent interaction effect underestimated under omitted positive
+cross-loadings with LMS. As in our study, @Brandt2020 also found no approach
+free of bias and none uniformly best. Lastly, the contrast between the
+structural and the measurement omissions matches the expectation of
+@Robitzsch2022 that the advantage of LSAM lies in structural rather than
+measurement misspecification, since the cross-loading biased LSAM as well,
+whereas the structural omissions left its mediator equation untouched.
 
-For applied researchers, these results suggest the following within the conditions studied. When the latent predictors can be assumed normal, LMS is the most efficient choice. When they may be nonnormal, LSAM is preferable, at the price of lower power with strongly skewed predictors, and it was also the least affected by misspecification. UPI, in contrast, is not advisable in small samples with low reliability, in addition to other known difficulties [@Foldnes2014; @Marsh2004; @Vieira2026]. FSR is not recommended because of its attenuation, although it had power close to that of LMS and higher than that of LSAM and UPI in most conditions. This is important to highlight because it is often suggested or expected that latent variable models may increase the power to detect interactions [e.g., @Castillo2026], but it is also well known that correcting for measurement error trades bias for variance [@Carroll2006, Section 3.5; @LedgerwoodShrout2011].^[We note that this expectation can be traced to @JaccardWan1995, but in their simulation study a latent variable model with three indicators per construct was compared with least squares regression on a single one of those indicators.] In terms of sample size, with an interaction of the size studied here, a power of 0.80 required about 300 observations at high and 500 at low reliability for most predictor distributions. Beyond the choice of approach, misspecification had strong consequences for all of them, and, depending on the study design, many of the omissions studied may be highly plausible in applied contexts. No approach protected against an omitted path in the outcome equation or a misspecified measurement model, and both should therefore be examined before the imm is interpreted, which the separate measurement step of LSAM makes natural. Finally, we evaluated the statistical and inferential properties of the estimation approaches, but a moderated mediation model and its hypotheses rest on strong causal assumptions [@Imai2010; @Rohrer2022]. Good statistical performance in certain conditions is therefore not, on its own, a justification for a causal claim, and we direct interested readers to the literature on the causal interpretation of mediation [@Morelli2026; @Imai2010].
+For applied researchers, these results suggest the following within the
+conditions studied. When the latent predictors can be assumed normal, LMS is the
+most efficient choice. When they may be nonnormal, LSAM is preferable, at the
+price of lower power with strongly skewed predictors, and it was also the least
+affected by misspecification. UPI, in contrast, is not advisable in small
+samples with low reliability, in addition to other known difficulties
+[@Foldnes2014; @Marsh2004; @Vieira2026]. FSR is not recommended because of its
+attenuation, although it had power close to that of LMS and higher than that of
+LSAM and UPI in most conditions. This is important to highlight because it is
+often suggested or expected that latent variable models may increase the power
+to detect interactions [e.g., @Castillo2026], but it is also well known that
+correcting for measurement error trades bias for variance [@Carroll2006, Section
+3.5; @LedgerwoodShrout2011].^[We note that this expectation can be traced to
+@JaccardWan1995, but in their simulation study a latent variable model with
+three indicators per construct was compared with least squares regression on a
+single one of those indicators.] In terms of sample size, with an interaction of
+the size studied here, a power of 0.80 required about 300 observations at high
+and 500 at low reliability for most predictor distributions. Beyond the choice
+of approach, misspecification had strong consequences for all of them, and,
+depending on the study design, many of the omissions studied may be highly
+plausible in applied contexts. No approach protected against an omitted path in
+the outcome equation or a misspecified measurement model, and both should
+therefore be examined before the imm is interpreted, which the separate
+measurement step of LSAM makes natural. Finally, we evaluated the statistical
+and inferential properties of the estimation approaches, but a moderated
+mediation model and its hypotheses rest on strong causal assumptions [@Imai2010;
+@Rohrer2022]. Good statistical performance in certain conditions is therefore
+not, on its own, a justification for a causal claim, and we direct interested
+readers to the literature on the causal interpretation of mediation
+[@Morelli2026; @Imai2010].
 
 {{< pagebreak >}}
 
