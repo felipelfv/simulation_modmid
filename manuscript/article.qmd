@@ -887,8 +887,8 @@ These patterns are broadly consistent with previous research. Under
 distributional misspecification, the behavior of LMS is expected given its
 assumption of normal latent predictors and reproduces earlier findings
 [@Brandt2014; @Cham2012; @Lonati2025; @Vieira2026], as does that of LSAM
-[@Rosseel2025; @Vieira2026]. The same holds for UPI, whose largely unbiased
-estimates and inaccurate standard errors were reported before [@Brandt2014;
+[@Rosseel2025; @Vieira2026]. The same holds for UPI, whose estimates with low
+bias and inaccurate standard errors were reported before [@Brandt2014;
 @Cham2012; @Lonati2025; @Marsh2004; @Vieira2026], and for FSR, whose attenuation
 is known to occur when the measurement error in the scores is ignored
 [@Devlieger2016; @NgChan2020; @Rosseel2025]. Turning to misspecification, our

@@ -238,7 +238,8 @@ $$
      = \begin{bmatrix} 1 & 0.3 \\ 0.3 & 1 \end{bmatrix},
 $$
 
-\noindent so that the conditions differ only in distributional shape. Under the
+\noindent so that the conditions have the same means, variances, and
+correlation. Under the
 normal condition, the predictors had Gaussian marginals with the specified
 covariance structure. Under the uniform condition, they had symmetric uniform
 marginals $\mathrm{U}(-\sqrt3, \sqrt3)$, which have mean $0$ and variance $1$.
