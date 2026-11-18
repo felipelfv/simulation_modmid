@@ -263,7 +263,7 @@ exogenous predictors and a correctly specified model) each dependent latent
 variable has $R^2 \approx 0.30$ at the interaction level $a_3 = 0.20$. Also note that, 
 because $a_3$ contributes to the variance of $M$, the explained variance is 
 naturally higher with a larger $a_3$ and lower when its effect is null. The
-realized values in every condition are reported in the supplementary
+realized values are reported in the supplementary
 materials. Each latent variable is measured by four congeneric indicators with
 loadings $1.0$, $0.8$, $0.7$, and $0.6$.
 
@@ -562,7 +562,7 @@ measurement specification and then under misspecification. We then turn to the
 remaining structural coefficients (i.e., $a_1$, $a_2$, $b$, and $c'$), and we
 close with the estimated factor loadings, focusing mainly on that of the
 cross-loaded indicator ($m_3$). Due to the large number of conditions, the
-figures in the main text show a subset. Complete results for every condition, and detailed convergence and 
+figures in the main text show a subset. Complete results, and detailed convergence and 
 outlier information, are available in the supplementary materials.
 
 ## Convergence, Outliers, and Inadmissible Solutions
@@ -574,7 +574,7 @@ for LMS ($N = 500$, high reliability, $t_5$ predictors). Outliers were below
 1% in most conditions and reached at most 3% for LSAM, LMS, and FSR and 11%
 for UPI ($N = 100$, low reliability, $\chi^2$ predictors). Inadmissible
 solutions arose almost exclusively for UPI, mainly at $N = 100$ with low
-reliability. They were retained, and excluding them changes the results only
+reliability. They were retained, and excluding them changes the results primarily
 for UPI in these conditions. Details are in Tables 3 and 4 of the
 supplementary materials.
 
@@ -627,9 +627,12 @@ errors, without which the ratio is acceptable in 9 of these 13 conditions
 (see Table 5 of the supplementary materials). FSR slightly underestimates the
 standard error in a few conditions (0.86 at the lowest). For the interaction
 coefficient the ratios are slightly lower than for the imm, so that LSAM and
-LMS also fall just below 0.90 in a few conditions (0.87 at the lowest). For
-the results at the larger interaction magnitude ($a_3 = 0.4$), see Figures
-18, 19, 22, and 23 of the supplementary materials.
+LMS also fall just below 0.90 in a few conditions (0.87 at the lowest). With
+the SE$^2$/VAR ratio, UPI remains the highest and FSR the lowest, but LSAM and
+LMS also exceed 1.10 at $N = 200$ with low reliability (see Figures 39 and 40
+of the supplementary materials). The results at the larger interaction
+magnitude are also reported ($a_3 = 0.4$; see Figures 18, 19, 22, and 23 of
+the supplementary materials).
 
 ```{r}
 #| label: fig-sesd
