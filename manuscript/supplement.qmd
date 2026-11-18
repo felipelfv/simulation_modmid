@@ -721,16 +721,16 @@ tbl(tab, c("Distribution", "Copula", "$\\operatorname{Cov}(X, XW)$",
 
 # Complete Figures
 
-The figures below show the results for the imm and the interaction coefficient
-across the conditions of the design. They are ordered by performance measure,
-then by estimand, interaction magnitude, and reliability level, and each shows
-all sample sizes, distributions, and (mis)specifications. The SE/SD ratio and
-coverage are shown at $a_3 = 0.2$ and $0.4$, and power at $a_3 = 0.2$. The
-first figure shows the relative bias of the
-interaction coefficient under correct specification, and the last eight show the
-remaining structural coefficients, the SE$^2$/VAR ratio, and the loading of the
-cross-loaded indicator $m_3$ in the conditions named in their captions. In each
-figure, LSAM = local structural-after-measurement, LMS = latent moderated
+The figures below are ordered by performance measure (relative bias, relative
+RMSE, SE/SD, coverage, Type I error, and power), first for the imm and the
+interaction coefficient and then for the remaining structural coefficients, the
+SE$^2$/VAR ratio, and the loading of the cross-loaded indicator $m_3$. Within
+each measure, they are ordered by estimand, interaction magnitude, and
+reliability level, and most show all sample sizes, predictor distributions, and
+(mis)specifications. The SE/SD ratio and coverage are shown at $a_3 = 0.2$ and
+$0.4$, power at $a_3 = 0.2$, and the Type I error at $a_3 = 0$. The conditions
+shown in each figure are named in its caption. In each figure, LSAM = local
+structural-after-measurement, LMS = latent moderated
 structural equations, UPI = unconstrained product indicator, FSR = factor score
 regression, imm = index of moderated mediation, n = no misspecification, $c_2$
 and $c_3$ = omitted paths, cl = omitted cross-loading, rc = omitted residual
