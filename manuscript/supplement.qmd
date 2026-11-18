@@ -726,7 +726,7 @@ coefficient in every condition of the design. They are ordered by performance
 measure, then by estimand, interaction magnitude, and reliability level, and
 each shows all sample sizes, distributions, and (mis)specifications. Power is
 shown at $a_3 = 0.2$. The first figure shows the relative bias of the
-interaction coefficient under correct specification, and the last six show the
+interaction coefficient under correct specification, and the last eight show the
 remaining structural coefficients, the SE$^2$/VAR ratio, and the loading of the
 cross-loaded indicator $m_3$ in the conditions named in their captions. In each
 figure, LSAM = local structural-after-measurement, LMS = latent moderated
@@ -794,6 +794,20 @@ knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_high.png")
 #| fig-cap: "SE/SD of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at High Reliability, $N = 500$, and $a_3 = 0.2$"
 #| out-width: "6.3in"
 knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_high.png")
+```
+
+```{r}
+#| label: fig-s-param-coverage-low
+#| fig-cap: "Coverage of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at Low Reliability, $N = 500$, and $a_3 = 0.2$"
+#| out-width: "6.3in"
+knitr::include_graphics("../plots/param_coverage_a3-0.2_n500_low.png")
+```
+
+```{r}
+#| label: fig-s-param-sesd-low
+#| fig-cap: "SE/SD of the Structural Coefficients ($a_1$, $a_2$, $b$, $c'$) Across Distributions and (Mis)specifications at Low Reliability, $N = 500$, and $a_3 = 0.2$"
+#| out-width: "6.3in"
+knitr::include_graphics("../plots/param_se_sd_a3-0.2_n500_low.png")
 ```
 
 ```{r}

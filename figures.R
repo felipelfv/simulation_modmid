@@ -276,9 +276,12 @@ for (rl in c("low", "high")) {
 # reliability go to the supplement. those at low reliability, where the
 # approaches differ most, go to the article: the relative bias of the
 # coefficients, each on its own axis because that of c' is far larger, and the
-# loading without the SE²/VAR ratio.
+# loading without the SE²/VAR ratio. the coverage and the SE/SD ratio of the
+# coefficients at low reliability go to the supplement as well.
 for (m in c("rel_bias", "coverage", "se_sd"))
   save_fig(fig_param(m, "high"), sprintf("param_%s_a3-0.2_n500_high", m), 12, 10, rotate = TRUE)
+for (m in c("coverage", "se_sd"))
+  save_fig(fig_param(m, "low"), sprintf("param_%s_a3-0.2_n500_low", m), 12, 10, rotate = TRUE)
 save_fig(fig_param("rel_bias", "low", "free_y") + small_x, "param_rel_bias_a3-0.2_n500_low", 10, 9)
 save_fig(fig_load("high", c("rel_bias", "coverage", "se_sd", "rel_bias_var")) +
            theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5, size = 6)),
